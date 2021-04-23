@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 module.exports = () => {
-  mongoose.connect("mongodb+srv://blackeagle4894:blackeagle4894@blackeagle4894.uyz3k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true})
+  mongoose.connect("mongodb+srv://softwarechasers:softwarechasers@cluster0.kmmfi.mongodb.net/movie-app?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true})
   mongoose.connection.on("open", () => {
     console.log("DB connection established")
   })
