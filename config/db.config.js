@@ -1,6 +1,7 @@
+require("dotenv").config()
 const mongoose = require("mongoose");
 module.exports = () => {
-  mongoose.connect("mongodb+srv://softwarechasers:softwarechasers@cluster0.kmmfi.mongodb.net/movie-app?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true})
+  mongoose.connect(process.env.db_connection, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true})
   mongoose.connection.on("open", () => {
     console.log("DB connection established")
   })
