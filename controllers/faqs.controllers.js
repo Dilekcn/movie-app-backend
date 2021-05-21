@@ -11,6 +11,16 @@ exports.getAllFaqs = async (req, res) => {
 	}
 };
 
+exports.getSingleFaqById = async (req, res) => {
+	await FaqModel.findById({ _id: req.params.faqid }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	});
+};
+
 exports.createFaq = async (req, res) => {
 	const newFaq = await new FaqModel({
 		question: req.body.question,
@@ -24,7 +34,7 @@ exports.createFaq = async (req, res) => {
 		.then((data) =>
 			res.json({
 				status: true,
-				message: 'Added new faq successfully.',
+				message: 'Added new faq successfully',
 				data,
 			}),
 		)
