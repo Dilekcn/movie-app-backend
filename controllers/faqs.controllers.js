@@ -60,3 +60,12 @@ exports.createFaq = async (req, res) => {
 		)
 		.catch((err) => res.json({ status: false, message: err }));
 };
+
+exports.updateFaq = async (req, res) => {
+	await FaqModel.findByIdAndUpdate(
+		{ _id: req.params.faqid },
+		{ $set: req.body },
+	)
+		.then((data) => res.json(data))
+		.catch((err) => res.json({ message: err }));
+};
