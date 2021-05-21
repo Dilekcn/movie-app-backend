@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users.routes');
 const postsRouter = require('./routes/posts.routes');
 const faqsRouter = require('./routes/faqs.routes');
+const commentsRouter = require('./routes/comments.routes');
 
 //middlewares
 const verifyToken = require('./auth/verifyToken');
@@ -31,6 +32,9 @@ app.use('/', indexRouter);
 app.use('/', usersRouter);
 app.use('/', postsRouter);
 app.use('/', faqsRouter);
+app.use('/', commentsRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
