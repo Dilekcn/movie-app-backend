@@ -21,6 +21,16 @@ exports.getSingleFaqById = async (req, res) => {
 	});
 };
 
+exports.getSingleFaqByQuestion = async (req, res) => {
+	await FaqModel.findOne({ question: req.params.question }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	});
+};
+
 exports.createFaq = async (req, res) => {
 	const newFaq = await new FaqModel({
 		question: req.body.question,
