@@ -22,7 +22,7 @@ exports.getSingleFaqById = async (req, res) => {
 };
 
 exports.getSingleFaqByQuestion = async (req, res) => {
-	await FaqModel.findOne({ question: req.params.question }, (err, data) => {
+	await FaqModel.find({ question: req.params.question }, (err, data) => {
 		if (err) {
 			res.json({ message: err });
 		} else {
@@ -32,7 +32,7 @@ exports.getSingleFaqByQuestion = async (req, res) => {
 };
 
 exports.getSingleFaqByAnswer = async (req, res) => {
-	await FaqModel.findOne({ answer: req.params.answer }, (err, data) => {
+	await FaqModel.find({ answer: req.params.answer }, (err, data) => {
 		if (err) {
 			res.json({ message: err });
 		} else {
