@@ -14,6 +14,7 @@ const commentsRouter = require('./routes/comments.routes');
 const footerRouter = require('./routes/footers.routes');
 const moviesRouter = require('./routes/movies.routes')
 const menusRouter = require('./routes/menus.routes')
+const messagesRouter = require('./routes/messages.routes')
 
 
 
@@ -45,6 +46,9 @@ app.use('/', commentsRouter);
 app.use('/', footerRouter);
 app.use('/', moviesRouter);
 app.use('/', menusRouter)
+app.use('/', messagesRouter)
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
