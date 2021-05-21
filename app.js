@@ -16,6 +16,7 @@ const moviesRouter = require('./routes/movies.routes')
 const menusRouter = require('./routes/menus.routes')
 const messagesRouter = require('./routes/messages.routes')
 const listsRouter = require('./routes/lists.routes')
+const mediasRouter = require('./routes/medias.routes')
 
 
 
@@ -45,10 +46,11 @@ app.use('/', postsRouter);
 app.use('/', faqsRouter);
 app.use('/', commentsRouter);
 app.use('/', footerRouter);
-app.use('/', moviesRouter);
+app.use('/', moviesRouter); 
 app.use('/', menusRouter)
 app.use('/', messagesRouter)
 app.use('/', listsRouter)
+app.use('/', mediasRouter)
 
 
 
