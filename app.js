@@ -15,6 +15,7 @@ const footerRouter = require('./routes/footers.routes');
 const moviesRouter = require('./routes/movies.routes')
 const menusRouter = require('./routes/menus.routes')
 const messagesRouter = require('./routes/messages.routes')
+const listsRouter = require('./routes/lists.routes')
 
 
 
@@ -47,6 +48,9 @@ app.use('/', footerRouter);
 app.use('/', moviesRouter);
 app.use('/', menusRouter)
 app.use('/', messagesRouter)
+app.use('/', listsRouter)
+
+
 
 
 
