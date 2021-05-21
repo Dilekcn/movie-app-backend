@@ -10,6 +10,16 @@ exports.getAllContactInfo = async (req, res) => {
 	}
 };
 
+exports.getSingleContactInfoById = async (req, res) => {
+	await ContactInfoModel.findById({ _id: req.params.id }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	});
+};
+
 exports.createContactInfo = async (req, res) => {
 	const { address, phone, email, socialMedia, isActive, isDeleted, userId } =
 		req.body;
@@ -45,6 +55,6 @@ exports.updateCreateInfo = async (req, res) => {
 
 exports.removeContactInfo = async (req, res) => {
 	await ContactInfoModel.findByIdAndDelete({ _id: req.params.id })
-		.then((data) => res.json({ message: 'Successfully updated', data }))
+		.then((data) => res.json({ message: 'Successfully removed', data }))
 		.catch((err) => res.json({ message: err }));
 };
