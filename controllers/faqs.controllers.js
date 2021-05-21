@@ -66,6 +66,12 @@ exports.updateFaq = async (req, res) => {
 		{ _id: req.params.faqid },
 		{ $set: req.body },
 	)
-		.then((data) => res.json(data))
+		.then((data) => res.json({ message: 'Successfully updated', data }))
+		.catch((err) => res.json({ message: err }));
+};
+
+exports.removeFaq = async (req, res) => {
+	await FaqModel.findByIdAndDelete({ _id: req.params.faqid })
+		.then((data) => res.json({ message: 'Successfully removed', data }))
 		.catch((err) => res.json({ message: err }));
 };
