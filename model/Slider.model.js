@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 const sliderSchema = new Schema(
 	{
         videoId:Schema.Types.ObjectId,
-		isRead: { type: Boolean, default: false },
-		mediaId: Schema.Types.ObjectId,
+        isActive:{ type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },
 	},
 	{ timestamps: true },
