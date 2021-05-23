@@ -5,6 +5,7 @@ const NotificationModel = require('../model/Notification.model');
 exports.getAllNotifications =  (req, res) => {
   
     NotificationModel.find()
+    
     .then((data) =>{ res.json(data);})
     .catch((err) => {res.json( err)});
 }
