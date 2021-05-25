@@ -18,6 +18,8 @@ const messagesRouter = require('./routes/messages.routes');
 const listsRouter = require('./routes/lists.routes');
 const mediasRouter = require('./routes/medias.routes');
 const sliderRouter = require('./routes/slider.router');
+const contactInfoRouter = require('./routes/contactinfo.routes');
+const rolesRouter = require('./routes/roles.routes');
 
 //middlewares
 const verifyToken = require('./auth/verifyToken');
@@ -50,7 +52,9 @@ app.use('/', menusRouter);
 app.use('/', messagesRouter);
 app.use('/', listsRouter);
 app.use('/', mediasRouter);
-app.use('/',sliderRouter);
+app.use('/', sliderRouter);
+app.use('/', contactInfoRouter);
+app.use('/', rolesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
