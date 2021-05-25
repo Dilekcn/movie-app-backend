@@ -37,3 +37,18 @@ exports.getSingleRoleById = async (req, res) => {
 		}
 	});
 };
+
+exports.updateRole = async (req, res) => {
+	await RolesModel.findByIdAndUpdate(
+		{ _id: req.params.roleid },
+		{ $set: req.body },
+	)
+		.then((data) => res.json({ message: 'Successfully updated', data }))
+		.catch((err) => res.json({ message: err }));
+};
+
+exports.removeRole = async (req, res) => {
+	await RolesModel.findByIdAndDelete({ _id: req.params.roleid })
+		.then((data) => res.json({ message: 'Successfully removed', data }))
+		.catch((err) => res.json({ message: err }));
+};
