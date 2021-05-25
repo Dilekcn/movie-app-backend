@@ -23,6 +23,7 @@ const rolesRouter = require('./routes/roles.routes');
 
 //middlewares
 const verifyToken = require('./auth/verifyToken');
+const isAdmin = require('./auth/isAdmin');
 
 var app = express();
 
@@ -54,7 +55,7 @@ app.use('/', listsRouter);
 app.use('/', mediasRouter);
 app.use('/', sliderRouter);
 app.use('/', contactInfoRouter);
-app.use('/', rolesRouter);
+app.use('/', isAdmin, rolesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
