@@ -14,7 +14,7 @@ exports.getAllRoles = async (req, res) => {
 exports.createRole = async (req, res) => {
 	const { name, isActive, isDeleted } = req.body;
 
-	const newRole = await new RoleModel({ name, isActive, isDeleted });
+	const newRole = await new RolesModel({ name, isActive, isDeleted });
 
 	newRole
 		.save()
@@ -26,4 +26,14 @@ exports.createRole = async (req, res) => {
 			}),
 		)
 		.catch((err) => res.json({ status: false, message: err }));
+};
+
+exports.getSingleRoleById = async (req, res) => {
+	await RolesModel.findById({ _id: req.params.id }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	});
 };
