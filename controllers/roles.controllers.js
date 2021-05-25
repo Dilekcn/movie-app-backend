@@ -29,7 +29,7 @@ exports.createRole = async (req, res) => {
 };
 
 exports.getSingleRoleById = async (req, res) => {
-	await RolesModel.findById({ _id: req.params.id }, (err, data) => {
+	await RolesModel.findById({ _id: req.params.roleid }, (err, data) => {
 		if (err) {
 			res.json({ message: err });
 		} else {
