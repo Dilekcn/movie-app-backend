@@ -9,5 +9,5 @@ router.post('/medias', mediasControllers.createMedia)
 router.put('/medias/:movieId', mediasControllers.updateSingleMedia)
 router.delete('/medias/:movieId', mediasControllers.removeSingleMedia)
 
-
+ 
 module.exports = router
