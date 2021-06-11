@@ -7,7 +7,7 @@ exports.getAll = async (req, res) => {
     } catch (e) {
         res.status(500).json(e)
     }
-} 
+}
 
 exports.create = async (req, res) => {
 
@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
                 year: req.body.year,
                 duration: req.body.duration,
                 rate: req.body.rate,
-                imageId: req.body.imageId,
+                imageUrl: 'http://localhost:5000/uploads/'+filename,
                 userId: req.body.userId,
                 cast: req.body.cast,
                 novel:req.body.novel,
@@ -55,7 +55,7 @@ exports.create = async (req, res) => {
             year: req.body.year,
             duration: req.body.duration,
             rate: req.body.rate,
-            imageId: req.body.imageId,
+            imageUrl: req.body.imageUrl,
             userId: req.body.userId,
             originalName: req.body.originalName,
             cast: req.body.cast,
