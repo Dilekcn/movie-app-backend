@@ -21,7 +21,7 @@ exports.getSingleUser = async (req,res) => {
   }
 
 exports.createUser = async  (req,res) => {
-  const {firstname, lastname, email, password, profileImageId} = req.body
+  const {firstname, lastname, email, password,country, profileImageId} = req.body
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(password, salt)
 
@@ -29,6 +29,7 @@ exports.createUser = async  (req,res) => {
     firstname: firstname,
     lastname: lastname,
     email: email,
+    country:country,
     profileImageId:profileImageId,
     password: hashedPassword
   })
@@ -46,6 +47,7 @@ exports.login = async (req, res)=> {
              firstname: data.firstname,
              lastname:data.lastname,
              email:data.email,
+             country:country,
              id:data._id,
              profileImageId:data.profileImageId,
              token: token
