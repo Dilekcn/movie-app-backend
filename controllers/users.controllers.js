@@ -21,7 +21,7 @@ exports.getSingleUser = async (req,res) => {
   }
 
 exports.createUser = async  (req,res) => {
-  const {firstname, lastname, email, password,country, profileImageId} = req.body
+  const {firstname, lastname, email, password,country, profileImageId,isActive,isDeleted} = req.body
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(password, salt)
 
@@ -31,7 +31,9 @@ exports.createUser = async  (req,res) => {
     email: email,
     country:country,
     profileImageId:profileImageId,
-    password: hashedPassword
+    password: hashedPassword,
+    isActive:isActive,
+    isDeleted:isDeleted
   })
   newUser.save().then(data => res.json({status: true, message: "Signed up succesfully.", data})).catch(err=> res.json({status:false,message:err}))
 }
@@ -48,6 +50,8 @@ exports.login = async (req, res)=> {
              lastname:data.lastname,
              email:data.email,
              country:country,
+             isActive:isActive,
+             isDeleted:isDeleted,
              id:data._id,
              profileImageId:data.profileImageId,
              token: token
