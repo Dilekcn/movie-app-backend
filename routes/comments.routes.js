@@ -5,8 +5,8 @@ const commentsControllers = require('../controllers/comments.controllers');
  
 router.get("/comments",commentsControllers.getAll)
 router.get("/comments/:id",commentsControllers.getSingleComment)
-router.get("/comments/userId/:userid",commentsControllers.getSingleCommentByUserId)
-router.get("/comments/videoid/:videoid",commentsControllers.getSingleCommentByVideoId)
+router.get("/comments/userid/:userId",commentsControllers.getSingleCommentByUserId)
+router.get("/comments/videoid/:videoId",commentsControllers.getSingleCommentByVideoId)
 router.post("/comments",commentsControllers.create)
 router.put("/comments/:id", commentsControllers.updateComment)
 router.delete("/comments/:id", commentsControllers.removeSingleComment)
