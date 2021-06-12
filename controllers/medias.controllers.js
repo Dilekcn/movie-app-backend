@@ -28,10 +28,10 @@ exports.getSingleMedia = async (req, res) => {
        if(err) {
         res.json({message: err, status:false})
        } else {
-           res.json({data, status:true})
+           res.json(data)
        }
    })
-} 
+}  
 
 
  exports.updateSingleMedia = async (req, res) => {
