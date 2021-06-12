@@ -4,6 +4,7 @@ const userControllers = require("../controllers/users.controllers")
 const isAdmin = require("../auth/isAdmin")
 
 router.get("/users",userControllers.getAllUsers)
+router.get("/users/:id",userControllers.getSingleUser)
 router.post("/users/signup",userControllers.createUser)
 router.post("/users/signin", userControllers.login)
 router.put("/users/:id",isAdmin, userControllers.updateUser)

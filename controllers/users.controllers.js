@@ -10,6 +10,16 @@ exports.getAllUsers = async (req,res) => {
   .catch(err => res.json({message:err}))
 }
 
+exports.getSingleUser = async (req,res) => {
+  await UserModel.findById({_id: req.params.id}, (err,data) => {
+    if(err) {
+      res.json({message: err})
+    } else {
+      res.json(data)
+    }
+  })
+  }
+
 exports.createUser = async  (req,res) => {
   const {firstname, lastname, email, password, profileImageId} = req.body
   const salt = await bcrypt.genSalt()
