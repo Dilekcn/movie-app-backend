@@ -7,7 +7,7 @@ exports.getAllMedia = async (req, res) => {
     } catch (e) {
         res.status(500).json(e)
     }
-}
+} 
  
 exports.createMedia = async (req, res) => {
     const newMovie = await new MediaModel({
@@ -31,7 +31,7 @@ exports.getSingleMedia = async (req, res) => {
            res.json({data, status:true})
        }
    })
-}
+} 
 
 
  exports.updateSingleMedia = async (req, res) => {
