@@ -17,6 +17,7 @@ const menusRouter = require('./routes/menus.routes');
 const messagesRouter = require('./routes/messages.routes');
 const listsRouter = require('./routes/lists.routes');
 const mediasRouter = require('./routes/medias.routes');
+const notificationRouter =require('./routes/notification.routes');
 const sliderRouter = require('./routes/slider.router');
 
 //middlewares
@@ -50,6 +51,7 @@ app.use('/', menusRouter);
 app.use('/', messagesRouter);
 app.use('/', listsRouter);
 app.use('/', mediasRouter);
+app.use('/',notificationRouter);
 app.use('/',sliderRouter);
 
 // catch 404 and forward to error handler
