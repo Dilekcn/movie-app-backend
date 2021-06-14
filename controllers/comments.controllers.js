@@ -44,6 +44,7 @@ exports.getCommentsByUserId= async (req,res) => {
     })
 }
 
+
 exports.getCommentsByVideoId= async (req,res) => {
     await CommentsModel.find({videoId: req.params.userId}, (err,data) => {
       if(err) {

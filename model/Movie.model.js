@@ -8,7 +8,7 @@ const MovieSchema = new Schema({
     writer:{type:String, required:true},
     type:{type:String, required:true},
     year:{type:Number, required:true},
-    duration:{type:String, required:true},
+    duration:{type:String},
     rating:{type:Number, required:true},
     imageUrl:{type:String, default:null},
     userId: {type: mongoose.Types.ObjectId, required:true},
