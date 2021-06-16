@@ -20,6 +20,7 @@ const mediasRouter = require('./routes/medias.routes');
 const sliderRouter = require('./routes/slider.router');
 const contactInfoRouter = require('./routes/contactinfo.routes');
 const rolesRouter = require('./routes/roles.routes');
+const trailersRouter = require('./routes/trailers.routes');
 
 //middlewares
 const verifyToken = require('./auth/verifyToken');
@@ -56,6 +57,9 @@ app.use('/', mediasRouter);
 app.use('/', sliderRouter);
 app.use('/', contactInfoRouter);
 app.use('/', isAdmin, rolesRouter);
+app.use('/', trailersRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
