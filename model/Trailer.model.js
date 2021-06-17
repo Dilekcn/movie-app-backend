@@ -5,6 +5,7 @@ const TrailersSchema = new Schema(
 	{ 
 		title: {type:String, required:true},
 		type:{type:String, required:true},
+		episodeTitle:{type:String},
 		year:{type:Number, required:true},
 		duration:{type:String},
 		mediaId:{type: mongoose.Types.ObjectId},
