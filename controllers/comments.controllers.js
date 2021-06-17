@@ -41,7 +41,7 @@ exports.getCommentsByUserId= async (req,res) => {
       } else {
         res.json(data)
       }
-    })
+    }) 
 }
 
 

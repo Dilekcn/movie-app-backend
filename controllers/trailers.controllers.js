@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const TrailersModel = require('../model/Trailer.model')
 
 exports.getAll = async (req, res) => {
@@ -6,17 +7,17 @@ exports.getAll = async (req, res) => {
         res.json(response)
     } catch (e) {
         res.status(500).json(e)
-    }
+    } 
 }
-
+ 
 
 exports.create =  (req, res) => {
-    const {title,type,year,duration,mediaId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl }=req.body
+    const {title,type,year,duration,mediaId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl}=req.body
 	const newTrailer = new TrailersModel({
         title,
         type,
         year,
-        duration,
+        duration, 
         mediaId,
         cast,
         description,
@@ -46,7 +47,7 @@ exports.getSingleTrailer = async (req, res) => {
 
 
 exports.getSingleTrailerByTitle = async (req, res) => {
-    await TrailersModel.findOne({name: req.params.title}, (err, data) => {
+    await TrailersModel.findOne({title: req.params.title}, (err, data) => {
         if(err) {
          res.json({message: err})
         } else {
