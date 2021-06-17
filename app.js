@@ -23,8 +23,8 @@ const rolesRouter = require('./routes/roles.routes');
 const trailersRouter = require('./routes/trailers.routes');
 
 //middlewares
-const verifyToken = require('./auth/verifyToken');
-const isAdmin = require('./auth/isAdmin');
+// const verifyToken = require('./auth/verifyToken');
+// const isAdmin = require('./auth/isAdmin');
 
 var app = express();
 
@@ -56,7 +56,7 @@ app.use('/', listsRouter);
 app.use('/', mediasRouter);
 app.use('/', sliderRouter);
 app.use('/', contactInfoRouter);
-app.use('/', isAdmin, rolesRouter);
+app.use('/', rolesRouter);
 app.use('/', trailersRouter);
 
 

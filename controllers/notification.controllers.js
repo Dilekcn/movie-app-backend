@@ -2,12 +2,14 @@ const mongoose = require('mongoose');
 const NotificationModel = require('../model/Notification.model');
 
 
-exports.getAllNotifications =  (req, res) => {
-  
-    NotificationModel.find()
-    
-    .then((data) =>{ res.json(data);})
-    .catch((err) => {res.json( err)});
+exports.getAllNotifications = async (req, res) => {
+  try{
+    const response = await  NotificationModel.find() 
+    res.json(response)
+  } catch (error) {
+    res.status(500).json(error);
+  }
+   
 }
 
 exports.createNotification = (req, res) => {

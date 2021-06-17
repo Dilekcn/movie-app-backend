@@ -2,13 +2,16 @@ const mongoose = require('mongoose');
 const SliderModel = require('../model/Slider.model');
 
 
-exports.getAllSliders =  (req, res) => {
+exports.getAllSliders = async (req, res) => {
+  try {
+		const response = await SliderModel.find();
+		res.json(response);
+	} catch (error) {
+		res.status(500).json(error);
+	} 
   
-    SliderModel.find()
-    .then((data) =>{ res.json(data);})
-    .catch((err) => {res.json( err)});
 }
-
+ 
 exports.createSlider = (req, res) => {
     const newSlider =  new SliderModel(
      req.bady        
