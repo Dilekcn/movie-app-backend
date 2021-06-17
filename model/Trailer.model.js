@@ -17,7 +17,8 @@ const TrailersSchema = new Schema(
 		seasonNumber:{type:Number}, 
 		episodeNumber:{type:Number},
 		tags:{type:Array},
-		trailerUrl:{type:String}
+		trailerUrl:{type:String},
+		likes:{type:Number}
 	},
 	{ timestamps: true },
 );

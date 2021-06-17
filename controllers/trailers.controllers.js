@@ -12,7 +12,7 @@ exports.getAll = async (req, res) => {
 
 
 exports.create = async (req,res) => {
-  const {title,type,year,duration,mediaId,bannerId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl}=req.body
+  const {title,type,year,duration,mediaId,bannerId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl,likes}=req.body
 	const newTrailer = new TrailersModel({
         title,
         type,
@@ -28,7 +28,8 @@ exports.create = async (req,res) => {
         seasonNumber,
         episodeNumber,
         tags,
-        trailerUrl 
+        trailerUrl,
+        likes,
 	}); 
 	newTrailer
 		.save()
