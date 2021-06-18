@@ -8,8 +8,8 @@ exports.getAllFaqs = async (req, res) => {
 		res.json(response);
 	} catch (error) {
 		res.status(500).json(error);
-	}
-};
+	} 
+}; 
 
 exports.getSingleFaqById = async (req, res) => {
 	await FaqModel.findById({ _id: req.params.faqid }, (err, data) => {

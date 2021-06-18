@@ -1,11 +1,15 @@
 const FooterModel = require('../model/Footer.model')
 
-exports.getAll = (req, res) => {
-    FooterModel.find()
-        .then(data => res.json(data))
-        .catch(err => res.json({message: err, status:false}))
-}
+exports.getAll = async (req, res) => {
 
+    try {
+		const response = await  FooterModel.find();
+		res.json(response);
+	} catch (error) {
+		res.status(500).json(error);
+	} 
+}
+ 
 exports.getSingleFooterById = (req, res) => {
     const id = req.params.id
 

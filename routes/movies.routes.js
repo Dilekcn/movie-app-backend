@@ -11,4 +11,4 @@ router.put('/movies/:movieid', moviesControllers.updateSingleMovie)
 router.delete('/movies/:movieid', moviesControllers.removeSingleMovie)
 
 
-module.exports = router
+module.exports = router 

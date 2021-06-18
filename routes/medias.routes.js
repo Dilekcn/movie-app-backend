@@ -10,4 +10,4 @@ router.put('/medias/:mediaId', mediasControllers.updateSingleMedia)
 router.delete('/medias/:mediaId', mediasControllers.removeSingleMedia)
 
  
-module.exports = router   
+module.exports = router    

@@ -7,7 +7,7 @@ exports.getAll = async (req, res) => {
     res.json(response)
   } catch (error) {
     res.status(500).json(error)
-  }
+  } 
 }
 
 
@@ -41,8 +41,9 @@ exports.getCommentsByUserId= async (req,res) => {
       } else {
         res.json(data)
       }
-    })
+    }) 
 }
+
 
 exports.getCommentsByVideoId= async (req,res) => {
     await CommentsModel.find({videoId: req.params.userId}, (err,data) => {
