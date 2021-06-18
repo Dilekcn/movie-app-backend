@@ -19,9 +19,12 @@ const listsRouter = require('./routes/lists.routes');
 const mediasRouter = require('./routes/medias.routes');
 const notificationRouter =require('./routes/notification.routes');
 const sliderRouter = require('./routes/slider.router');
+const contactInfoRouter = require('./routes/contactinfo.routes');
+const rolesRouter = require('./routes/roles.routes');
 
 //middlewares
 const verifyToken = require('./auth/verifyToken');
+const isAdmin = require('./auth/isAdmin');
 
 var app = express();
 
@@ -51,8 +54,9 @@ app.use('/', menusRouter);
 app.use('/', messagesRouter);
 app.use('/', listsRouter);
 app.use('/', mediasRouter);
-app.use('/',notificationRouter);
-app.use('/',sliderRouter);
+app.use('/', sliderRouter);
+app.use('/', contactInfoRouter);
+app.use('/', isAdmin, rolesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

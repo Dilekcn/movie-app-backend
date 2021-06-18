@@ -34,8 +34,8 @@ await CommentsModel.findById({_id: req.params.id}, (err,data) => {
 })
 }
  
-exports.getSingleCommentByUserId= async (req,res) => {
-    await CommentsModel.findOne({userId: req.params.userId}, (err,data) => {
+exports.getCommentsByUserId= async (req,res) => {
+    await CommentsModel.find({userId: req.params.userId}, (err,data) => {
       if(err) {
         res.json({message: err})
       } else {
@@ -44,8 +44,8 @@ exports.getSingleCommentByUserId= async (req,res) => {
     })
 }
 
-exports.getSingleCommentByVideoId= async (req,res) => {
-    await CommentsModel.findOne({videoId: req.params.userId}, (err,data) => {
+exports.getCommentsByVideoId= async (req,res) => {
+    await CommentsModel.find({videoId: req.params.userId}, (err,data) => {
       if(err) {
         res.json({message: err})
       } else {

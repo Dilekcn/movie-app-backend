@@ -6,6 +6,10 @@ const UserSchema = new Schema({
   lastname: {type: String, required:true},
   email: {type: String, required:true, unique: true},
   password: {type: String, required:true},
+  country: {type: String, required:true},
+  profileImageId: {type: mongoose.Types.ObjectId, ref:'medias'},
+  isActive:{ type: Boolean, default: true },
+  isDeleted:{ type: Boolean, default: false },
   role: {type:String, default: "user"}
 }, {timestamps:true})
 

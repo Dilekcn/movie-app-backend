@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
 		.then((response) => res.json(response))
 		.catch((err) => res.json(err));
 };
-
+ 
 
 
 exports.getSingleList = async (req,res) => {

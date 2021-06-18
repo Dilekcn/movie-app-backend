@@ -28,11 +28,19 @@ exports.create = async (req, res) => {
                 year: req.body.year,
                 duration: req.body.duration,
                 rate: req.body.rate,
-                imageLocal: 'http://localhost:5000/uploads/'+filename,
+                imageUrl: 'http://localhost:5000/uploads/'+filename,
                 userId: req.body.userId,
                 cast: req.body.cast,
                 novel:req.body.novel,
-                summary:req.body.summary
+                summary:req.body.summary,
+                genre:req.body.genre,
+                ageRestriction:req.body.ageRestriction,
+                seasonCount:req.body.seasonCount,
+                episodeCount:req.body.episodeCount,
+                likes:req.body.likes,
+                imdb:req.body.imdb,
+                tags:req.body.tags,
+                trailerUrl:req.body.trailerUrl
             })
         
             newMovie.save().then(response => res.json({message:'Movie Created', status:true, response})).catch(err => res.json({message:err, status:false}))
@@ -52,7 +60,15 @@ exports.create = async (req, res) => {
             originalName: req.body.originalName,
             cast: req.body.cast,
             novel:req.body.novel,
-            summary:req.body.summary
+            summary:req.body.summary,
+            genre:req.body.genre,
+            ageRestriction:req.body.ageRestriction,
+            seasonCount:req.body.seasonCount,
+            episodeCount:req.body.episodeCount,
+            likes:req.body.likes,
+            imdb:req.body.imdb,
+            tags:req.body.tags,
+            trailerUrl:req.body.trailerUrl
         })
     
         newMovie.save().then(response => res.json({message:'Movie Created', status:true, response})).catch(err => res.json({message:err, status:false}))
