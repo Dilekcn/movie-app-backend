@@ -4,13 +4,15 @@ const TrailersModel = require("../model/Trailer.model")
 exports.getAll = async (req, res) => {
   try {
     const response = await TrailersModel.find()
+    .populate('mediaId','url')
+    .populate('bannerId','url')
     res.json(response)
   } catch (error) {
     res.status(500).json(error)
   } 
 }  
 
-
+ 
 exports.create = async (req,res) => {
   const {title,episodeTitle,type,year,duration,mediaId,bannerId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl,likes}=req.body
 	const newTrailer = new TrailersModel({
