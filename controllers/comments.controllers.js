@@ -4,7 +4,9 @@ const CommentsModel = require("../model/Comment.model")
 exports.getAll = async (req, res) => {
   try {
     const response = await CommentsModel.find()
-    .populate('userId','firstname','lastname')
+    .populate({ path: 'userId', select: 'firstname lastname' })
+    // .populate('userId','firstname')
+    
     res.json(response)
   } catch (error) { 
     res.status(500).json(error)
