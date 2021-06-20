@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   email: {type: String, required:true, unique: true},
   password: {type: String, required:true},
   country: {type: String, required:true},
-  profileImageId: {type: mongoose.Types.ObjectId, ref:'medias'},
+  profileImageId: {type: mongoose.Types.ObjectId, ref:'media'},
   isActive:{ type: Boolean, default: true },
   isDeleted:{ type: Boolean, default: false },
   role: {type:String, default: "user"}

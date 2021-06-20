@@ -6,6 +6,7 @@ require("dotenv").config()
 
 exports.getAllUsers = async (req,res) => {
   await UserModel.find()
+  .populate('profileImageId','url')
   .then(data => res.json(data))
   .catch(err => res.json({message:err}))
 }
