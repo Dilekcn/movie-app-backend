@@ -60,6 +60,8 @@ exports.getTrailersByUserId= async (req,res) => {
         res.json(data)
       }
     }) 
+    .populate('mediaId','url')
+    .populate('bannerId','url')
 }
 
 
