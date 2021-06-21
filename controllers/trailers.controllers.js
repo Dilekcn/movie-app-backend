@@ -4,7 +4,7 @@ const mediaModel = require("../model/Media.model")
 
 exports.getAll = async (req, res) => {
   try {
-    const response = await TrailersModel.find()
+    const response = await TrailersModel.find().sort({createdAt:-1})
     .populate('mediaId','url')
     .populate('bannerId','url')
     res.json(response)
