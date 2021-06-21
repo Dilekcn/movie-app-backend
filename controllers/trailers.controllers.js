@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const TrailersModel = require("../model/Trailer.model")
+const mediaModel = require("../model/Media.model")
 
 exports.getAll = async (req, res) => {
   try {
@@ -14,6 +15,16 @@ exports.getAll = async (req, res) => {
 
  
 exports.create = async (req,res) => {
+  const newMediaId = await new mediaModel({
+    url:req.body.url || null,
+    title:req.body.title || null,
+    description:req.body.description || null
+  })
+  const newBannerId = await new mediaModel({
+    url:req.body.url || null,
+    title:req.body.title || null,
+    description:req.body.description || null
+  })
   const {title,episodeTitle,type,year,duration,mediaId,bannerId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl,likes}=req.body
 	const newTrailer = new TrailersModel({
         title,
@@ -21,8 +32,8 @@ exports.create = async (req,res) => {
         type,
         year,
         duration, 
-        mediaId,
-        bannerId,
+        mediaId:newMediaId._id,
+        bannerId:newBannerId._id,
         cast,
         description,
         genre,
