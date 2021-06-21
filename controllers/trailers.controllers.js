@@ -25,6 +25,8 @@ exports.create = async (req,res) => {
     title:req.body.title || null,
     description:req.body.description || null
   })
+  newMediaId.save(newMediaId)
+  newBannerId.save(newBannerId)
   const {title,episodeTitle,type,year,duration,mediaId,bannerId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl,likes}=req.body
 	const newTrailer = new TrailersModel({
         title,
