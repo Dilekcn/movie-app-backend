@@ -48,6 +48,8 @@ await TrailersModel.findById({_id: req.params.id}, (err,data) => {
     res.json(data)
   }
 })
+.populate('mediaId','url')
+.populate('bannerId','url')
 }
  
 exports.getTrailersByUserId= async (req,res) => {
