@@ -16,12 +16,12 @@ exports.getAll = async (req, res) => {
  
 exports.create = async (req,res) => {
   const newMediaId = await new mediaModel({
-    url:req.body.url || null,
+    url:req.body.mediaId || null,
     title:req.body.title || null,
     description:req.body.description || null
   })
   const newBannerId = await new mediaModel({
-    url:req.body.url || null,
+    url:req.body.bannerId || null,
     title:req.body.title || null,
     description:req.body.description || null
   })
