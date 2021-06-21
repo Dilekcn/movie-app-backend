@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const TrailersSchema = new Schema(
 	{ 
-		title: {type:String, required:true},
-		type:{type:String, required:true},
+		title: {type:String},
+		type:{type:String},
 		episodeTitle:{type:String},
-		year:{type:Number, required:true},
+		year:{type:Number},
 		duration:{type:String},
 		mediaId:{type: mongoose.Types.ObjectId,ref:'media'},
 		bannerId:{type: mongoose.Types.ObjectId,ref:'media'},
