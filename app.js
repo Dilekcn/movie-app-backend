@@ -8,17 +8,12 @@ const cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users.routes');
-const postsRouter = require('./routes/posts.routes');
 const faqsRouter = require('./routes/faqs.routes');
 const commentsRouter = require('./routes/comments.routes');
 const footerRouter = require('./routes/footers.routes');
-const moviesRouter = require('./routes/movies.routes');
-const menusRouter = require('./routes/menus.routes');
 const messagesRouter = require('./routes/messages.routes');
 const listsRouter = require('./routes/lists.routes');
 const mediasRouter = require('./routes/medias.routes');
-const sliderRouter = require('./routes/slider.router');
-const contactInfoRouter = require('./routes/contactinfo.routes');
 const rolesRouter = require('./routes/roles.routes');
 const trailersRouter = require('./routes/trailers.routes');
 
@@ -42,24 +37,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(upload());
 app.use(cors());
-
 app.use('/', indexRouter);
 app.use('/', usersRouter);
-app.use('/', postsRouter);
 app.use('/', faqsRouter);
 app.use('/', commentsRouter);
 app.use('/', footerRouter);
-app.use('/', moviesRouter);
-app.use('/', menusRouter);
 app.use('/', messagesRouter);
 app.use('/', listsRouter);
 app.use('/', mediasRouter);
-app.use('/', sliderRouter);
-app.use('/', contactInfoRouter);
 app.use('/', rolesRouter);
 app.use('/', trailersRouter);
-
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

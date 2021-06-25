@@ -4,12 +4,11 @@ const Schema = mongoose.Schema;
 
 const notificationSchema = new Schema(
 	{
-        userId:Schema.Types.ObjectId,
+		userId: { type: Schema.Types.ObjectId, ref: 'user' },
 		isRead: { type: Boolean, default: false },
-		mediaId: Schema.Types.ObjectId,
 		isDeleted: { type: Boolean, default: false },
 	},
-	{ timestamps: true },
+	{ timestamps: true }
 );
 
 module.exports = mongoose.model('notification', notificationSchema);

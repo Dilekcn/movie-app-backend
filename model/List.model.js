@@ -3,16 +3,17 @@ const Schema = mongoose.Schema;
 
 const ListsSchema = new Schema(
 	{
-		userId: {type: mongoose.Types.ObjectId, ref:'users'},
+		userId: { type: mongoose.Types.ObjectId, ref: 'user' },
 		name: { type: String, required: true },
 		description: { type: String, required: true },
-        coverImageId: {type: mongoose.Types.ObjectId, ref:'media'},
-        sortBy:{type:[String]},
-        isPublic:{ type: Boolean, default: true },
-        isActive:{ type: Boolean, default: true },
-        isDeleted:{ type: Boolean, default: false } 
+		coverImageId: { type: mongoose.Types.ObjectId, ref: 'media' },
+		listItemIds: Array,
+		likes: Array,
+		isPublic: { type: Boolean, default: true },
+		isActive: { type: Boolean, default: true },
+		isDeleted: { type: Boolean, default: false },
 	},
-	{ timestamps: true },
+	{ timestamps: true }
 );
- 
+
 module.exports = mongoose.model('list', ListsSchema);
