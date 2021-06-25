@@ -4,11 +4,12 @@ const CommentsModel = require("../model/Comment.model")
 exports.getAll = async (req, res) => {
   try {
     const response = await CommentsModel.find()
+    .populate('userId','firstname lastname')
     res.json(response)
-  } catch (error) {
+  } catch (error) { 
     res.status(500).json(error)
   } 
-}
+} 
 
 
 exports.create = async (req,res) => {

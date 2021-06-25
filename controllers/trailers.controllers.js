@@ -1,17 +1,32 @@
 const mongoose = require("mongoose");
 const TrailersModel = require("../model/Trailer.model")
+const mediaModel = require("../model/Media.model")
 
 exports.getAll = async (req, res) => {
   try {
-    const response = await TrailersModel.find()
+    const response = await TrailersModel.find().sort({createdAt:-1})
+    .populate('mediaId','url')
+    .populate('bannerId','url')
     res.json(response)
   } catch (error) {
     res.status(500).json(error)
   } 
 }  
 
-
+ 
 exports.create = async (req,res) => {
+  const newMediaId = await new mediaModel({
+    url:req.body.mediaId || null,
+    title:req.body.title || null,
+    description:req.body.description || null
+  })
+  const newBannerId = await new mediaModel({
+    url:req.body.bannerId || null,
+    title:req.body.title || null,
+    description:req.body.description || null
+  })
+  newMediaId.save(newMediaId)
+  newBannerId.save(newBannerId)
   const {title,episodeTitle,type,year,duration,mediaId,bannerId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl,likes}=req.body
 	const newTrailer = new TrailersModel({
         title,
@@ -19,8 +34,8 @@ exports.create = async (req,res) => {
         type,
         year,
         duration, 
-        mediaId,
-        bannerId,
+        mediaId:newMediaId._id,
+        bannerId:newBannerId._id,
         cast,
         description,
         genre,
@@ -46,6 +61,8 @@ await TrailersModel.findById({_id: req.params.id}, (err,data) => {
     res.json(data)
   }
 })
+.populate('mediaId','url')
+.populate('bannerId','url')
 }
  
 exports.getTrailersByUserId= async (req,res) => {
@@ -56,6 +73,8 @@ exports.getTrailersByUserId= async (req,res) => {
         res.json(data)
       }
     }) 
+    .populate('mediaId','url')
+    .populate('bannerId','url')
 }
 
 
