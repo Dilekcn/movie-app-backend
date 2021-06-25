@@ -11,7 +11,7 @@ const UserSchema = new Schema(
 		profileImageId: { type: mongoose.Types.ObjectId, ref: 'media' },
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },
-		roleId: { type: String, default: 'user' },
+		role: { type: String, default: 'user' },
 	},
 	{ timestamps: true }
 );

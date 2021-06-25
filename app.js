@@ -14,7 +14,6 @@ const footerRouter = require('./routes/footers.routes');
 const messagesRouter = require('./routes/messages.routes');
 const listsRouter = require('./routes/lists.routes');
 const mediasRouter = require('./routes/medias.routes');
-const rolesRouter = require('./routes/roles.routes');
 const trailersRouter = require('./routes/trailers.routes');
 
 //middlewares
@@ -45,7 +44,6 @@ app.use('/', footerRouter);
 app.use('/', messagesRouter);
 app.use('/', listsRouter);
 app.use('/', mediasRouter);
-app.use('/', rolesRouter);
 app.use('/', trailersRouter);
 
 // catch 404 and forward to error handler
