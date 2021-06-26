@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
 	{
-		firstname: { type: String, required: true },
-		lastname: { type: String, required: true },
-		email: { type: String, required: true, unique: true },
-		password: { type: String, required: true },
-		country: { type: String, required: true },
+		firstname: { type: String},
+		lastname: { type: String },
+		email: { type: String, unique: true },
+		password: { type: String },
+		country: { type: String },
 		profileImageId: { type: mongoose.Types.ObjectId, ref: 'media' },
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },

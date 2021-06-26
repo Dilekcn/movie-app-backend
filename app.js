@@ -14,6 +14,7 @@ const footerRouter = require('./routes/footers.routes');
 const messagesRouter = require('./routes/messages.routes');
 const listsRouter = require('./routes/lists.routes');
 const mediasRouter = require('./routes/medias.routes');
+const notificationRouter =require('./routes/notification.routes');
 const trailersRouter = require('./routes/trailers.routes');
 
 //middlewares
