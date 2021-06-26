@@ -1,9 +1,9 @@
 const MediaModel = require('../model/Media.model')
 const AWS = require('aws-sdk')
 require('dotenv').config()
-const Access_Key = process.env.Access_Key_ID
-const Secret_Key = process.env.Secret_Access_Key
-const Bucket_Name = process.env.Bucket_Name
+const Access_Key = 'AKIATHUYFINRAEMY72NM'
+const Secret_Key = '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'
+const Bucket_Name = 'movieappimageupload'
 
 exports.getAllMedia = async (req, res) => {
     try {
