@@ -8,17 +8,18 @@ exports.getAll = async (req, res) => {
 	} catch (error) {
 		res.status(500).json(error); 
 	}
-};
+}; 
  
 exports.create = async (req, res) => {
-    const {userId,name,description,coverImageId,sortBy,isPublic,isActive,isDeleted
+    const {userId,name,description,coverImageId,sortBy,isPublic,isActive,isDeleted,listItemIds,likes
     }=req.body
 	const newList = await new ListsModel({
 		userId,
         name,
         description,
         coverImageId,
-        sortBy,
+        listItemIds,
+        likes,
         isPublic,
         isActive,
         isDeleted
