@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const CommentsSchema = new Schema(
 	{
-		userId: { type: mongoose.Types.ObjectId, ref: 'user' },
+		userId: { type: Schema.Types.ObjectId, ref: 'user' },
 		title: { type: String, required: true },
 		content: { type: String, required: true },
-		listId: { type: mongoose.Types.ObjectId, ref: 'list' },
+		listId: { type: Schema.Types.ObjectId, ref: 'list' },
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },
 	},
