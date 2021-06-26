@@ -20,7 +20,9 @@ const TrailersSchema = new Schema(
 		seasonNumber: { type: Number },
 		episodeNumber: { type: Number },
 		episodeTitle: { type: String },
-		imdb:{ type: String }
+		imdb:{ type: String },
+		isActive: { type: Boolean, default: true },
+		isDeleted: { type: Boolean, default: false }
 		
 	},
 	{ timestamps: true }
