@@ -8,7 +8,7 @@ const ListsSchema = new Schema(
 		description: { type: String, required: true },
 		coverImageId: { type: mongoose.Types.ObjectId, ref: 'media' },
 		listItemIds: Array,
-		likes: Array,
+		likes: Array, 
 		isPublic: { type: Boolean, default: true },
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },
