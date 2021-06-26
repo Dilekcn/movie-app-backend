@@ -34,7 +34,7 @@ exports.createFooter = (req, res) => {
 
 exports.updateFooterById = (req, res) => {
     const id = req.params.id
-    FooterModel.findByIdAndUpdate({_id:id}).then(data => res.json({status:true, data})).catch(err => res.json({message: err, status:false}))
+    FooterModel.findByIdAndUpdate({_id:id}, {$set:req.body}).then(data => res.json({status:true, data})).catch(err => res.json({message: err, status:false}))
 }
 
 exports.removeFooterById = (req, res) => {

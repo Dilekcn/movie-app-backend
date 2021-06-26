@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const FooterSchema = new Schema(
 	{
-		logo: { type: String, required: true },
-		address: { type: String, required: true },
-		email: { type: String, required: true },
-		phone: { type: String, required: true },
-		socialMediaLinks: { type: Array, required: true },
-		copyright: { type: String, required: true },
+		logo: { type: String },
+		address: { type: String },
+		email: { type: String },
+		phone: { type: String },
+		socialMediaLinks: { type: Array },
+		copyright: { type: String },
 	},
 	{ timestamps: true }
 );
