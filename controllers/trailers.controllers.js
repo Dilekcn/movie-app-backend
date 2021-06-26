@@ -1,6 +1,10 @@
-const mongoose = require("mongoose");
 const TrailersModel = require("../model/Trailer.model")
 const mediaModel = require("../model/Media.model")
+const AWS = require('aws-sdk')
+require('dotenv').config()
+const Access_Key = process.env.Access_Key_ID
+const Secret_Key = process.env.Secret_Access_Key
+const Bucket_Name = process.env.Bucket_Name
 
 exports.getAll = async (req, res) => {
   try {
@@ -15,20 +19,52 @@ exports.getAll = async (req, res) => {
 
  
 exports.create = async (req,res) => {
-  const newMediaId = await new mediaModel({
-    url:req.body.mediaId || null,
-    title:req.body.title || null,
-    description:req.body.description || null
-  })
-  const newBannerId = await new mediaModel({
-    url:req.body.bannerId || null,
-    title:req.body.title || null,
-    description:req.body.description || null
-  })
-  newMediaId.save(newMediaId)
-  newBannerId.save(newBannerId)
-  const {imdb,isActive,isDeleted,title,episodeTitle,type,year,duration,mediaId,bannerId,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl,likes}=req.body
-	const newTrailer = new TrailersModel({
+
+  const image = req.files.image 
+  const banner = req.files.banner
+    
+    const s3 = new AWS.S3({
+        accessKeyId:Access_Key,
+        secretAccessKey:Secret_Key
+    })
+
+    const params1 = {
+        Bucket:Bucket_Name,
+        Key:image.name,
+        Body:image.data,
+        ContentType:'image/JPG'
+    }
+
+    const params2 = {
+      Bucket:Bucket_Name,
+      Key:banner.name,
+      Body:banner.data,
+      ContentType:'image/JPG'
+  }
+
+   await s3.upload(params1, async (err, data1) => {
+        if(err) {
+            res.json(err)
+        } else {
+          await s3.upload(params2, async (err, data2) => {
+            if(err) {
+                res.json(err)
+            } else {
+              const newMediaId = await new mediaModel({
+                url:data1.Location || null,
+                title:req.body.title || null,
+                description:req.body.description || null
+              })
+              newMediaId.save(newMediaId)
+              const newBannerId = await new mediaModel({
+                url:data2.Location || null,
+                title:req.body.title || null,
+                description:req.body.description || null
+              })
+              newBannerId.save(newBannerId)
+
+              const {imdb,isActive,isDeleted,title,episodeTitle,type,year,duration,cast,description,genre,ageRestriction,totalSeasons,seasonNumber,episodeNumber,tags,trailerUrl,likes}=req.body
+    	const newTrailer = new TrailersModel({
         title,
         episodeTitle,
         type,
@@ -54,6 +90,18 @@ exports.create = async (req,res) => {
 		.save()
 		.then((response) => res.json(response))
 		.catch((err) => res.json(err));
+            }
+        })
+        }
+    })
+
+    
+
+
+
+  
+  
+  
 }
 
 exports.getSingleTrailer = async (req,res) => {
