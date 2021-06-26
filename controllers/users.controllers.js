@@ -6,7 +6,7 @@ require('dotenv').config();
 
 exports.getAllUsers = async (req, res) => {
 	await UserModel.find()
-		.populate('profileImageId', 'url')
+		.populate('profileImageId','url')
 		.then((data) => res.json(data))
 		.catch((err) => res.json({ message: err }));
 };
@@ -22,21 +22,20 @@ exports.getSingleUser = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
+	const newMedia = await new Media({
+		url: req.body.profileImageId.url || null,
+		title: 'user',
+		description: req.body.profileImageId.description || null,
+	});
 
-	const newMedia =await new Media({
-		url:req.body.mediaId.url || null,
-		title:'user',
-		description:req.body.mediaId.description || null,
-
-	})
-
-	const {
+	const mediaUrl = newMedia._id;
+	newMedia.save();
+const {
 		firstname,
 		lastname,
 		email,
 		password,
-		country,
-		profileImageId,
+		country,		
 		isActive,
 		isDeleted,
 	} = req.body;
@@ -48,7 +47,7 @@ exports.createUser = async (req, res) => {
 		lastname: lastname,
 		email: email,
 		country: country,
-		profileImageId: newMedia.url,
+		profileImageId: mediaUrl,
 		password: hashedPassword,
 		isActive: isActive,
 		isDeleted: isDeleted,
@@ -81,7 +80,7 @@ exports.login = async (req, res) => {
 					isActive: isActive,
 					isDeleted: isDeleted,
 					id: data._id,
-					profileImageId: data.newMedia.url,
+					profileImageId: data.profileImageId,
 					token: token,
 				});
 			} else {
@@ -92,10 +91,46 @@ exports.login = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-	await UserModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
+	const {
+		firstname,
+		lastname,
+		email,	
+		country,		
+		isActive,
+		isDeleted,
+	} = req.body;
+	await UserModel.findById(
+		{_id:req.params.id}
+	)
+	.then(async(data)=>{
+		await Media.findByIdAndUpdate(
+			{_id:data.profileImageId},
+			{
+			 $set:req.body.profileImageId	
+			}
+		)
+		await UserModel.findByIdAndUpdate({_id:req.params.id},
+			{$set:{
+				firstname: firstname,
+				lastname: lastname,
+				email: email,
+				country: country,
+				profileImageId: data.profileImageId,				
+				isActive: isActive,
+				isDeleted: isDeleted,
+			}})
 		.then((data) => res.json({ message: 'Successfully updated.', data }))
 		.catch((err) => res.json({ message: err }));
+	}).catch((err) => res.json({ message: err }));
+		
+		
 };
+
+
+
+
+
+
 exports.deleteUser = async (req, res) => {
 	await UserModel.findByIdAndRemove({ _id: req.params.id })
 		.then((data) => res.json({ message: 'Successfully removed.', data }))
