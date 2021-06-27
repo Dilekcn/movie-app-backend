@@ -20,8 +20,8 @@ exports.getAll = async (req, res) => {
  
 exports.create = async (req,res) => {
 
-  const image = req.files.mediaId 
-  const banner = req.files.bannerId
+  const mediaId = req.files.mediaId 
+  const bannerId = req.files.bannerId
     
     const s3 = new AWS.S3({
         accessKeyId:Access_Key,
