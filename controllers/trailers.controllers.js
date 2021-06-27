@@ -20,8 +20,8 @@ exports.getAll = async (req, res) => {
  
 exports.create = async (req,res) => {
 
-  const image = req.files.image 
-  const banner = req.files.banner
+  const image = req.files.mediaId 
+  const banner = req.files.bannerId
     
     const s3 = new AWS.S3({
         accessKeyId:Access_Key,
@@ -30,15 +30,15 @@ exports.create = async (req,res) => {
 
     const params1 = {
         Bucket:Bucket_Name,
-        Key:image.name,
-        Body:image.data,
+        Key:mediaId.name,
+        Body:mediaId.data,
         ContentType:'image/JPG'
     }
 
     const params2 = {
       Bucket:Bucket_Name,
-      Key:banner.name,
-      Body:banner.data,
+      Key:bannerId.name,
+      Body:bannerId.data,
       ContentType:'image/JPG'
   }
 
