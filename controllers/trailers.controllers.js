@@ -51,13 +51,13 @@ exports.create = async (req, res) => {
 				} else {
 					const newMediaId = await new mediaModel({
 						url: data1.Location || null,
-						title: req.body.title || null,
+						title: 'trailer',
 						description: req.body.description || null,
 					});
 					newMediaId.save(newMediaId);
 					const newBannerId = await new mediaModel({
 						url: data2.Location || null,
-						title: req.body.title || null,
+						title: 'trailer-banner',
 						description: req.body.description || null,
 					});
 					newBannerId.save(newBannerId);
