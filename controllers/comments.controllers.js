@@ -66,8 +66,8 @@ exports.updateComment = async (req, res) => {
 				{ _id: req.params.id },
 				{
 					userId: comment.userId,
-					title,
-					content,
+					title:comment.title,
+					content:comment.content,
 					listId: comment.listId,
 					isActive: !req.body.isActive ? true : req.body.isActive,
 					isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,

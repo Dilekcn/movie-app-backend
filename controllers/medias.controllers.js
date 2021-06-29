@@ -34,7 +34,7 @@ exports.createMedia = async (req, res) => {
         if(err) {
             res.json(err)
         } else {
-            const newMovie = await new MediaModel({
+            const newMedia = await new MediaModel({
                 url: data.Location,
                 title: req.body.title,
                 description: req.body.description,
@@ -43,7 +43,7 @@ exports.createMedia = async (req, res) => {
                 isDeleted: req.body.isDeleted
             })
         
-            newMovie.save().then(response => res.json({message:'Media Created', status:true, response})).catch(err => res.json({message:err, status:false}))
+            newMedia.save().then(response => res.json({message:'Media Created', status:true, response})).catch(err => res.json({message:err, status:false}))
         }
     })
 
