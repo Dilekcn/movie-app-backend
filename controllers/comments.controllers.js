@@ -35,7 +35,7 @@ exports.getSingleComment = async (req, res) => {
 		} else {
 			res.json(data);
 		}
-	});
+	}).populate('userId', 'firstname lastname');
 };
 
 exports.getCommentsByUserId = async (req, res) => {
