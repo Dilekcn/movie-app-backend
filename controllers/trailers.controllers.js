@@ -51,7 +51,7 @@ exports.create = async (req, res) => {
 				} else {
 					const newMediaId = await new mediaModel({
 						url: data1.Location || null,
-						title: 'trailer',
+						title: 'trailer-image',
 						description: req.body.description || null,
 					});
 					newMediaId.save(newMediaId);
