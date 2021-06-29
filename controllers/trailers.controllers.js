@@ -1,10 +1,7 @@
 const TrailersModel = require('../model/Trailer.model');
 const mediaModel = require('../model/Media.model');
-const AWS = require('aws-sdk');
 require('dotenv').config();
-const Access_Key = process.env.Access_Key_ID;
-const Secret_Key = process.env.Secret_Access_Key;
-const Bucket_Name = process.env.Bucket_Name;
+const S3 = require('../config/aws.s3.config');
 
 exports.getAll = async (req, res) => {
 	try {
@@ -19,99 +16,75 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	const mediaId = req.files.mediaId;
-	const bannerId = req.files.bannerId;
+	const dataMedia = async (data1) => {
+		const newMediaId = await new mediaModel({
+			url: data1.Location || null,
+			title: 'trailer-image',
+			mediaKey: data1.Key,
+		});
+		newMediaId.save(newMediaId);
 
-	const s3 = new AWS.S3({
-		accessKeyId: Access_Key,
-		secretAccessKey: Secret_Key,
-	});
-
-	const params1 = {
-		Bucket: Bucket_Name,
-		Key: mediaId.name,
-		Body: mediaId.data,
-		ContentType: 'image/JPG',
-	};
-
-	const params2 = {
-		Bucket: Bucket_Name,
-		Key: bannerId.name,
-		Body: bannerId.data,
-		ContentType: 'image/JPG',
-	};
-
-	await s3.upload(params1, async (err, data1) => {
-		if (err) {
-			res.json(err);
-		} else {
-			await s3.upload(params2, async (err, data2) => {
-				if (err) {
-					res.json(err);
-				} else {
-					const newMediaId = await new mediaModel({
-						url: data1.Location || null,
-						title: 'trailer-image',
-						description: req.body.description || null,
-					});
-					newMediaId.save(newMediaId);
-					const newBannerId = await new mediaModel({
-						url: data2.Location || null,
-						title: 'trailer-banner',
-						description: req.body.description || null,
-					});
-					newBannerId.save(newBannerId);
-
-					const {
-						imdb,
-						isActive,
-						isDeleted,
-						title,
-						episodeTitle,
-						type,
-						year,
-						duration,
-						cast,
-						description,
-						genre,
-						ageRestriction,
-						totalSeasons,
-						seasonNumber,
-						episodeNumber,
-						tags,
-						trailerUrl,
-						likes,
-					} = req.body;
-					const newTrailer = new TrailersModel({
-						title,
-						episodeTitle,
-						type,
-						year,
-						duration,
-						mediaId: newMediaId._id,
-						bannerId: newBannerId._id,
-						cast,
-						description,
-						genre,
-						ageRestriction,
-						totalSeasons,
-						seasonNumber,
-						episodeNumber,
-						tags,
-						trailerUrl,
-						likes,
-						isActive,
-						isDeleted,
-						imdb,
-					});
-					newTrailer
-						.save()
-						.then((response) => res.json(response))
-						.catch((err) => res.json(err));
-				}
+		const dataBanner = async (data2) => {
+			const newBannerId = await new mediaModel({
+				url: data2.Location || null,
+				title: 'trailer-banner',
+				mediaKey: data2.Key,
 			});
-		}
-	});
+
+			newBannerId.save(newBannerId);
+			const {
+				imdb,
+				isActive,
+				isDeleted,
+				title,
+				episodeTitle,
+				type,
+				year,
+				duration,
+				cast,
+				description,
+				genre,
+				ageRestriction,
+				totalSeasons,
+				seasonNumber,
+				episodeNumber,
+				tags,
+				trailerUrl,
+				likes,
+			} = req.body;
+
+			const newTrailer = await new TrailersModel({
+				title,
+				episodeTitle,
+				type,
+				year,
+				duration,
+				mediaId: newMediaId._id,
+				bannerId: newBannerId._id,
+				cast,
+				description,
+				genre,
+				ageRestriction,
+				totalSeasons,
+				seasonNumber,
+				episodeNumber,
+				tags,
+				trailerUrl,
+				likes,
+				isActive,
+				isDeleted,
+				imdb,
+			});
+			newTrailer
+				.save()
+				.then((response) => res.json(response))
+				.catch((err) => res.json(err));
+		};
+
+		S3.uploadNewBanner(req, res, dataBanner);
+	};
+
+	S3.uploadNewMedia(req, res, dataMedia);
 };
 
 exports.getSingleTrailer = async (req, res) => {

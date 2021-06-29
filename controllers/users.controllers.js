@@ -7,7 +7,7 @@ const S3 = require('../config/aws.s3.config');
 
 exports.getAllUsers = async (req, res) => {
 	await UserModel.find()
-		.populate('profileImageId', 'url')
+		.populate('mediaId', 'url')
 		.then((data) => res.json(data))
 		.catch((err) => res.json({ message: err }));
 };
@@ -41,15 +41,15 @@ exports.createUser = async (req, res) => {
 			lastname,
 			email,
 			country,
-			profileImageId: newMedia._id,
+			mediaId: newMedia._id,
 			password: hashedPassword,
 			isActive,
 			isDeleted,
 		});
 		newUser
 			.save()
-			.then((data) =>
-				res.json({ status: true, message: 'Signed up successfully.', data })
+			.then((response) =>
+				res.json({ status: true, message: 'Signed up successfully.', response })
 			)
 			.catch((err) => res.json({ status: false, message: err }));
 	};
@@ -76,7 +76,7 @@ exports.login = async (req, res) => {
 					isActive: isActive,
 					isDeleted: isDeleted,
 					id: data._id,
-					profileImageId: data.profileImageId,
+					mediaId: data.mediaId,
 					token: token,
 				});
 			} else {
@@ -91,9 +91,9 @@ exports.updateUser = async (req, res) => {
 	await UserModel.findById({ _id: req.params.id })
 		.then(async (data) => {
 			await Media.findByIdAndUpdate(
-				{ _id: data.profileImageId },
+				{ _id: data.mediaId },
 				{
-					$set: req.body.profileImageId,
+					$set: req.body.mediaId,
 				}
 			);
 			await UserModel.findByIdAndUpdate(
@@ -104,7 +104,7 @@ exports.updateUser = async (req, res) => {
 						lastname: lastname,
 						email: email,
 						country: country,
-						profileImageId: data.profileImageId,
+						mediaId: data.mediaId,
 						isActive: isActive,
 						isDeleted: isDeleted,
 					},

@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
 	{
-		firstname: { type: String},
+		firstname: { type: String },
 		lastname: { type: String },
 		email: { type: String, unique: true },
 		password: { type: String },
 		country: { type: String },
-		profileImageId: { type: mongoose.Types.ObjectId, ref: 'media' },
+		mediaId: { type: mongoose.Types.ObjectId, ref: 'media' },
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },
 		role: { type: String, default: 'user' },

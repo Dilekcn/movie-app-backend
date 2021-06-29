@@ -23,6 +23,19 @@ const uploadNewMedia = (req, res, callback) => {
 	});
 };
 
+const uploadNewBanner = (req, res, callback) => {
+	const params = {
+		Bucket: Bucket_Name,
+		Key: uuid(),
+		Body: req.files.bannerId.data,
+		ContentType: 'image/JPG',
+	};
+	S3.upload(params, (err, data) => {
+		if (err) return res.json(err);
+		callback(data);
+	});
+};
+
 const updateMedia = (req, res, mediaKey, callback) => {
 	const params = {
 		Bucket: Bucket_Name,
@@ -45,4 +58,4 @@ const deleteMedia = (mediaKey) => {
 	S3.deleteObject(params).promise();
 };
 
-module.exports = { uploadNewMedia, updateMedia, deleteMedia };
+module.exports = { uploadNewMedia, updateMedia, deleteMedia, uploadNewBanner };
