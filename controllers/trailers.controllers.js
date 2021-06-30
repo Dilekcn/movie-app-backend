@@ -2,6 +2,7 @@ const TrailersModel = require('../model/Trailer.model');
 const mediaModel = require('../model/Media.model');
 require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
+const MediaModel = require('../model/Media.model');
 
 exports.getAll = async (req, res) => {
 	try {
@@ -122,8 +123,99 @@ exports.getTrailersByVideoId = async (req, res) => {
 };
 
 exports.updateSingleTrailer = async (req, res) => {
-	await TrailersModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
-		.then((data) => res.json(data))
+	await TrailersModel.findById({ _id: req.params.id })
+		.then(async (trailer) => {
+			await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
+				const data = async (data) => {
+					await MediaModel.findByIdAndUpdate(
+						{ _id: trailer.mediaId },
+						{
+							$set: {
+								url: data.Location || null,
+								title: 'trailer-image',
+								mediaKey: data.Key,
+							},
+						},
+						{ useFindAndModify: false, new: true }
+					).catch((err) => res.json({ message: err, status: false }));
+				};
+				await S3.updateMedia(req, res, media.mediaKey, data);
+			});
+
+			await MediaModel.findById({ _id: trailer.bannerId }).then(async (banner) => {
+				console.log(banner);
+				const data = async (data) => {
+					await MediaModel.findByIdAndUpdate(
+						{ _id: trailer.bannerId },
+						{
+							$set: {
+								url: data.Location || null,
+								title: 'trailer-banner',
+								mediaKey: data.Key,
+							},
+						},
+						{ useFindAndModify: false, new: true }
+					).catch((err) => res.json({ message: err, status: false }));
+				};
+				await S3.updateBanner(req, res, banner.mediaKey, data);
+			});
+			const {
+				imdb,
+				isActive,
+				isDeleted,
+				title,
+				episodeTitle,
+				type,
+				year,
+				duration,
+				cast,
+				description,
+				genre,
+				ageRestriction,
+				totalSeasons,
+				seasonNumber,
+				episodeNumber,
+				tags,
+				trailerUrl,
+				likes,
+			} = req.body;
+
+			await TrailersModel.findByIdAndUpdate(
+				{ _id: req.params.id },
+				{
+					$set: {
+						title,
+						episodeTitle,
+						type,
+						year,
+						duration,
+						mediaId: trailer.mediaId,
+						bannerId: trailer.bannerId,
+						cast,
+						description,
+						genre,
+						ageRestriction,
+						totalSeasons,
+						seasonNumber,
+						episodeNumber,
+						tags,
+						trailerUrl,
+						likes,
+						isActive,
+						isDeleted,
+						imdb,
+					},
+				}
+			)
+				.then((data) =>
+					res.json({
+						status: true,
+						message: 'Trailer is updated successfully',
+						data,
+					})
+				)
+				.catch((err) => res.json({ message: err }));
+		})
 		.catch((err) => res.json({ message: err }));
 };
 
