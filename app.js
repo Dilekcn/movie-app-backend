@@ -53,6 +53,8 @@ app.use('/', listsRouter);
 app.use('/', mediasRouter);
 app.use('/', trailersRouter);
 app.use('/', categoriesRouter);
+app.use('/', notificationRouter);
+
 
 
 // catch 404 and forward to error handler
