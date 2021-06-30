@@ -16,7 +16,7 @@ const listsRouter = require('./routes/lists.routes');
 const mediasRouter = require('./routes/medias.routes');
 const notificationRouter =require('./routes/notification.routes');
 const trailersRouter = require('./routes/trailers.routes');
-const categoriesRouter = require('./routes/trailers.routes');
+const categoriesRouter = require('./routes/categories.routes');
 
 //middlewares
 // const verifyToken = require('./auth/verifyToken');
