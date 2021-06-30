@@ -48,6 +48,18 @@ const updateMedia = (req, res, mediaKey, callback) => {
 		callback(data);
 	});
 };
+const updateBanner = (req, res, mediaKey, callback) => {
+	const params = {
+		Bucket: Bucket_Name,
+		Key: mediaKey,
+		Body: req.files.bannerId.data,
+		ContentType: 'image/JPG',
+	};
+	S3.upload(params, (err, data) => {
+		if (err) return res.json({ message: 'error from aws update', err });
+		callback(data);
+	});
+};
 
 const deleteMedia = (mediaKey) => {
 	const params = {
@@ -58,4 +70,10 @@ const deleteMedia = (mediaKey) => {
 	S3.deleteObject(params).promise();
 };
 
-module.exports = { uploadNewMedia, updateMedia, deleteMedia, uploadNewBanner };
+module.exports = {
+	uploadNewMedia,
+	updateMedia,
+	deleteMedia,
+	uploadNewBanner,
+	updateBanner,
+};
