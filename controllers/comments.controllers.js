@@ -42,7 +42,9 @@ exports.getSingleComment = async (req, res) => {
 		} else {
 			res.json({ status: 200, data });
 		}
-	}).populate('userId', 'firstname lastname');
+	})
+		.populate('userId', 'firstname lastname')
+		.populate('listId', 'name');
 };
 
 exports.getCommentsByUserId = async (req, res) => {
@@ -52,7 +54,9 @@ exports.getCommentsByUserId = async (req, res) => {
 		} else {
 			res.json({ status: 200, data });
 		}
-	});
+	})
+		.populate('userId', 'firstname lastname')
+		.populate('listId', 'name');
 };
 
 exports.getCommentsByList = async (req, res) => {
@@ -62,7 +66,9 @@ exports.getCommentsByList = async (req, res) => {
 		} else {
 			res.json({ status: 200, data });
 		}
-	});
+	})
+		.populate('userId', 'firstname lastname')
+		.populate('listId', 'name');
 };
 
 exports.updateComment = async (req, res) => {

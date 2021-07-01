@@ -97,8 +97,8 @@ exports.getSingleTrailer = async (req, res) => {
 			res.json(data);
 		}
 	})
-		.populate('mediaId', 'url')
-		.populate('bannerId', 'url');
+		.populate('mediaId', 'url title alt')
+		.populate('bannerId', 'url title alt');
 };
 
 exports.getTrailersByUserId = async (req, res) => {
@@ -109,18 +109,8 @@ exports.getTrailersByUserId = async (req, res) => {
 			res.json(data);
 		}
 	})
-		.populate('mediaId', 'url')
-		.populate('bannerId', 'url');
-};
-
-exports.getTrailersByVideoId = async (req, res) => {
-	await TrailersModel.find({ videoId: req.params.id }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		}
-	});
+		.populate('mediaId', 'url title alt')
+		.populate('bannerId', 'url title alt');
 };
 
 exports.updateSingleTrailer = async (req, res) => {

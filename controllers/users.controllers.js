@@ -13,14 +13,54 @@ exports.getAllUsers = async (req, res) => {
 		.catch((err) => res.json({ message: err }));
 };
 
-exports.getSingleUser = async (req, res) => {
+exports.getSingleUserById = async (req, res) => {
 	await UserModel.findById({ _id: req.params.id }, (err, data) => {
 		if (err) {
 			res.json({ message: err });
 		} else {
 			res.json(data);
 		}
-	});
+	}).populate('mediaId', 'url title alt');
+};
+
+exports.getSingleUserByFirstName = async (req, res) => {
+	await UserModel.findById({ firstname: req.params.firstname }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	}).populate('mediaId', 'url title alt');
+};
+
+exports.getSingleUserByLastName = async (req, res) => {
+	await UserModel.findById({ lastname: req.params.lastname }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	}).populate('mediaId', 'url title alt');
+};
+
+exports.getSingleUserByEmail = async (req, res) => {
+	await UserModel.findById({ email: req.params.email }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	}).populate('mediaId', 'url title alt');
+};
+
+exports.getSingleUserByCountry = async (req, res) => {
+	await UserModel.findById({ country: req.params.country }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	}).populate('mediaId', 'url title alt');
 };
 
 exports.createUser = async (req, res) => {
