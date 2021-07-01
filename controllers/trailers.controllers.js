@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
 			url: data1.Location || null,
 			title: 'trailer-image',
 			mediaKey: data1.Key,
-			alt: req.body.alt || null,
+			altImage: req.body.altImage || null,
 		});
 		newMediaId.save(newMediaId);
 
@@ -31,7 +31,7 @@ exports.create = async (req, res) => {
 				url: data2.Location || null,
 				title: 'trailer-banner',
 				mediaKey: data2.Key,
-				alt:req.body.alt || null,
+				altBanner:req.body.altBanner || null,
 			});
 
 			newBannerId.save(newBannerId);
