@@ -8,8 +8,8 @@ exports.getAll = async (req, res) => {
 	try {
 		const response = await TrailersModel.find()
 			.sort({ createdAt: -1 })
-			.populate('mediaId', 'url title alt')
-			.populate('bannerId', 'url title alt');
+			.populate('mediaId', 'url title altImage')
+			.populate('bannerId', 'url title altBanner');
 		res.json(response);
 	} catch (error) {
 		res.status(500).json(error);
@@ -98,8 +98,8 @@ exports.getSingleTrailer = async (req, res) => {
 			res.json(data);
 		}
 	})
-		.populate('mediaId', 'url title alt')
-		.populate('bannerId', 'url title alt');
+		.populate('mediaId', 'url title altImage')
+		.populate('bannerId', 'url title altBanner');
 };
 
 exports.getTrailersByUserId = async (req, res) => {
@@ -110,8 +110,8 @@ exports.getTrailersByUserId = async (req, res) => {
 			res.json(data);
 		}
 	})
-		.populate('mediaId', 'url title alt')
-		.populate('bannerId', 'url title alt');
+		.populate('mediaId', 'url title altImage')
+		.populate('bannerId', 'url title altBanner');
 };
 
 exports.updateSingleTrailer = async (req, res) => {
@@ -126,7 +126,7 @@ exports.updateSingleTrailer = async (req, res) => {
 								url: data.Location || null,
 								title: 'trailer-image',
 								mediaKey: data.Key,
-								alt: req.body.alt || null,
+								alt: req.body.altImage || null,
 							},
 						},
 						{ useFindAndModify: false, new: true }
@@ -145,6 +145,7 @@ exports.updateSingleTrailer = async (req, res) => {
 								url: data.Location || null,
 								title: 'trailer-banner',
 								mediaKey: data.Key,
+								alt: req.body.altBanner || null,
 							},
 						},
 						{ useFindAndModify: false, new: true }
