@@ -3,7 +3,7 @@ const ListsModel = require('../model/List.model');
 
 exports.getAll = async (req, res) => {
 	try {
-		const response = await ListsModel.find();
+		const response = await ListsModel.find().sort({ createdAt: -1 });
 		res.json(response);
 	} catch (error) {
 		res.status(500).json(error);

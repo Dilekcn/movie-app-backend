@@ -5,7 +5,7 @@ const MediaSchema = new Schema(
 	{
 		url: { type: String },
 		title: { type: String },
-		description: { type: String },
+		alt: { type: String },
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },
 		mediaKey: { type: String },

@@ -7,7 +7,8 @@ const S3 = require('../config/aws.s3.config');
 
 exports.getAllUsers = async (req, res) => {
 	await UserModel.find()
-		.populate('mediaId', 'url')
+		.sort({ createdAt: -1 })
+		.populate('mediaId', 'url title alt')
 		.then((data) => res.json(data))
 		.catch((err) => res.json({ message: err }));
 };
@@ -28,6 +29,7 @@ exports.createUser = async (req, res) => {
 			url: data.Location || null,
 			title: 'users',
 			mediaKey: data.Key,
+			alt: req.body.alt || null,
 		});
 		newMedia.save();
 
@@ -96,9 +98,10 @@ exports.updateUser = async (req, res) => {
 							{ _id: data.mediaId },
 							{
 								$set: {
-									url: req.body.mediaId.url,
+									url: data.Location || null,
 									title: 'users',
 									mediaKey: data.Key,
+									alt: req.body.alt || null,
 								},
 							},
 							{ useFindAndModify: false, new: true }

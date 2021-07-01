@@ -8,8 +8,8 @@ exports.getAll = async (req, res) => {
 	try {
 		const response = await TrailersModel.find()
 			.sort({ createdAt: -1 })
-			.populate('mediaId', 'url')
-			.populate('bannerId', 'url');
+			.populate('mediaId', 'url title alt')
+			.populate('bannerId', 'url title alt');
 		res.json(response);
 	} catch (error) {
 		res.status(500).json(error);
@@ -22,6 +22,7 @@ exports.create = async (req, res) => {
 			url: data1.Location || null,
 			title: 'trailer-image',
 			mediaKey: data1.Key,
+			alt: req.body.alt || null,
 		});
 		newMediaId.save(newMediaId);
 
@@ -134,6 +135,7 @@ exports.updateSingleTrailer = async (req, res) => {
 								url: data.Location || null,
 								title: 'trailer-image',
 								mediaKey: data.Key,
+								alt: req.body.alt || null,
 							},
 						},
 						{ useFindAndModify: false, new: true }

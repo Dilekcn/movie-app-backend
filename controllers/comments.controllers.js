@@ -4,6 +4,7 @@ const CommentsModel = require('../model/Comment.model');
 exports.getAll = async (req, res) => {
 	try {
 		const response = await CommentsModel.find()
+			.sort({ createdAt: -1 })
 			.populate('userId', 'firstname lastname')
 			.populate('listId', 'name');
 		res.json(response);
@@ -67,7 +68,6 @@ exports.getCommentsByList = async (req, res) => {
 exports.updateComment = async (req, res) => {
 	await CommentsModel.findById({ _id: req.params.id })
 		.then(async (comment) => {
-			const { title, content } = req.body;
 			await CommentsModel.findByIdAndUpdate(
 				{ _id: req.params.id },
 				{
