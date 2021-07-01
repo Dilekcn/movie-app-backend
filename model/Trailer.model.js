@@ -23,6 +23,7 @@ const TrailersSchema = new Schema(
 		imdb: { type: String },
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },
+		alt:{ type: String }
 	},
 	{ timestamps: true }
 );

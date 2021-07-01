@@ -31,6 +31,7 @@ exports.create = async (req, res) => {
 				url: data2.Location || null,
 				title: 'trailer-banner',
 				mediaKey: data2.Key,
+				alt:req.body.alt || null,
 			});
 
 			newBannerId.save(newBannerId);
