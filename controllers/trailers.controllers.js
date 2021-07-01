@@ -54,6 +54,8 @@ exports.create = async (req, res) => {
 				tags,
 				trailerUrl,
 				likes,
+				altImage,
+				altBanner
 			} = req.body;
 
 			const newTrailer = await new TrailersModel({
@@ -77,6 +79,8 @@ exports.create = async (req, res) => {
 				isActive,
 				isDeleted,
 				imdb,
+				altImage,
+				altBanner
 			});
 			newTrailer
 				.save()
