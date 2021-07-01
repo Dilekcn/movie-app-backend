@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
 			url: data1.Location || null,
 			title: 'trailer-image',
 			mediaKey: data1.Key,
-			altImage: req.body.altImage || null,
+			altImage:'elif',
 		});
 		newMediaId.save(newMediaId);
 
@@ -31,7 +31,7 @@ exports.create = async (req, res) => {
 				url: data2.Location || null,
 				title: 'trailer-banner',
 				mediaKey: data2.Key,
-				altBanner:req.body.altBanner || null,
+				altBanner: 'elif'
 			});
 
 			newBannerId.save(newBannerId);
@@ -53,9 +53,8 @@ exports.create = async (req, res) => {
 				episodeNumber,
 				tags,
 				trailerUrl,
-				likes,
-				altImage,
-				altBanner
+				likes
+				
 			} = req.body;
 
 			const newTrailer = await new TrailersModel({
@@ -78,9 +77,8 @@ exports.create = async (req, res) => {
 				likes,
 				isActive,
 				isDeleted,
-				imdb,
-				altImage,
-				altBanner
+				imdb
+			
 			});
 			newTrailer
 				.save()
