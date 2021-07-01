@@ -24,16 +24,22 @@ exports.create = async (req, res) => {
 
 	newComment
 		.save()
-		.then((response) => res.json(response))
-		.catch((err) => res.json(err));
+		.then((response) =>
+			res.json({
+				status: 200,
+				message: 'New comment is created successfully',
+				response,
+			})
+		)
+		.catch((err) => res.json({ status: false, message: err }));
 };
 
 exports.getSingleComment = async (req, res) => {
 	await CommentsModel.findById({ _id: req.params.id }, (err, data) => {
 		if (err) {
-			res.json({ message: err });
+			res.json({ status: false, message: err });
 		} else {
-			res.json(data);
+			res.json({ status: 200, data });
 		}
 	}).populate('userId', 'firstname lastname');
 };
@@ -41,9 +47,9 @@ exports.getSingleComment = async (req, res) => {
 exports.getCommentsByUserId = async (req, res) => {
 	await CommentsModel.find({ userId: req.params.userid }, (err, data) => {
 		if (err) {
-			res.json({ message: err });
+			res.json({ status: false, message: err });
 		} else {
-			res.json(data);
+			res.json({ status: 200, data });
 		}
 	});
 };
@@ -51,9 +57,9 @@ exports.getCommentsByUserId = async (req, res) => {
 exports.getCommentsByList = async (req, res) => {
 	await CommentsModel.find({ listId: req.params.listid }, (err, data) => {
 		if (err) {
-			res.json({ message: err });
+			res.json({ status: false, message: err });
 		} else {
-			res.json(data);
+			res.json({ status: 200, data });
 		}
 	});
 };
@@ -66,8 +72,8 @@ exports.updateComment = async (req, res) => {
 				{ _id: req.params.id },
 				{
 					userId: comment.userId,
-					title:comment.title,
-					content:comment.content,
+					title: comment.title,
+					content: comment.content,
 					listId: comment.listId,
 					isActive: !req.body.isActive ? true : req.body.isActive,
 					isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
@@ -76,19 +82,19 @@ exports.updateComment = async (req, res) => {
 			)
 				.then((comment) =>
 					res.json({
-						status: true,
+						status: 200,
 						message: 'Comment is updated successfully',
 						comment,
 					})
 				)
 				.catch((err) => res.json({ status: false, message: err }));
 		})
-		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err }));
+		.then((data) => res.json({ status: 200, data }))
+		.catch((err) => res.json({ status: false, message: err }));
 };
 
 exports.removeSingleComment = async (req, res) => {
 	await CommentsModel.findByIdAndDelete({ _id: req.params.id })
-		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err }));
+		.then((data) => res.json({ status: 200, data }))
+		.catch((err) => res.json({ status: false, message: err }));
 };
