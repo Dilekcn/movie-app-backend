@@ -42,7 +42,7 @@ exports.getSingleComment = async (req, res) => {
 		if (err) {
 			res.json({ status: false, message: err });
 		} else {
-			res.json({ status: 200, data });
+			res.json({ data });
 		}
 	})
 		.populate('userId', 'firstname lastname')

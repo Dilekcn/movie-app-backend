@@ -8,7 +8,7 @@ const CommentsSchema = new Schema(
 		content: { type: String, required: true },
 		listId: { type: Schema.Types.ObjectId, ref: 'list' },
 		isActive: { type: Boolean, default: true },
-		reasonToBlock:{ type: Boolean, default: '' },
+		reasonToBlock:{ type: String, default: '' },
 		isDeleted: { type: Boolean, default: false }, 
 	},
 	{ timestamps: true }
