@@ -11,7 +11,7 @@ exports.getAllNotifications = async (req, res) => {
 };
 
 exports.createNotification = (req, res) => {
-	const newNotification = new NotificationModel(req.bady);
+	const newNotification = new NotificationModel(req.body);
 
 	newNotification
 		.save()
