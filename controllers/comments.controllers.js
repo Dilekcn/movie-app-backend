@@ -4,7 +4,7 @@ const CommentsModel = require('../model/Comment.model');
 exports.getAll = async (req, res) => {
 	try {
 		const response = await CommentsModel.find()
-			.sort({ createdAt: -1 })
+			.sort({ createdAt: -1 }) 
 			.populate('userId', 'firstname lastname')
 			.populate('listId', 'name');
 		res.json(response);
@@ -20,7 +20,9 @@ exports.create = async (req, res) => {
 		content: req.body.content,
 		listId: req.body.listId,
 		isActive: req.body.isActive,
+		reasonToBlock:req.body.reasonToBlock,
 		isDeleted: req.body.isDeleted,
+
 	});
 
 	newComment
