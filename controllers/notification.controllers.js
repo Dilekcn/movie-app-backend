@@ -10,18 +10,27 @@ exports.getAllNotifications = async (req, res) => {
 	}
 };
 
-exports.createNotification = (req, res) => {
-	const newNotification = new NotificationModel(req.body);
+exports.createNotification = async (req, res) => {
+	const newNotification = await new NotificationModel({
+		userId: req.body.userId,
+		title: req.body.title,
+		content: req.body.content,
+		isRead: req.body.isRead,
+		isDeleted: req.body.isDeleted,
+	});
 
 	newNotification
 		.save()
-		.then((data) => {
-			res.json(data);
-		})
-		.catch((err) => {
-			res.json(err);
-		});
+		.then((response) =>
+			res.json({
+				status: 200,
+				message: 'New notification is created successfully',
+				response,
+			})
+		)
+		.catch((err) => res.json({ status: false, message: err }));
 };
+
 
 exports.deleteNotification = (req, res, next) => {
 	NotificationModel.findByIdAndRemove({ _id: req.params.notificationId })
