@@ -91,6 +91,7 @@ exports.updateComment = async (req, res) => {
 					listId: comment.listId,
 					isActive: !req.body.isActive ? true : req.body.isActive,
 					isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+					reasonToBlock: comment.reasonToBlock,
 				},
 				{ useFindAndModify: false, new: true }
 			)
