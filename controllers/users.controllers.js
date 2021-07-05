@@ -9,10 +9,16 @@ const Secret_Key = process.env.Secret_Access_Key;
 const Bucket_Name = process.env.Bucket_Name;
 
 exports.getAllUsers = async (req, res) => {
+	const { page = 1, limit } = req.query;
+	const total = await UserModel.find().count();
+	const pages = limit === undefined ? 1 : Math.ceil(total / limit)
 	await UserModel.find()
-		.populate('profileImageId', 'url')
-		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err }));
+	.limit(limit * 1)
+	.skip((page - 1) * limit)
+	.sort({ createdAt: -1 })
+	.populate('profileImageId', 'url')
+	.then((data) => res.json({ total: total, pages, status: 200, data }))
+	.catch((err) => res.json({ message: err }));
 };
 
 exports.getSingleUser = async (req, res) => {

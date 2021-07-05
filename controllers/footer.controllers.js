@@ -3,6 +3,7 @@ const FooterModel = require('../model/Footer.model')
 exports.getAll = async (req, res) => {
 
     try {
+		const { page = 1, limit } = req.query;
 		const response = await  FooterModel.find();
 		res.json(response);
 	} catch (error) {

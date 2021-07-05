@@ -3,10 +3,18 @@ const CommentsModel = require('../model/Comment.model');
 
 exports.getAll = async (req, res) => {
 	try {
+		const { page = 1, limit } = req.query;
 		const response = await CommentsModel.find()
+		.limit(limit * 1)
+		.skip((page - 1) * limit)
+		.sort({ createdAt: -1 })
 			.populate('userId', 'firstname lastname')
 			.populate('listId', 'name');
-		res.json(response);
+				
+			const total = await CommentsModel.find().count();
+		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+		res.json({ total: total, pages, status: 200, response });
+
 	} catch (error) {
 		res.status(500).json(error);
 	}
