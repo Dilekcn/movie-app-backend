@@ -10,7 +10,7 @@ const UserSchema = new Schema(
 		country: { type: String },
 		mediaId: { type: mongoose.Types.ObjectId, ref: 'media' },
 		isActive: { type: Boolean, default: true },
-		isDeleted: { type: Boolean, default: false },
+		isDeleted: { type: Boolean, default: false }, 
 		role: { type: String, default: 'user' },
 		alt:String
 	},
