@@ -76,9 +76,9 @@ exports.createUser = async (req, res) => {
 			mediaKey: data.Key,
 			alt: req.body.alt || null,
 		});
-		newMedia.save();
+		newMedia.save(); 
 
-		const { firstname, lastname, email, password, country, isActive, isDeleted } =
+		const { firstname, lastname, email, password, country, isActive, isDeleted,role } =
 			req.body;
 		const salt = await bcrypt.genSalt();
 		const hashedPassword = await bcrypt.hash(password, salt);
@@ -88,10 +88,11 @@ exports.createUser = async (req, res) => {
 			lastname,
 			email,
 			country,
-			mediaId: newMedia._id,
+			mediaId: newMedia._id, 
 			password: hashedPassword,
+			role,
 			isActive,
-			isDeleted,
+			isDeleted, 
 		});
 		newUser
 			.save()
@@ -124,6 +125,7 @@ exports.login = async (req, res) => {
 					isDeleted: isDeleted,
 					id: data._id,
 					mediaId: data.mediaId,
+					role:data.role,
 					token: token,
 				});
 			} else {
@@ -158,6 +160,7 @@ exports.updateUser = async (req, res) => {
 								country,
 								isActive,
 								isDeleted,
+								role
 							} = req.body;
 							await UserModel.findByIdAndUpdate(
 								{ _id: req.params.id },
@@ -170,6 +173,7 @@ exports.updateUser = async (req, res) => {
 										mediaId: data.mediaId,
 										isActive: isActive,
 										isDeleted: isDeleted,
+										role:data.role
 									},
 								}
 							).then((data) =>
