@@ -1,117 +1,101 @@
 const TrailersModel = require('../model/Trailer.model');
 const mediaModel = require('../model/Media.model');
-const AWS = require('aws-sdk');
 require('dotenv').config();
-const Access_Key = process.env.Access_Key_ID;
-const Secret_Key = process.env.Secret_Access_Key;
-const Bucket_Name = process.env.Bucket_Name;
+const S3 = require('../config/aws.s3.config');
+const MediaModel = require('../model/Media.model');
 
 exports.getAll = async (req, res) => {
 	try {
+		const { page = 1, limit } = req.query;
+
 		const response = await TrailersModel.find()
+		.limit(limit * 1)
+			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-			.populate('mediaId', 'url')
-			.populate('bannerId', 'url');
-		res.json(response);
+			.populate('mediaId', 'url title altImage')
+			.populate('bannerId', 'url title altBanner');
+			const total = await TrailersModel.find().count();
+			const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+			res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
 		res.status(500).json(error);
 	}
 };
 
 exports.create = async (req, res) => {
-	const mediaId = req.files.mediaId;
-	const bannerId = req.files.bannerId;
+	const dataMedia = async (data1) => {
+		const newMediaId = await new mediaModel({
+			url: data1.Location || null,
+			title: 'trailer-image',
+			mediaKey: data1.Key,
+			altImage: req.body.altImage || null,
+		});
+		newMediaId.save(newMediaId);
 
-	const s3 = new AWS.S3({
-		accessKeyId: Access_Key,
-		secretAccessKey: Secret_Key,
-	});
-
-	const params1 = {
-		Bucket: Bucket_Name,
-		Key: mediaId.name,
-		Body: mediaId.data,
-		ContentType: 'image/JPG',
-	};
-
-	const params2 = {
-		Bucket: Bucket_Name,
-		Key: bannerId.name,
-		Body: bannerId.data,
-		ContentType: 'image/JPG',
-	};
-
-	await s3.upload(params1, async (err, data1) => {
-		if (err) {
-			res.json(err);
-		} else {
-			await s3.upload(params2, async (err, data2) => {
-				if (err) {
-					res.json(err);
-				} else {
-					const newMediaId = await new mediaModel({
-						url: data1.Location || null,
-						title: 'trailer',
-						description: req.body.description || null,
-					});
-					newMediaId.save(newMediaId);
-					const newBannerId = await new mediaModel({
-						url: data2.Location || null,
-						title: 'trailer-banner',
-						description: req.body.description || null,
-					});
-					newBannerId.save(newBannerId);
-
-					const {
-						imdb,
-						isActive,
-						isDeleted,
-						title,
-						episodeTitle,
-						type,
-						year,
-						duration,
-						cast,
-						description,
-						genre,
-						ageRestriction,
-						totalSeasons,
-						seasonNumber,
-						episodeNumber,
-						tags,
-						trailerUrl,
-						likes,
-					} = req.body;
-					const newTrailer = new TrailersModel({
-						title,
-						episodeTitle,
-						type,
-						year,
-						duration,
-						mediaId: newMediaId._id,
-						bannerId: newBannerId._id,
-						cast,
-						description,
-						genre,
-						ageRestriction,
-						totalSeasons,
-						seasonNumber,
-						episodeNumber,
-						tags,
-						trailerUrl,
-						likes,
-						isActive,
-						isDeleted,
-						imdb,
-					});
-					newTrailer
-						.save()
-						.then((response) => res.json(response))
-						.catch((err) => res.json(err));
-				}
+		const dataBanner = async (data2) => {
+			const newBannerId = await new mediaModel({
+				url: data2.Location || null,
+				title: 'trailer-banner',
+				mediaKey: data2.Key,
+				altBanner:req.body.altBanner || null,
 			});
-		}
-	});
+
+			newBannerId.save(newBannerId);
+			const {
+				imdb,
+				isActive,
+				isDeleted,
+				title,
+				episodeTitle,
+				type,
+				year,
+				duration,
+				cast,
+				description,
+				genre,
+				ageRestriction,
+				totalSeasons,
+				seasonNumber,
+				episodeNumber,
+				tags,
+				trailerUrl,
+				likes
+				
+			} = req.body;
+
+			const newTrailer = await new TrailersModel({
+				title,
+				episodeTitle,
+				type,
+				year,
+				duration,
+				mediaId: newMediaId._id,
+				bannerId: newBannerId._id,
+				cast,
+				description,
+				genre,
+				ageRestriction,
+				totalSeasons,
+				seasonNumber,
+				episodeNumber,
+				tags,
+				trailerUrl,
+				likes,
+				isActive,
+				isDeleted,
+				imdb
+			
+			});
+			newTrailer
+				.save()
+				.then((response) => res.json(response))
+				.catch((err) => res.json(err));
+		};
+
+		S3.uploadNewBanner(req, res, dataBanner);
+	};
+
+	S3.uploadNewMedia(req, res, dataMedia);
 };
 
 exports.getSingleTrailer = async (req, res) => {
@@ -122,8 +106,8 @@ exports.getSingleTrailer = async (req, res) => {
 			res.json(data);
 		}
 	})
-		.populate('mediaId', 'url')
-		.populate('bannerId', 'url');
+		.populate('mediaId', 'url title altImage')
+		.populate('bannerId', 'url title altBanner');
 };
 
 exports.getTrailersByUserId = async (req, res) => {
@@ -134,23 +118,106 @@ exports.getTrailersByUserId = async (req, res) => {
 			res.json(data);
 		}
 	})
-		.populate('mediaId', 'url')
-		.populate('bannerId', 'url');
-};
-
-exports.getTrailersByVideoId = async (req, res) => {
-	await TrailersModel.find({ videoId: req.params.id }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		}
-	});
+		.populate('mediaId', 'url title altImage')
+		.populate('bannerId', 'url title altBanner');
 };
 
 exports.updateSingleTrailer = async (req, res) => {
-	await TrailersModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
-		.then((data) => res.json(data))
+	await TrailersModel.findById({ _id: req.params.id })
+		.then(async (trailer) => {
+			await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
+				const data = async (data) => {
+					await MediaModel.findByIdAndUpdate(
+						{ _id: trailer.mediaId },
+						{
+							$set: {
+								url: data.Location || null,
+								title: 'trailer-image',
+								mediaKey: data.Key,
+								alt: req.body.altImage || null,
+							},
+						},
+						{ useFindAndModify: false, new: true }
+					).catch((err) => res.json({ message: err, status: false }));
+				};
+				await S3.updateMedia(req, res, media.mediaKey, data);
+			});
+
+			await MediaModel.findById({ _id: trailer.bannerId }).then(async (banner) => {
+				console.log(banner);
+				const data = async (data) => {
+					await MediaModel.findByIdAndUpdate(
+						{ _id: trailer.bannerId },
+						{
+							$set: {
+								url: data.Location || null,
+								title: 'trailer-banner',
+								mediaKey: data.Key,
+								alt: req.body.altBanner || null,
+							},
+						},
+						{ useFindAndModify: false, new: true }
+					).catch((err) => res.json({ message: err, status: false }));
+				};
+				await S3.updateBanner(req, res, banner.mediaKey, data);
+			});
+			const {
+				imdb,
+				isActive,
+				isDeleted,
+				title,
+				episodeTitle,
+				type,
+				year,
+				duration,
+				cast,
+				description,
+				genre,
+				ageRestriction,
+				totalSeasons,
+				seasonNumber,
+				episodeNumber,
+				tags,
+				trailerUrl,
+				likes,
+			} = req.body;
+
+			await TrailersModel.findByIdAndUpdate(
+				{ _id: req.params.id },
+				{
+					$set: {
+						title,
+						episodeTitle,
+						type,
+						year,
+						duration,
+						mediaId: trailer.mediaId,
+						bannerId: trailer.bannerId,
+						cast,
+						description,
+						genre,
+						ageRestriction,
+						totalSeasons,
+						seasonNumber,
+						episodeNumber,
+						tags,
+						trailerUrl,
+						likes,
+						isActive,
+						isDeleted,
+						imdb,
+					},
+				}
+			)
+				.then((data) =>
+					res.json({
+						status: true,
+						message: 'Trailer is updated successfully',
+						data,
+					})
+				)
+				.catch((err) => res.json({ message: err }));
+		})
 		.catch((err) => res.json({ message: err }));
 };
 

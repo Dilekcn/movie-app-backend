@@ -7,8 +7,8 @@ const TrailersSchema = new Schema(
 		type: { type: String },
 		year: { type: Number },
 		duration: { type: String },
-		mediaId: { type: mongoose.Types.ObjectId, ref: 'media' },
-		bannerId: { type: mongoose.Types.ObjectId, ref: 'media' },
+		mediaId: { type: mongoose.Types.ObjectId, required: true, ref: 'media' },
+		bannerId: { type: mongoose.Types.ObjectId, required: true, ref: 'media' },
 		cast: { type: Array },
 		description: { type: String },
 		genre: { type: Array },
@@ -20,10 +20,11 @@ const TrailersSchema = new Schema(
 		seasonNumber: { type: Number },
 		episodeNumber: { type: Number },
 		episodeTitle: { type: String },
-		imdb:{ type: String },
+		imdb: { type: String },
 		isActive: { type: Boolean, default: true },
-		isDeleted: { type: Boolean, default: false }
-		
+		isDeleted: { type: Boolean, default: false },
+		altImage:{ type: String },
+		altBanner:{ type: String }
 	},
 	{ timestamps: true }
 );

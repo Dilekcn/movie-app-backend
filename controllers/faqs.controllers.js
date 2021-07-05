@@ -14,8 +14,8 @@ exports.getAllFaqs = async (req, res) => {
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
 		res.status(500).json(error);
-	} 
-}; 
+	}
+};
 
 exports.getSingleFaqById = async (req, res) => {
 	await FaqModel.findById({ _id: req.params.faqid }, (err, data) => {
@@ -62,16 +62,13 @@ exports.createFaq = async (req, res) => {
 				status: true,
 				message: 'Added new faq successfully',
 				data,
-			}),
+			})
 		)
 		.catch((err) => res.json({ status: false, message: err }));
 };
 
 exports.updateFaq = async (req, res) => {
-	await FaqModel.findByIdAndUpdate(
-		{ _id: req.params.faqid },
-		{ $set: req.body },
-	)
+	await FaqModel.findByIdAndUpdate({ _id: req.params.faqid }, { $set: req.body })
 		.then((data) => res.json({ message: 'Successfully updated', data }))
 		.catch((err) => res.json({ message: err }));
 };

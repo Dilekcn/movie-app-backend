@@ -1,40 +1,60 @@
 const mongoose = require('mongoose');
 const NotificationModel = require('../model/Notification.model');
 
-
 exports.getAllNotifications = async (req, res) => {
-  try{
-    const response = await  NotificationModel.find() 
-    res.json(response)
-  } catch (error) {
-    res.status(500).json(error);
-  }
-   
-}
+	try {
+		const { page = 1, limit } = req.query;
 
-exports.createNotification = (req, res) => {
-    const newNotification =  new NotificationModel(
-     req.bady        
-    )
+		const response = await NotificationModel.find()
+		.limit(limit * 1)
+		.skip((page - 1) * limit)
+		.sort({ createdAt: -1 });
+		const total = await NotificationModel.find().count();
+		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+		res.json({ total: total, pages, status: 200, response });
+	} catch (error) {
+		res.status(500).json(error);
+	}
+};
 
-    newNotification.save()
-    .then((data) =>{ res.json(data);})
-    .catch((err) => {res.json( err)});
-   
-}
+exports.createNotification = async (req, res) => {
+	const newNotification = await new NotificationModel({
+		userId: req.body.userId,
+		title: req.body.title,
+		content: req.body.content,
+		isRead: req.body.isRead,
+		isDeleted: req.body.isDeleted,
+	});
 
-exports.deleteNotification = (req,res,next)=>{
+	newNotification
+		.save()
+		.then((response) =>
+			res.json({
+				status: 200,
+				message: 'New notification is created successfully',
+				response,
+			})
+		)
+		.catch((err) => res.json({ status: false, message: err }));
+};
 
-    NotificationModel.findByIdAndRemove({_id:req.params.notificationId})
-    .then((data)=>{res.json(data)})
-    .catch((err)=>{
-      next({message:'The notification deleted.',code:99})
-      res.json(err)
-    })
-  }
 
-  exports.updateSingleNotification =  (req, res) => {
-    NotificationModel.findByIdAndUpdate({_id: req.params.notificationId}, {$set: req.body})
-    .then(data => res.json({message:'Notification updated', status:true, data}))
-    .catch(err => res.json({message: err, status:false}))
-}
+exports.deleteNotification = (req, res, next) => {
+	NotificationModel.findByIdAndRemove({ _id: req.params.notificationId })
+		.then((data) => {
+			res.json(data);
+		})
+		.catch((err) => {
+			next({ message: 'The notification deleted.', code: 99 });
+			res.json(err);
+		});
+};
+
+exports.updateSingleNotification = (req, res) => {
+	NotificationModel.findByIdAndUpdate(
+		{ _id: req.params.notificationId },
+		{ $set: req.body }
+	)
+		.then((data) => res.json({ message: 'Notification updated', status: true, data }))
+		.catch((err) => res.json({ message: err, status: false }));
+};
