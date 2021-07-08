@@ -23,9 +23,8 @@ const TrailersSchema = new Schema(
 		director: { type: String },
 		imdb: { type: String },
 		isActive: { type: Boolean, default: true },
-		isDeleted: { type: Boolean, default: false },
-		altImage:{ type: String },
-		altBanner:{ type: String }
+		isDeleted: { type: Boolean, default: false }
+	
 	},
 	{ timestamps: true }
 );

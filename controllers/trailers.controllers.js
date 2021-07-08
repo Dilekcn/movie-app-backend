@@ -12,8 +12,8 @@ exports.getAll = async (req, res) => {
 		.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-			.populate('mediaId', 'url title altImage alt')
-			.populate('bannerId', 'url title altBanner alt');
+			.populate('mediaId', 'url title alt')
+			.populate('bannerId', 'url title alt');
 			const total = await TrailersModel.find().count();
 			const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 			res.json({ total: total, pages, status: 200, response });
@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
 			url: data1.Location || null,
 			title: 'trailer-image',
 			mediaKey: data1.Key,
-			altImage: req.body.altImage || null,
+			alt: req.body.title || null,
 		});
 		newMediaId.save(newMediaId);
 
@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
 				url: data2.Location || null,
 				title: 'trailer-banner',
 				mediaKey: data2.Key,
-				altBanner:req.body.altBanner || null,
+				alt:req.body.title || null,
 			});
 
 			newBannerId.save(newBannerId);
@@ -108,8 +108,8 @@ exports.getSingleTrailer = async (req, res) => {
 			res.json(data);
 		}
 	})
-		.populate('mediaId', 'url title altImage')
-		.populate('bannerId', 'url title altBanner');
+		.populate('mediaId', 'url title alt')
+		.populate('bannerId', 'url title alt');
 };
 
 exports.getTrailersByUserId = async (req, res) => {
@@ -120,8 +120,8 @@ exports.getTrailersByUserId = async (req, res) => {
 			res.json(data);
 		}
 	})
-		.populate('mediaId', 'url title altImage')
-		.populate('bannerId', 'url title altBanner');
+		.populate('mediaId', 'url title alt')
+		.populate('bannerId', 'url title alt');
 };
 
 exports.updateSingleTrailer = async (req, res) => {
@@ -136,7 +136,7 @@ exports.updateSingleTrailer = async (req, res) => {
 								url: data.Location || null,
 								title: 'trailer-image',
 								mediaKey: data.Key,
-								alt: req.body.altImage || null,
+								alt: req.body.title || null,
 							},
 						},
 						{ useFindAndModify: false, new: true }
@@ -155,7 +155,7 @@ exports.updateSingleTrailer = async (req, res) => {
 								url: data.Location || null,
 								title: 'trailer-banner',
 								mediaKey: data.Key,
-								alt: req.body.altBanner || null,
+								alt: req.body.title || null,
 							},
 						},
 						{ useFindAndModify: false, new: true }
