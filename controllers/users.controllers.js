@@ -13,7 +13,7 @@ exports.getAllUsers = async (req, res) => {
 	.limit(limit * 1)
 	.skip((page - 1) * limit)
 	.sort({ createdAt: -1 })
-	.populate('profileImageId', 'url alt')
+	.populate('mediaId', 'url title alt')
 	.then((data) => res.json({ total: total, pages, status: 200, data }))
 	.catch((err) => res.json({ message: err }));
 };
@@ -99,7 +99,7 @@ exports.createUser = async (req, res) => {
 			.then((response) =>
 				res.json({ status: true, message: 'Signed up successfully.', response })
 			)
-			.catch((err) => res.json({ status: false, message: err }));
+			.catch((err) => res.json({ status: false, message: err })); 
 	};
 	await S3.uploadNewMedia(req, res, data);
 };
