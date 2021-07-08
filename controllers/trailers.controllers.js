@@ -206,7 +206,7 @@ exports.updateSingleTrailer = async (req, res) => {
 						director,
 						tags,
 						trailerUrl,
-						likes,
+						likes: req.body.likes ? req.body.likes:trailer.likes,
 						isActive,
 						isDeleted,
 						imdb,
