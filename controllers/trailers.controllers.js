@@ -12,8 +12,8 @@ exports.getAll = async (req, res) => {
 		.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-			.populate('mediaId', 'url title altImage')
-			.populate('bannerId', 'url title altBanner');
+			.populate('mediaId', 'url title altImage alt')
+			.populate('bannerId', 'url title altBanner alt');
 			const total = await TrailersModel.find().count();
 			const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 			res.json({ total: total, pages, status: 200, response });
