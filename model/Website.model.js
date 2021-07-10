@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const WatchSchema = new Schema(
+const WebsiteSchema = new Schema(
 	{
 		title: { type: String },
 		link: { type: String },
@@ -11,4 +11,4 @@ const WatchSchema = new Schema(
 	{ timestamps: true }
 );
 
-module.exports = mongoose.model('watch', WatchSchema);
+module.exports = mongoose.model('website', WebsiteSchema);

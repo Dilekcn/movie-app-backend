@@ -1,6 +1,6 @@
 const TrailersModel = require("../model/Trailer.model");
 const mediaModel = require("../model/Media.model");
-const WatchModel = require("../model/Watch.model");
+const WebsiteModel = require("../model/Website.model");
 require("dotenv").config();
 const S3 = require("../config/aws.s3.config");
 const MediaModel = require("../model/Media.model");
@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
   if (req.body.websiteId) {
     const newWebsite = await req.body.websiteId.map((web) => {
       const website = JSON.parse(web);
-      return new WatchModel({
+      return new WebsiteModel({
         title: website.title || null,
         link: website.link || null,
       });
