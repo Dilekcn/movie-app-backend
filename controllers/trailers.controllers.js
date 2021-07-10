@@ -282,7 +282,7 @@ exports.updateSingleTrailer = async (req, res) => {
         trailerUrl,
         likes,
         userRating,
-        watchMovie,
+       
       } = req.body;
 
       await TrailersModel.findByIdAndUpdate(

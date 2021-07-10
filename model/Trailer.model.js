@@ -22,7 +22,7 @@ const TrailersSchema = new Schema(
 		episodeTitle: { type: String },
 		director: { type: String },
 		imdb: { type: String },
-		websiteId: [{ type: Schema.Types.ObjectId, ref: 'watch', default: [] }],
+		websiteId: [{ type: Schema.Types.ObjectId, ref: 'website', default: [] }],
 		userRating:{ type: Array,default:[] },
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false }
