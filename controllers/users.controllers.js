@@ -153,6 +153,7 @@ exports.updateUser = async (req, res) => {
 							},
 							{ useFindAndModify: false, new: true }
 						).then(async (updatedMedia) => {
+					console.log(updatedMedia)
 							const {
 								firstname,
 								lastname,
@@ -173,7 +174,7 @@ exports.updateUser = async (req, res) => {
 										mediaId: data.mediaId,
 										isActive: isActive,
 										isDeleted: isDeleted,
-										role:data.role
+										role:role
 									},
 								}
 							).then((data) =>
