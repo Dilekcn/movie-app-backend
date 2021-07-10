@@ -15,7 +15,7 @@ exports.getAll = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate("mediaId", "url title alt")
       .populate("bannerId", "url title alt")
-      .populate("websiteId", "title link");
+      .populate("websiteId", "title link")
     const total = await TrailersModel.find().count();
     const pages = limit === undefined ? 1 : Math.ceil(total / limit);
     res.json({ total: total, pages, status: 200, response });
@@ -86,7 +86,7 @@ exports.create = async (req, res) => {
           bannerId: newBannerId._id,
           cast: cast.split(","),
           description,
-          genre: genre.split(","),
+          genre: typeof(genre) === "string" ? JSON.parse(genre) : genre,
           ageRestriction,
           totalSeasons,
           seasonNumber,
@@ -163,7 +163,7 @@ exports.create = async (req, res) => {
 			bannerId: newBannerId._id,
 			cast: cast.split(","),
 			description,
-			genre: genre.split(","),
+			genre: typeof(genre) === "string" ? JSON.parse(genre) : genre,
 			ageRestriction,
 			totalSeasons,
 			seasonNumber,
@@ -316,7 +316,7 @@ exports.updateSingleTrailer = async (req, res) => {
             bannerId: trailer.bannerId,
             cast:cast.split(','),
             description,
-            genre:genre.split(','),
+            genre:typeof(genre) === "string" ? JSON.parse(genre) : genre,
             ageRestriction,
             totalSeasons,
             seasonNumber,

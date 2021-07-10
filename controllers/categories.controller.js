@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 const CategoriesModel = require('../model/Category.model');
+const TrailersModel = require('../model/Trailer.model')
 
 exports.getAll = async (req, res) => {
 	try {
+		const update = await CategoriesModel.find()
+		update.map(async(item, index) => {
+			const count = await TrailersModel.count({genre: {$in: item._id.toString()}})
+			await CategoriesModel.findByIdAndUpdate({_id:item._id}, {$set: {movieCount: count}})
+		})
 		const response = await CategoriesModel.find().sort({ createdAt: -1 });
 		res.json(response);
 	} catch (error) {
