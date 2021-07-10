@@ -261,6 +261,14 @@ exports.updateSingleTrailer = async (req, res) => {
           await S3.updateBanner(req, res, banner.mediaKey, data);
         }
       );
+	  await trailer.websiteId.map(async (web, index) => {
+		await WebsiteModel.findByIdAndUpdate(
+			{ _id: web },
+			{
+				$set: JSON.parse(req.body.websiteId)[index],
+			}
+		);
+	});
       const {
         imdb,
         isActive,
@@ -306,6 +314,7 @@ exports.updateSingleTrailer = async (req, res) => {
             director,
             tags,
             trailerUrl,
+			websiteId:traile.websiteId,
             likes: req.body.likes ? req.body.likes : trailer.likes,
             isActive: req.body.isActive ? req.body.isActive : trailer.isActive,
             isDeleted: req.body.isDeleted
