@@ -36,7 +36,7 @@ exports.getSingleCategory = async (req, res) => {
 };
 
 exports.updateSingleCategory = (req, res) => {
-	NotificationModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
+	CategoriesModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
 		.then((data) => res.json({ message: 'Category updated', status: true, data }))
 		.catch((err) => res.json({ message: err, status: false }));
 };
