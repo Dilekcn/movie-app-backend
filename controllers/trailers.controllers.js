@@ -110,13 +110,8 @@ exports.create = async (req, res) => {
 					.catch((err) => res.json(err));
 			};
 
-<<<<<<< HEAD
       S3.uploadNewMedia(req, res, dataBanner);
     };
-=======
-			S3.uploadNewBanner(req, res, dataBanner);
-		};
->>>>>>> eaaf3d9adfaf4a7b1a569f03830ed92ecb2cfa04
 
 		S3.uploadNewMedia(req, res, dataMedia);
 	} else {
@@ -193,14 +188,11 @@ exports.create = async (req, res) => {
 
 			S3.uploadNewBanner(req, res, dataBanner);
 		};
-<<<<<<< HEAD
   
 		S3.uploadNewMedia(req, res, dataBanner);
 	  };
   
 	  S3.uploadNewMedia(req, res, dataMedia);
-=======
->>>>>>> eaaf3d9adfaf4a7b1a569f03830ed92ecb2cfa04
 
 		S3.uploadNewMedia(req, res, dataMedia);
 	}
