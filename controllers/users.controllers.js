@@ -76,6 +76,7 @@ exports.createUser = async (req, res) => {
 			mediaKey: data.Key,
 			alt: req.body.alt || null,
 		});
+
 		newMedia.save();
 
 		const {
@@ -146,61 +147,111 @@ exports.login = async (req, res) => {
 exports.updateUser = async (req, res) => {
 	await UserModel.findById({ _id: req.params.id })
 		.then(async (user) => {
-			await MediaModel.findById({ _id: user.mediaId })
-				.then(async (media) => {
-					const data = async (data) => {
-						await MediaModel.findByIdAndUpdate(
-							{ _id: data.mediaId },
-							{
-								$set: {
-									url: data.Location || null,
-									title: 'users',
-									mediaKey: data.Key,
-									alt: req.body.alt || null,
-								},
+			await MediaModel.findById({ _id: user.mediaId }).then(async (media) => {
+				const data = async (data) => {
+					await MediaModel.findByIdAndUpdate(
+						{ _id: user.mediaId },
+						{
+							$set: {
+								url: data.Location || null,
+								title: 'users',
+								mediaKey: data.Key,
+								alt: req.body.alt || null,
 							},
-							{ useFindAndModify: false, new: true }
-						).then(async (updatedMedia) => {
-							const {
-								firstname,
-								lastname,
-								email,
-								country,
-								isActive,
-								isDeleted,
-								role,
-							} = req.body;
-
-							await UserModel.findByIdAndUpdate(
-								{ _id: req.params.id },
-								{
-									$set: {
-										firstname: firstname,
-										lastname: lastname,
-										email: email,
-										country: country,
-										mediaId: data.mediaId,
-										isActive: isActive,
-										isDeleted: isDeleted,
-										role: role,
-									},
-								},
-								{ useFindAndModify: false, new: true }
-							).then((data) =>
-								res.json({
-									status: true,
-									message: 'Successfully updated.',
-									data,
-								})
-							);
-						});
-					};
-					await S3.updateMedia(req, res, media.mediaKey, data);
-				})
+						},
+						{ useFindAndModify: false, new: true }
+					).catch((err) => res.json({ status: 404, message: err }));
+				};
+				await S3.updateMedia(req, res, media.mediaKey, data);
+			});
+			const { firstname, lastname, email, country, isActive, isDeleted, role } =
+				req.body;
+			await UserModel.findByIdAndUpdate(
+				{ _id: req.params.id },
+				{
+					$set: {
+						firstname: firstname,
+						lastname: lastname,
+						email: email,
+						country: country,
+						mediaId: user.mediaId,
+						isActive: isActive,
+						isDeleted: isDeleted,
+						role: role,
+					},
+				},
+				{ useFindAndModify: false, new: true }
+			)
+				.then((data) =>
+					res.json({
+						status: true,
+						message: 'Successfully updated.',
+						data,
+					})
+				)
 				.catch((err) => res.json({ status: false, message: err }));
 		})
 		.catch((err) => res.json({ status: false, message: err }));
 };
+
+// exports.updateUser = async (req, res) => {
+// 	await UserModel.findById({ _id: req.params.id })
+// 		.then(async (user) => {
+// 			await MediaModel.findById({ _id: user.mediaId })
+// 				.then(async (media) => {
+// 					const data = async (data) => {
+// 						await MediaModel.findByIdAndUpdate(
+// 							{ _id: user.mediaId },
+// 							{
+// 								$set: {
+// 									url: data.Location || null,
+// 									title: 'users',
+// 									mediaKey: data.Key,
+// 									alt: req.body.alt || null,
+// 								},
+// 							},
+// 							{ useFindAndModify: false, new: true }
+// 						).then(async (updatedMedia) => {
+// 							const {
+// 								firstname,
+// 								lastname,
+// 								email,
+// 								country,
+// 								isActive,
+// 								isDeleted,
+// 								role,
+// 							} = req.body;
+
+// 							await UserModel.findByIdAndUpdate(
+// 								{ _id: req.params.id },
+// 								{
+// 									$set: {
+// 										firstname: firstname,
+// 										lastname: lastname,
+// 										email: email,
+// 										country: country,
+// 										mediaId: user.mediaId,
+// 										isActive: isActive,
+// 										isDeleted: isDeleted,
+// 										role: role,
+// 									},
+// 								},
+// 								{ useFindAndModify: false, new: true }
+// 							).then((data) =>
+// 								res.json({
+// 									status: true,
+// 									message: 'Successfully updated.',
+// 									data,
+// 								})
+// 							);
+// 						});
+// 					};
+// 					await S3.updateMedia(req, res, media.mediaKey, data);
+// 				})
+// 				.catch((err) => res.json({ status: false, message: err }));
+// 		})
+// 		.catch((err) => res.json({ status: false, message: err }));
+// };
 
 exports.deleteUser = async (req, res) => {
 	await UserModel.findById({ _id: req.params.id })
