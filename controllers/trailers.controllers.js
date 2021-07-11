@@ -25,14 +25,14 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	console.log(req.body.genre);
-	if (req.body.websiteId) {
-		const newWebsite = await req.body.websiteId.map((web) => {
-			const website = JSON.parse(web);
+	console.log( typeof req.body.websiteId);
+	if (req.body.websiteId) {	
+		const newWebsite = await JSON.parse(req.body.websiteId).map((web) => {
+			const website = web;
 			return new WebsiteModel({
 				title: website.title || null,
 				link: website.link || null,
-			});
+			}); 
 		});
 		newWebsite.map((web) => web.save());
 		const websiteIds = newWebsite.map((web) => web._id);
@@ -220,7 +220,8 @@ exports.getTrailersByUserId = async (req, res) => {
 };
 
 exports.updateSingleTrailer = async (req, res) => {
-	
+	console.log(req.body)
+
 	await TrailersModel.findById({ _id: req.params.id })
 		.then(async (trailer) => {
 			await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
