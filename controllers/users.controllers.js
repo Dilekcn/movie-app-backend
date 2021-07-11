@@ -185,7 +185,7 @@ exports.updateUser = async (req, res) => {
 				.then((data) =>
 					res.json({
 						status: true,
-						message: 'Successfully updated.',
+						message: 'Successfully updated',
 						data,
 					})
 				)
