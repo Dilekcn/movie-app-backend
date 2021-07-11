@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const NotificationModel = require('../model/Notification.model');
 
 exports.getAllNotifications = async (req, res) => {
@@ -6,9 +5,9 @@ exports.getAllNotifications = async (req, res) => {
 		const { page = 1, limit } = req.query;
 
 		const response = await NotificationModel.find()
-		.limit(limit * 1)
-		.skip((page - 1) * limit)
-		.sort({ createdAt: -1 });
+			.limit(limit * 1)
+			.skip((page - 1) * limit)
+			.sort({ createdAt: -1 });
 		const total = await NotificationModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
@@ -37,7 +36,6 @@ exports.createNotification = async (req, res) => {
 		)
 		.catch((err) => res.json({ status: false, message: err }));
 };
-
 
 exports.deleteNotification = (req, res, next) => {
 	NotificationModel.findByIdAndRemove({ _id: req.params.notificationId })

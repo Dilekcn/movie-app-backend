@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const WebsiteModel = require('../model/Website.model');
 
 exports.getAll = async (req, res) => {

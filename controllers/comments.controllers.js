@@ -1,17 +1,15 @@
-const mongoose = require('mongoose');
 const CommentsModel = require('../model/Comment.model');
 
 exports.getAll = async (req, res) => {
-
 	try {
 		const { page = 1, limit } = req.query;
 		const response = await CommentsModel.find()
-		    .limit(limit * 1)
-		    .skip((page - 1) * limit)
-			.sort({ createdAt: -1 }) 
+			.limit(limit * 1)
+			.skip((page - 1) * limit)
+			.sort({ createdAt: -1 })
 			.populate('userId', 'firstname lastname')
 			.populate('listId', 'name');
-			const total = await CommentsModel.find().count();
+		const total = await CommentsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
@@ -26,9 +24,8 @@ exports.create = async (req, res) => {
 		content: req.body.content,
 		listId: req.body.listId,
 		isActive: req.body.isActive,
-		reasonToBlock:req.body.reasonToBlock,
+		reasonToBlock: req.body.reasonToBlock,
 		isDeleted: req.body.isDeleted,
-
 	});
 
 	newComment
@@ -91,7 +88,7 @@ exports.updateComment = async (req, res) => {
 	// 				listId: comment.listId,
 	// 				isActive: !req.body.isActive ? true : req.body.isActive,
 	// 				isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
-	// 				reasonToBlock: req.body.reasonToBlock ? req.body.reasonToBlock :comment.reasonToBlock 
+	// 				reasonToBlock: req.body.reasonToBlock ? req.body.reasonToBlock :comment.reasonToBlock
 	// 			},
 	// 			{ useFindAndModify: false, new: true }
 	// 		)
