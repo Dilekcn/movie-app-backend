@@ -308,7 +308,6 @@ exports.updateSingleTrailer = async (req, res) => {
 						director,
 						tags: tags.split(','),
 						trailerUrl,
-						mediaId: trailer.mediaId,
 						websiteId: trailer.websiteId,
 						likes: req.body.likes ? req.body.likes : trailer.likes,
 						isActive: req.body.isActive
