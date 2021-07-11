@@ -10,7 +10,7 @@ exports.getAll = async (req, res) => {
 
 		const response = await TrailersModel.find()
 			.limit(limit * 1)
-			.skip((page - 1) * limit)
+			.skip((page - 1) * limit) 
 			.sort({ createdAt: -1 })
 			.populate('mediaId', 'url title alt')
 			.populate('bannerId', 'url title alt')
@@ -87,7 +87,7 @@ exports.create = async (req, res) => {
 					bannerId: newBannerId._id,
 					cast: cast.split(','),
 					description,
-					genre,
+					genre: genre.split(','),
 					ageRestriction,
 					totalSeasons,
 					seasonNumber,
@@ -116,7 +116,7 @@ exports.create = async (req, res) => {
 		S3.uploadNewMedia(req, res, dataMedia);
 	} else {
 		const dataMedia = async (data1) => {
-			const newMediaId = await new mediaModel({
+			const newMediaId = await new MediaModel({
 				url: data1.Location || null,
 				title: 'trailer-image',
 				mediaKey: data1.Key,
@@ -125,7 +125,7 @@ exports.create = async (req, res) => {
 			newMediaId.save(newMediaId);
 
 			const dataBanner = async (data2) => {
-				const newBannerId = await new mediaModel({
+				const newBannerId = await new MediaModel({
 					url: data2.Location || null,
 					title: 'trailer-banner',
 					mediaKey: data2.Key,
@@ -164,7 +164,7 @@ exports.create = async (req, res) => {
 					bannerId: newBannerId._id,
 					cast: cast.split(','),
 					description,
-					genre,
+					genre: genre.split(','),
 					ageRestriction,
 					totalSeasons,
 					seasonNumber,
