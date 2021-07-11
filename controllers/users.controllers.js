@@ -176,7 +176,7 @@ exports.updateUser = async (req, res) => {
 						mediaId: user.mediaId,
 						isActive: !req.body.isActive ? true : req.body.isActive,
 						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
-						role: role,
+						role: !req.body.role ? user.role : req.body.role,
 					},
 				},
 				{ useFindAndModify: false, new: true }
