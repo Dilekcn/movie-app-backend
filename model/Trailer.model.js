@@ -11,7 +11,7 @@ const TrailersSchema = new Schema(
 		bannerId: { type: mongoose.Types.ObjectId, required: true, ref: 'media' },
 		cast: { type: Array },
 		description: { type: String },
-		genre: { type: Array },
+		genre: [{ type: mongoose.Types.ObjectId, ref:'category' }],
 		ageRestriction: { type: Number },
 		tags: { type: Array },
 		trailerUrl: { type: String },

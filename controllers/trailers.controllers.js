@@ -16,6 +16,7 @@ exports.getAll = async (req, res) => {
       .populate("mediaId", "url title alt")
       .populate("bannerId", "url title alt")
       .populate("websiteId", "title link")
+      .populate("genre")
     const total = await TrailersModel.find().count();
     const pages = limit === undefined ? 1 : Math.ceil(total / limit);
     res.json({ total: total, pages, status: 200, response });
@@ -109,7 +110,7 @@ exports.create = async (req, res) => {
           .catch((err) => res.json(err));
       };
 
-      S3.uploadNewBanner(req, res, dataBanner);
+      S3.uploadNewMedia(req, res, dataBanner);
     };
 
     S3.uploadNewMedia(req, res, dataMedia);
@@ -185,7 +186,7 @@ exports.create = async (req, res) => {
 			.catch((err) => res.json(err));
 		};
   
-		S3.uploadNewBanner(req, res, dataBanner);
+		S3.uploadNewMedia(req, res, dataBanner);
 	  };
   
 	  S3.uploadNewMedia(req, res, dataMedia);
