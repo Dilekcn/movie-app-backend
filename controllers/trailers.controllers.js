@@ -208,7 +208,8 @@ exports.getSingleTrailer = async (req, res) => {
 	})
 		.populate('mediaId', 'url title alt')
 		.populate('bannerId', 'url title alt')
-		.populate('websiteId', 'title link');
+		.populate('websiteId', 'title link')
+		.populate("genre","name")
 };
 
 exports.getTrailersByUserId = async (req, res) => {
