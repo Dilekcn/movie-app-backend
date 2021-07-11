@@ -3,7 +3,7 @@ const mediaModel = require('../model/Media.model');
 const WebsiteModel = require('../model/Website.model');
 require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
-const mediaModel = require('../model/Media.model');
+
 
 exports.getAll = async (req, res) => {
 	try {
