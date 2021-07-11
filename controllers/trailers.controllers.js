@@ -16,7 +16,7 @@ exports.getAll = async (req, res) => {
       .populate("mediaId", "url title alt")
       .populate("bannerId", "url title alt")
       .populate("websiteId", "title link")
-      .populate("genre")
+      .populate("genre","name")
     const total = await TrailersModel.find().count();
     const pages = limit === undefined ? 1 : Math.ceil(total / limit);
     res.json({ total: total, pages, status: 200, response });
