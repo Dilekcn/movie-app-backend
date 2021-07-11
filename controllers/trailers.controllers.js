@@ -301,7 +301,7 @@ exports.updateSingleTrailer = async (req, res) => {
 						bannerId: trailer.bannerId,
 						cast: cast.split(','),
 						description,
-						genre,
+						genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
 						ageRestriction,
 						totalSeasons,
 						seasonNumber,
