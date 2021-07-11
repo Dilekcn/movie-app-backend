@@ -196,7 +196,7 @@ exports.create = async (req, res) => {
 
 		S3.uploadNewMedia(req, res, dataMedia);
 	}
-};
+
 
 exports.getSingleTrailer = async (req, res) => {
 	await TrailersModel.findById({ _id: req.params.id }, (err, data) => {
