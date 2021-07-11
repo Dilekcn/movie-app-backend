@@ -4,25 +4,24 @@ const WebsiteModel = require('../model/Website.model');
 require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
 
-
 exports.getAll = async (req, res) => {
 	try {
 		const { page = 1, limit } = req.query;
 
-    const response = await TrailersModel.find()
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .sort({ createdAt: -1 })
-      .populate("mediaId", "url title alt")
-      .populate("bannerId", "url title alt")
-      .populate("websiteId", "title link")
-      .populate("genre","name")
-    const total = await TrailersModel.find().count();
-    const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-    res.json({ total: total, pages, status: 200, response });
-  } catch (error) {
-    res.status(500).json(error);
-  }
+		const response = await TrailersModel.find()
+			.limit(limit * 1)
+			.skip((page - 1) * limit)
+			.sort({ createdAt: -1 })
+			.populate('mediaId', 'url title alt')
+			.populate('bannerId', 'url title alt')
+			.populate('websiteId', 'title link')
+			.populate('genre', 'name');
+		const total = await TrailersModel.find().count();
+		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+		res.json({ total: total, pages, status: 200, response });
+	} catch (error) {
+		res.status(500).json(error);
+	}
 };
 
 exports.create = async (req, res) => {
@@ -110,8 +109,8 @@ exports.create = async (req, res) => {
 					.catch((err) => res.json(err));
 			};
 
-      S3.uploadNewMedia(req, res, dataBanner);
-    };
+			S3.uploadNewBanner(req, res, dataBanner);
+		};
 
 		S3.uploadNewMedia(req, res, dataMedia);
 	} else {
@@ -188,15 +187,10 @@ exports.create = async (req, res) => {
 
 			S3.uploadNewBanner(req, res, dataBanner);
 		};
-  
-		S3.uploadNewMedia(req, res, dataBanner);
-	  };
-  
-	  S3.uploadNewMedia(req, res, dataMedia);
 
 		S3.uploadNewMedia(req, res, dataMedia);
 	}
-
+};
 
 exports.getSingleTrailer = async (req, res) => {
 	await TrailersModel.findById({ _id: req.params.id }, (err, data) => {
@@ -209,7 +203,7 @@ exports.getSingleTrailer = async (req, res) => {
 		.populate('mediaId', 'url title alt')
 		.populate('bannerId', 'url title alt')
 		.populate('websiteId', 'title link')
-		.populate("genre","name")
+		.populate('genre', 'name');
 };
 
 exports.getTrailersByUserId = async (req, res) => {
