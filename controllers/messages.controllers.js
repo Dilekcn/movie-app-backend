@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const MessagesModel = require('../model/Messages.model');
 
 exports.getAll = async (req, res) => {
@@ -6,12 +5,12 @@ exports.getAll = async (req, res) => {
 		const { page = 1, limit } = req.query;
 
 		const response = await MessagesModel.find()
-		.sort({ createdAt: -1 })
-		.limit(limit * 1)
+			.sort({ createdAt: -1 })
+			.limit(limit * 1)
 			.skip((page - 1) * limit);
-			const total = await MessagesModel.find().count();
-			const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-			res.json({ total: total, pages, status: 200, response });
+		const total = await MessagesModel.find().count();
+		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
 		res.status(500).json(error);
 	}
