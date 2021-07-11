@@ -142,7 +142,7 @@ exports.create = async (req, res) => {
 					year,
 					duration,
 					cast,
-					description,
+					description, 
 					genre,
 					ageRestriction,
 					totalSeasons,
