@@ -1,5 +1,5 @@
 const TrailersModel = require('../model/Trailer.model');
-const mediaModel = require('../model/Media.model');
+const MediaModel = require('../model/Media.model');
 const WebsiteModel = require('../model/Website.model');
 require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
 		const websiteIds = newWebsite.map((web) => web._id);
 
 		const dataMedia = async (data1) => {
-			const newMediaId = await new mediaModel({
+			const newMediaId = await new MediaModel({
 				url: data1.Location || null,
 				title: 'trailer-image',
 				mediaKey: data1.Key,
@@ -47,7 +47,7 @@ exports.create = async (req, res) => {
 			newMediaId.save(newMediaId);
 
 			const dataBanner = async (data2) => {
-				const newBannerId = await new mediaModel({
+				const newBannerId = await new MediaModel({
 					url: data2.Location || null,
 					title: 'trailer-banner',
 					mediaKey: data2.Key,
@@ -220,6 +220,7 @@ exports.getTrailersByUserId = async (req, res) => {
 };
 
 exports.updateSingleTrailer = async (req, res) => {
+	
 	await TrailersModel.findById({ _id: req.params.id })
 		.then(async (trailer) => {
 			await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
@@ -332,9 +333,9 @@ exports.updateSingleTrailer = async (req, res) => {
 					})
 				)
 
-				.catch((err) => res.json({ message: err }));
+				.catch((err) => res.json({ message: err,status:401 }));
 		})
-		.catch((err) => res.json({ message: err }));
+		.catch((err) => res.json({ message: err,status:402  }));
 };
 
 exports.removeSingleTrailer = async (req, res) => {
