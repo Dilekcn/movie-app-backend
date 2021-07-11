@@ -25,6 +25,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
+	console.log(req.body.genre)
 	if (req.body.websiteId) {
 		const newWebsite = await req.body.websiteId.map((web) => {
 			const website = JSON.parse(web);
@@ -86,7 +87,7 @@ exports.create = async (req, res) => {
 					bannerId: newBannerId._id,
 					cast: cast.split(','),
 					description,
-					genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
+					genre,
 					ageRestriction,
 					totalSeasons,
 					seasonNumber,
@@ -163,7 +164,7 @@ exports.create = async (req, res) => {
 					bannerId: newBannerId._id,
 					cast: cast.split(','),
 					description,
-					genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
+					genre,
 					ageRestriction,
 					totalSeasons,
 					seasonNumber,
