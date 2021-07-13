@@ -1,13 +1,22 @@
 const CommentsModel = require('../model/Comment.model');
 
 exports.getAll = async (req, res) => {
-	try {
+	try { 
 		const { page = 1, limit } = req.query;
 		const response = await CommentsModel.find()
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-			.populate('userId', 'firstname lastname')
+			.populate({
+				path:'userId',
+				model:'user',
+				select:'firstname lastname profileImageId',
+				populate:{
+					path:'profileImageId',
+					model:'media',
+					select:'url'
+				}
+			})
 			.populate('listId', 'name');
 		const total = await CommentsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
@@ -48,7 +57,16 @@ exports.getSingleComment = async (req, res) => {
 			res.json({ data });
 		}
 	})
-		.populate('userId', 'firstname lastname')
+	.populate({
+        path:'userId',
+        model:'user',
+        select:'firstname lastname profileImageId',
+        populate:{
+            path:'profileImageId',
+            model:'media',
+            select:'url'
+        }
+    })
 		.populate('listId', 'name');
 };
 
@@ -60,7 +78,16 @@ exports.getCommentsByUserId = async (req, res) => {
 			res.json({ status: 200, data });
 		}
 	})
-		.populate('userId', 'firstname lastname')
+	.populate({
+        path:'userId',
+        model:'user',
+        select:'firstname lastname profileImageId',
+        populate:{
+            path:'profileImageId',
+            model:'media',
+            select:'url'
+        }
+    })
 		.populate('listId', 'name');
 };
 
@@ -72,7 +99,16 @@ exports.getCommentsByList = async (req, res) => {
 			res.json({ status: 200, data });
 		}
 	})
-		.populate('userId', 'firstname lastname')
+	.populate({
+        path:'userId',
+        model:'user',
+        select:'firstname lastname profileImageId',
+        populate:{
+            path:'profileImageId',
+            model:'media',
+            select:'url'
+        }
+    })
 		.populate('listId', 'name');
 };
 
