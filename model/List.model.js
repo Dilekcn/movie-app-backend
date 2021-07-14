@@ -9,7 +9,7 @@ const ListsSchema = new Schema(
 		listItemIds: Array,
 		likes: Array,
 		isPublic: { type: Boolean, default: true },
-		isActive: { type: Boolean, default: true },
+		isActive: { type: Boolean, default: false },
 		isDeleted: { type: Boolean, default: false },
 	},
 	{ timestamps: true }
