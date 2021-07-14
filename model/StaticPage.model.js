@@ -9,7 +9,7 @@ const StaticPageSchema = new Schema(
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false },
 	},
-	{ timestamps: true }
+	{ timestamps: true } 
 );
 
 module.exports = mongoose.model('staticPage', StaticPageSchema);

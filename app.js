@@ -18,7 +18,7 @@ const notificationRouter = require('./routes/notification.routes');
 const trailersRouter = require('./routes/trailers.routes');
 const categoriesRouter = require('./routes/categories.routes');
 const websitesRouter = require('./routes/websites.routes');
-const staticPageRouter = require('./routes/websites.routes');
+const staticPageRouter = require('./routes/staticPage.routes');
 
 //middlewares
 // const verifyToken = require('./auth/verifyToken');
