@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
 	{
-		firstname: { type: String },
-		lastname: { type: String },
-		email: { type: String, unique: true }, 
-		password: { type: String },
+		firstname: { type: String,required:true },
+		lastname: { type: String,required:true },
+		email: { type: String, unique: true,required:true }, 
+		password: { type: String,required:true },
 		country: { type: String },
 		mediaId: { type: mongoose.Types.ObjectId, ref: 'media' },
 		isActive: { type: Boolean, default: true },
