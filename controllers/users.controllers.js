@@ -164,15 +164,14 @@ exports.updateUser = async (req, res) => {
 				};
 				await S3.updateMedia(req, res, media.mediaKey, data);
 			});
-			const { firstname, lastname, email, country, role } = req.body;
+			const { firstname, lastname, country, role } = req.body;
 			await UserModel.findByIdAndUpdate(
 				{ _id: req.params.id },
 				{
 					$set: {
 						firstname,
 						lastname,
-						email,
-						country,
+						country:!req.body.country ? user.country : req.body.country,
 						mediaId: user.mediaId,
 						isActive: !req.body.isActive ? true : req.body.isActive,
 						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,

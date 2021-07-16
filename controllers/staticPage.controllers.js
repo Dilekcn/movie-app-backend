@@ -7,7 +7,7 @@ exports.getAll = async (req, res) => {
 		const { page = 1, limit } = req.query;
 		const response = await StaticPageModel.find()
 			.limit(limit * 1)
-			.skip((page - 1) * limit)
+			.skip((page - 1) * limit) 
 			.sort({ createdAt: -1 })
 			.populate('mediaId', 'url title alt');
 		const total = await StaticPageModel.find().countDocuments();
@@ -25,7 +25,7 @@ exports.createPage = async (req, res) => {
 				url: data.Location || null,
 				title: 'static-page',
 				mediaKey: data.Key,
-				alt: req.body.alt || null,
+				alt: req.body.name,
 			});
 
 			newImage.save();
@@ -157,7 +157,7 @@ exports.updatePages = async (req, res) => {
 						$set: {
 							name,
 							content,
-							mediaId: staticpage.mediaId,
+							mediaId: !req.body.mediaId ? staticpage.mediaId : req.body.mediaId,
 							isActive: !req.body.isActive ? true : req.body.isActive,
 							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
 						},
