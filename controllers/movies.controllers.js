@@ -72,7 +72,6 @@ exports.create = async (req, res) => {
 					episodeNumber,
 					director,
 					tags,
-					trailerUrl,
 					likes,
 				} = req.body;
 
@@ -93,7 +92,6 @@ exports.create = async (req, res) => {
 					episodeNumber,
 					director,
 					tags: tags.split(','),
-					trailerUrl,
 					likes,
 					isActive,
 					isDeleted,
@@ -149,7 +147,6 @@ exports.create = async (req, res) => {
 					episodeNumber,
 					director,
 					tags,
-					trailerUrl,
 					likes,
 				} = req.body;
 
@@ -170,7 +167,6 @@ exports.create = async (req, res) => {
 					episodeNumber,
 					director,
 					tags: tags.split(','),
-					trailerUrl,
 					likes,
 					isActive,
 					isDeleted,
@@ -285,7 +281,6 @@ exports.updateSingleMovie = async (req, res) => {
 				episodeNumber,
 				director,
 				tags,
-				trailerUrl,
 			} = req.body;
 
 			await MoviesModel.findByIdAndUpdate(
@@ -308,7 +303,6 @@ exports.updateSingleMovie = async (req, res) => {
 						episodeNumber,
 						director,
 						tags: tags.split(','),
-						trailerUrl,
 						websiteId: movie.websiteId,
 						likes: req.body.likes ? req.body.likes : movie.likes,
 						isActive: req.body.isActive ? req.body.isActive : movie.isActive,
