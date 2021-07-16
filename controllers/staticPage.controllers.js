@@ -157,7 +157,7 @@ exports.updatePages = async (req, res) => {
 						$set: {
 							name,
 							content,
-							mediaId: staticpage.mediaId,
+							mediaId: !req.body.mediaId ? staticpage.mediaId : req.body.mediaId,
 							isActive: !req.body.isActive ? true : req.body.isActive,
 							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
 						},
