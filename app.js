@@ -17,6 +17,9 @@ const mediasRouter = require('./routes/medias.routes');
 const notificationRouter = require('./routes/notification.routes');
 const trailersRouter = require('./routes/trailers.routes');
 const categoriesRouter = require('./routes/categories.routes');
+const slidersRouter=require('./routes/sliders.routes');
+const getInvolvedRouter =require('./routes/getinvolved.router')
+
 
 //middlewares
 // const verifyToken = require('./auth/verifyToken');
@@ -57,6 +60,8 @@ app.use('/', mediasRouter);
 app.use('/', trailersRouter);
 app.use('/', categoriesRouter);
 app.use('/', notificationRouter);
+app.use('/', slidersRouter);
+app.use('/', getInvolvedRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
