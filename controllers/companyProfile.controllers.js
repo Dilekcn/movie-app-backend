@@ -1,14 +1,14 @@
-const FooterModel = require('../model/Footer.model');
+const CompanyProfileModel = require('../model/CompanyProfile.model');
 
 exports.getAll = async (req, res) => {
 	try {
 		const { page = 1, limit } = req.query;
 
-		const response = await FooterModel.find()
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .sort({ createdAt: -1 });
-        const total = await FooterModel.find().count();
+		const response = await CompanyProfileModel.find()
+			.limit(limit * 1)
+			.skip((page - 1) * limit)
+			.sort({ createdAt: -1 });
+		const total = await CompanyProfileModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
@@ -16,16 +16,16 @@ exports.getAll = async (req, res) => {
 	}
 };
 
-exports.getSingleFooterById = (req, res) => {
+exports.getCompanyProfileById = (req, res) => {
 	const id = req.params.id;
 
-	FooterModel.findById({ _id: id })
+	CompanyProfileModel.findById({ _id: id })
 		.then((data) => res.json(data))
 		.catch((err) => res.json({ message: err, status: false }));
 };
 
-exports.createFooter = (req, res) => {
-	const newFooter = new FooterModel({
+exports.createCompanyProfile = (req, res) => {
+	const newCompanyProfile = new CompanyProfileModel({
 		logo: req.body.logo,
 		address: req.body.address,
 		email: req.body.email,
@@ -34,22 +34,22 @@ exports.createFooter = (req, res) => {
 		copyright: req.body.copyright,
 	});
 
-	newFooter
+	newCompanyProfile
 		.save()
 		.then((data) => res.json({ status: true, data }))
 		.catch((err) => res.json({ message: err, status: false }));
 };
 
-exports.updateFooterById = (req, res) => {
+exports.updateCompanyProfile = (req, res) => {
 	const id = req.params.id;
-	FooterModel.findByIdAndUpdate({ _id: id }, { $set: req.body })
+	CompanyProfileModel.findByIdAndUpdate({ _id: id }, { $set: req.body })
 		.then((data) => res.json({ status: true, data }))
 		.catch((err) => res.json({ message: err, status: false }));
 };
 
-exports.removeFooterById = (req, res) => {
+exports.removeCompanyProfile = (req, res) => {
 	const id = req.params.id;
-	FooterModel.findByIdAndDelete({ _id: id })
+	CompanyProfileModel.findByIdAndDelete({ _id: id })
 		.then((data) => res.json({ status: true, data }))
 		.catch((err) => res.json({ message: err, status: false }));
 };

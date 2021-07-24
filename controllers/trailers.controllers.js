@@ -220,7 +220,6 @@ exports.getTrailersByUserId = async (req, res) => {
 };
 
 exports.updateSingleTrailer = async (req, res) => {
-	console.log(req.body);
 	await TrailersModel.findById({ _id: req.params.id })
 		.then(async (trailer) => {
 			// await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const FooterSchema = new Schema(
+const CompanyProfileSchema = new Schema(
 	{
 		logo: { type: String },
 		address: { type: String },
@@ -13,4 +13,4 @@ const FooterSchema = new Schema(
 	{ timestamps: true }
 );
 
-module.exports = mongoose.model('footer', FooterSchema);
+module.exports = mongoose.model('companyprofile', CompanyProfileSchema);
