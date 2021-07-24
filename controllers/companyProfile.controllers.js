@@ -269,6 +269,12 @@ exports.updateCompanyProfile = async (req, res) => {
 exports.removeCompanyProfile = (req, res) => {
 	const id = req.params.id;
 	CompanyProfileModel.findByIdAndDelete({ _id: id })
-		.then((data) => res.json({ status: true, data }))
+		.then((data) =>
+			res.json({
+				status: true,
+				message: 'Company profile is deleted successfully',
+				data,
+			})
+		)
 		.catch((err) => res.json({ message: err, status: false }));
 };
