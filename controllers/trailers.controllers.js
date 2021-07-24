@@ -224,51 +224,54 @@ exports.updateSingleTrailer = async (req, res) => {
 
 	await TrailersModel.findById({ _id: req.params.id })
 		.then(async (trailer) => {
-			await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
-				const data = async (data) => {
-					await MediaModel.findByIdAndUpdate(
-						{ _id: trailer.mediaId },
-						{
-							$set: {
-								url: data.Location || null,
-								title: 'trailer-image',
-								mediaKey: data.Key,
-								alt: req.body.title || null,
-							},
-						},
-						{ useFindAndModify: false, new: true }
-					).catch((err) => res.json({ message: err, status: false }));
-				};
-				await S3.updateMedia(req, res, media.mediaKey, data);
-			});
+			// await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
+			// 	const data = async (data) => {
+			// 		await MediaModel.findByIdAndUpdate(
+			// 			{ _id: trailer.mediaId },
+			// 			{
+			// 				$set: {
+			// 					url: data.Location || null,
+			// 					title: 'trailer-image',
+			// 					mediaKey: data.Key,
+			// 					alt: req.body.title || null,
+			// 				},
+			// 			},
+			// 			{ useFindAndModify: false, new: true }
+			// 		).catch((err) => res.json({ message: err, status: false }));
+			// 	};
+			// 	await S3.updateMedia(req, res, media.mediaKey, data);
+			// });
 
-			await MediaModel.findById({ _id: trailer.bannerId }).then(async (banner) => {
-				const data = async (data) => {
-					await MediaModel.findByIdAndUpdate(
-						{ _id: trailer.bannerId },
-						{
-							$set: {
-								url: data.Location || null,
-								title: 'trailer-banner',
-								mediaKey: data.Key,
-								alt: req.body.title || null,
-							},
-						},
-						{ useFindAndModify: false, new: true }
-					).catch((err) => res.json({ message: err, status: false }));
-				};
-				await S3.updateBanner(req, res, banner.mediaKey, data);
-			});
-
-			await trailer.websiteId.map(async (web, index) => {
-				await WebsiteModel.findByIdAndUpdate(
-					{ _id: web },
-					{
-						$set: JSON.parse(req.body.websiteId)[index],
-					},
-					{ useFindAndModify: false, new: true }
-				);
-			});
+			// await MediaModel.findById({ _id: trailer.bannerId }).then(async (banner) => {
+			// 	const data = async (data) => {
+			// 		await MediaModel.findByIdAndUpdate(
+			// 			{ _id: trailer.bannerId },
+			// 			{
+			// 				$set: {
+			// 					url: data.Location || null,
+			// 					title: 'trailer-banner',
+			// 					mediaKey: data.Key,
+			// 					alt: req.body.title || null,
+			// 				},
+			// 			},
+			// 			{ useFindAndModify: false, new: true }
+			// 		)
+			// 	};
+			// 	await S3.updateBanner(req, res, banner.mediaKey, data);
+			// }).catch((err) => res.json({ message: err, status: false }));
+			
+      
+			// await trailer.websiteId.map(async (web, index) => {
+			// 	await WebsiteModel.findByIdAndUpdate(
+			// 		{ _id: web },
+			// 		{
+			// 			$set: JSON.parse(req.body.websiteId)[index],
+			// 		},
+			// 		{ useFindAndModify: false, new: true }
+			// 	);
+			// });
+	
+		
 
 			const {
 				imdb,
@@ -310,7 +313,7 @@ exports.updateSingleTrailer = async (req, res) => {
 						director,
 						tags: tags.split(','),
 						trailerUrl,
-						websiteId: trailer.websiteId,
+						// websiteId: trailer.websiteId,
 						likes: req.body.likes ? req.body.likes : trailer.likes,
 						isActive: req.body.isActive
 							? req.body.isActive

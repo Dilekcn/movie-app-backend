@@ -10,9 +10,9 @@ exports.getAll = async (req, res) => {
 			.populate({
 				path:'userId',
 				model:'user',
-				select:'firstname lastname profileImageId',
+				select:'firstname lastname mediaId',
 				populate:{
-					path:'profileImageId',
+					path:'mediaId',
 					model:'media',
 					select:'url'
 				}
@@ -60,9 +60,9 @@ exports.getSingleComment = async (req, res) => {
 	.populate({
         path:'userId',
         model:'user',
-        select:'firstname lastname profileImageId',
+        select:'firstname lastname mediaId',
         populate:{
-            path:'profileImageId',
+            path:'mediaId',
             model:'media',
             select:'url'
         }
@@ -81,9 +81,9 @@ exports.getCommentsByUserId = async (req, res) => {
 	.populate({
         path:'userId',
         model:'user',
-        select:'firstname lastname profileImageId',
+        select:'firstname lastname mediaId',
         populate:{
-            path:'profileImageId',
+            path:'mediaId',
             model:'media',
             select:'url'
         }
@@ -102,9 +102,9 @@ exports.getCommentsByList = async (req, res) => {
 	.populate({
         path:'userId',
         model:'user',
-        select:'firstname lastname profileImageId',
+        select:'firstname lastname mediaId',
         populate:{
-            path:'profileImageId',
+            path:'mediaId',
             model:'media',
             select:'url'
         }
