@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const CompanyProfileSchema = new Schema(
 	{
+		name: String,
 		logo: { type: Schema.Types.ObjectId, ref: 'media' },
 		address: { type: String },
 		email: { type: String },
