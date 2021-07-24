@@ -58,7 +58,10 @@ exports.createCompanyProfile = async (req, res) => {
 				email,
 				copyright,
 				phone,
-				socialMediaLinks,
+				socialMediaLinks:
+					typeof socialMediaLinks === 'string'
+						? JSON.parse(socialMediaLinks)
+						: socialMediaLinks,
 				isActive,
 				isDeleted,
 			});
@@ -95,7 +98,10 @@ exports.createCompanyProfile = async (req, res) => {
 			email,
 			copyright,
 			phone,
-			socialMediaLinks,
+			socialMediaLinks:
+				typeof socialMediaLinks === 'string'
+					? JSON.parse(socialMediaLinks)
+					: socialMediaLinks,
 			isActive,
 			isDeleted,
 		});
@@ -139,7 +145,10 @@ exports.createCompanyProfile = async (req, res) => {
 				email,
 				copyright,
 				phone,
-				socialMediaLinks,
+				socialMediaLinks:
+					typeof socialMediaLinks === 'string'
+						? JSON.parse(socialMediaLinks)
+						: socialMediaLinks,
 				isActive,
 				isDeleted,
 			});
@@ -196,7 +205,10 @@ exports.updateCompanyProfile = async (req, res) => {
 							logo: req.files ? companyprofile.logo : req.body.logo,
 							phone,
 							address,
-							socialMediaLinks,
+							socialMediaLinks:
+								typeof socialMediaLinks === 'string'
+									? JSON.parse(socialMediaLinks)
+									: socialMediaLinks,
 							email,
 							copyright,
 							isActive: !req.body.isActive ? true : req.body.isActive,
@@ -229,7 +241,10 @@ exports.updateCompanyProfile = async (req, res) => {
 							logo: !logo ? companyprofile.logo : logo,
 							phone,
 							address,
-							socialMediaLinks,
+							socialMediaLinks:
+								typeof socialMediaLinks === 'string'
+									? JSON.parse(socialMediaLinks)
+									: socialMediaLinks,
 							email,
 							copyright,
 							isActive: !req.body.isActive ? true : req.body.isActive,
