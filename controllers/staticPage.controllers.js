@@ -177,7 +177,7 @@ exports.updatePages = async (req, res) => {
 	} else {
 		await StaticPageModel.findById({ _id: req.params.id })
 			.then(async (staticpage) => {
-				const { name, content, mediaId } = req.body;
+				const { name, content} = req.body;
 
 				await StaticPageModel.findByIdAndUpdate(
 					{ _id: req.params.id },
@@ -185,7 +185,7 @@ exports.updatePages = async (req, res) => {
 						$set: {
 							name,
 							content,
-							mediaId: !mediaId ? staticpage.mediaId : mediaId,
+							mediaId: staticpage.mediaId,
 							isActive: !req.body.isActive ? true : req.body.isActive,
 							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
 						},
