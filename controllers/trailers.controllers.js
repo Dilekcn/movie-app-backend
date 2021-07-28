@@ -310,12 +310,8 @@ exports.updateSingleTrailer = async (req, res) => {
 						trailerUrl,
 						// websiteId: trailer.websiteId,
 						// likes: req.body.likes ? req.body.likes : trailer.likes,
-						isActive: req.body.isActive
-							? req.body.isActive
-							: trailer.isActive,
-						isDeleted: req.body.isDeleted
-							? req.body.isDeleted
-							: trailer.isDeleted,
+						isActive: !req.body.isActive ? true : req.body.isActive,
+						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
 						// imdb,
 						// userRating: req.body.userRating
 						// 	? [...trailer.userRating, req.body.userRating]
@@ -332,9 +328,9 @@ exports.updateSingleTrailer = async (req, res) => {
 					})
 				)
 
-				.catch((err) => res.json({ message: err, status: 401 }));
+				.catch((err) => res.json({ message: err, status: 404 }));
 		})
-		.catch((err) => res.json({ message: err, status: 402 }));
+		.catch((err) => res.json({ message: err, status: 404 }));
 };
 
 exports.removeSingleTrailer = async (req, res) => {
