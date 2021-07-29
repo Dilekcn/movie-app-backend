@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken")
-require("dotenv").config()
+require("dotenv").config()  
 
 const isAdmin = (req,res,next) => {
   const token  = req.params.token || req.body.token || req.headers['x-access-token'] || req.headers.token

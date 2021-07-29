@@ -6,7 +6,7 @@ const notificationSchema = new Schema(
 	{
 		userId: { type: Schema.Types.ObjectId, ref: 'user' },
 		title:String,
-		content:String,
+		qoute:String,
 		isRead: { type: Boolean, default: false },
 		isDeleted: { type: Boolean, default: false },
 	},

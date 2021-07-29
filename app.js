@@ -60,9 +60,7 @@ app.use('/', mediasRouter);
 app.use('/', trailersRouter);
 app.use('/', categoriesRouter);
 app.use('/', notificationRouter);
-app.use('/', websitesRouter);
-app.use('/', staticPageRouter);
-app.use('/', moviesRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
