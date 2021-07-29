@@ -13,7 +13,7 @@ exports.getAll = async (req, res) => {
 			.populate('logo', 'url title alt');
 		const total = await CompanyProfileModel.find().countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-		res.json({ total: total, pages, status: 200, response });
+		res.json({ total, pages, status: 200, response });
 	} catch (error) {
 		res.json({ status: 404, message: error });
 	}
@@ -271,7 +271,7 @@ exports.removeCompanyProfile = (req, res) => {
 	CompanyProfileModel.findByIdAndDelete({ _id: id })
 		.then((data) =>
 			res.json({
-				status: true,
+				status: 200,
 				message: 'Company profile is deleted successfully',
 				data,
 			})
