@@ -1,14 +1,12 @@
-const mongoose = require('mongoose');
-
 const FaqModel = require('../model/Faq.model');
 
 exports.getAllFaqs = async (req, res) => {
 	try {
 		const { page = 1, limit } = req.query;
 		const response = await FaqModel.find()
-		.limit(limit * 1)
-		.skip((page - 1) * limit)
-		.sort({ createdAt: -1 });
+			.limit(limit * 1)
+			.skip((page - 1) * limit)
+			.sort({ createdAt: -1 });
 		const total = await FaqModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });

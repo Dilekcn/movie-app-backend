@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const ListsModel = require('../model/List.model');
 
 exports.getAll = async (req, res) => {
@@ -6,9 +5,9 @@ exports.getAll = async (req, res) => {
 		const { page = 1, limit } = req.query;
 
 		const response = await ListsModel.find()
-		.limit(limit * 1)
-		.skip((page - 1) * limit)
-		.sort({ createdAt: -1 });
+			.limit(limit * 1)
+			.skip((page - 1) * limit)
+			.sort({ createdAt: -1 });
 		const total = await ListsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
