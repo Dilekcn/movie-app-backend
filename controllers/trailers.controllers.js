@@ -10,7 +10,7 @@ exports.getAll = async (req, res) => {
 
 		const response = await TrailersModel.find()
 			.limit(limit * 1)
-			.skip((page - 1) * limit) 
+			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
 			.populate('mediaId', 'url title alt')
 			.populate('bannerId', 'url title alt')
@@ -25,14 +25,14 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	console.log( typeof req.body.websiteId);
-	if (req.body.websiteId) {	
+	console.log(typeof req.body.websiteId);
+	if (req.body.websiteId) {
 		const newWebsite = await JSON.parse(req.body.websiteId).map((web) => {
 			const website = web;
 			return new WebsiteModel({
 				title: website.title || null,
 				link: website.link || null,
-			}); 
+			});
 		});
 		newWebsite.map((web) => web.save());
 		const websiteIds = newWebsite.map((web) => web._id);
@@ -142,7 +142,7 @@ exports.create = async (req, res) => {
 					year,
 					duration,
 					cast,
-					description, 
+					description,
 					genre,
 					ageRestriction,
 					totalSeasons,
@@ -220,58 +220,56 @@ exports.getTrailersByUserId = async (req, res) => {
 };
 
 exports.updateSingleTrailer = async (req, res) => {
-	console.log(req.body)
-
 	await TrailersModel.findById({ _id: req.params.id })
 		.then(async (trailer) => {
-			await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
-				const data = async (data) => {
-					await MediaModel.findByIdAndUpdate(
-						{ _id: trailer.mediaId },
-						{
-							$set: {
-								url: data.Location || null,
-								title: 'trailer-image',
-								mediaKey: data.Key,
-								alt: req.body.title || null,
-							},
-						},
-						{ useFindAndModify: false, new: true }
-					).catch((err) => res.json({ message: err, status: false }));
-				};
-				await S3.updateMedia(req, res, media.mediaKey, data);
-			});
+			// await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
+			// 	const data = async (data) => {
+			// 		await MediaModel.findByIdAndUpdate(
+			// 			{ _id: trailer.mediaId },
+			// 			{
+			// 				$set: {
+			// 					url: data.Location || null,
+			// 					title: 'trailer-image',
+			// 					mediaKey: data.Key,
+			// 					alt: req.body.title || null,
+			// 				},
+			// 			},
+			// 			{ useFindAndModify: false, new: true }
+			// 		).catch((err) => res.json({ message: err, status: false }));
+			// 	};
+			// 	await S3.updateMedia(req, res, media.mediaKey, data);
+			// });
 
-			await MediaModel.findById({ _id: trailer.bannerId }).then(async (banner) => {
-				const data = async (data) => {
-					await MediaModel.findByIdAndUpdate(
-						{ _id: trailer.bannerId },
-						{
-							$set: {
-								url: data.Location || null,
-								title: 'trailer-banner',
-								mediaKey: data.Key,
-								alt: req.body.title || null,
-							},
-						},
-						{ useFindAndModify: false, new: true }
-					).catch((err) => res.json({ message: err, status: false }));
-				};
-				await S3.updateBanner(req, res, banner.mediaKey, data);
-			});
+			// await MediaModel.findById({ _id: trailer.bannerId }).then(async (banner) => {
+			// 	const data = async (data) => {
+			// 		await MediaModel.findByIdAndUpdate(
+			// 			{ _id: trailer.bannerId },
+			// 			{
+			// 				$set: {
+			// 					url: data.Location || null,
+			// 					title: 'trailer-banner',
+			// 					mediaKey: data.Key,
+			// 					alt: req.body.title || null,
+			// 				},
+			// 			},
+			// 			{ useFindAndModify: false, new: true }
+			// 		)
+			// 	};
+			// 	await S3.updateBanner(req, res, banner.mediaKey, data);
+			// }).catch((err) => res.json({ message: err, status: false }));
 
-			await trailer.websiteId.map(async (web, index) => {
-				await WebsiteModel.findByIdAndUpdate(
-					{ _id: web },
-					{
-						$set: JSON.parse(req.body.websiteId)[index],
-					},
-					{ useFindAndModify: false, new: true }
-				);
-			});
+			// await trailer.websiteId.map(async (web, index) => {
+			// 	await WebsiteModel.findByIdAndUpdate(
+			// 		{ _id: web },
+			// 		{
+			// 			$set: JSON.parse(req.body.websiteId)[index],
+			// 		},
+			// 		{ useFindAndModify: false, new: true }
+			// 	);
+			// });
 
 			const {
-				imdb,
+				// imdb,
 				title,
 				episodeTitle,
 				type,
@@ -284,7 +282,7 @@ exports.updateSingleTrailer = async (req, res) => {
 				totalSeasons,
 				seasonNumber,
 				episodeNumber,
-				director,
+				// director,
 				tags,
 				trailerUrl,
 			} = req.body;
@@ -298,30 +296,26 @@ exports.updateSingleTrailer = async (req, res) => {
 						type,
 						year,
 						duration,
-						mediaId: trailer.mediaId,
-						bannerId: trailer.bannerId,
-						cast: cast.split(','),
+						// mediaId: trailer.mediaId,
+						// bannerId: trailer.bannerId,
+						cast,
 						description,
 						genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
 						ageRestriction,
 						totalSeasons,
 						seasonNumber,
 						episodeNumber,
-						director,
-						tags: tags.split(','),
+						// director,
+						tags,
 						trailerUrl,
-						websiteId: trailer.websiteId,
-						likes: req.body.likes ? req.body.likes : trailer.likes,
-						isActive: req.body.isActive
-							? req.body.isActive
-							: trailer.isActive,
-						isDeleted: req.body.isDeleted
-							? req.body.isDeleted
-							: trailer.isDeleted,
-						imdb,
-						userRating: req.body.userRating
-							? [...trailer.userRating, req.body.userRating]
-							: trailer.userRating,
+						// websiteId: trailer.websiteId,
+						// likes: req.body.likes ? req.body.likes : trailer.likes,
+						isActive: !req.body.isActive ? true : req.body.isActive,
+						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+						// imdb,
+						// userRating: req.body.userRating
+						// 	? [...trailer.userRating, req.body.userRating]
+						// 	: trailer.userRating,
 					},
 				}
 			)
@@ -334,9 +328,9 @@ exports.updateSingleTrailer = async (req, res) => {
 					})
 				)
 
-				.catch((err) => res.json({ message: err,status:401 }));
+				.catch((err) => res.json({ message: err, status: 404 }));
 		})
-		.catch((err) => res.json({ message: err,status:402  }));
+		.catch((err) => res.json({ message: err, status: 404 }));
 };
 
 exports.removeSingleTrailer = async (req, res) => {
