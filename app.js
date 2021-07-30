@@ -20,6 +20,7 @@ const categoriesRouter = require('./routes/categories.routes');
 const websitesRouter = require('./routes/websites.routes');
 const staticPageRouter = require('./routes/staticPage.routes');
 const moviesRouter = require('./routes/movies.routes');
+const complaintRouter =require('./routes/complaint.routes')
 
 //middlewares
 // const verifyToken = require('./auth/verifyToken');
@@ -63,6 +64,7 @@ app.use('/', notificationRouter);
 app.use('/', websitesRouter);
 app.use('/', staticPageRouter);
 app.use('/', moviesRouter);
+app.use('/',complaintRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
