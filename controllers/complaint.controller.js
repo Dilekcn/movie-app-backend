@@ -1,5 +1,6 @@
 const ComplaintModel = require('../model/Complaint.model');
 
+
 exports.getAll = async (req, res) => {
 	try {
 		const { page = 1, limit } = req.query;
@@ -58,4 +59,17 @@ exports.getSingleList = async (req, res) => {
 			res.json(data);
 		}
 	});
+};
+
+
+exports.updateComplaint = async (req, res) => {
+	await ComplaintModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
+		.then((data) => res.json({ message: 'Successfully updated', data }))
+		.catch((err) => res.json({ message: err }));
+};
+
+exports.removeComplaint = async (req, res) => {
+	await ComplaintModel.findByIdAndDelete({ _id: req.params.id })
+		.then((data) => res.json({  status: 200, message: 'Successfully deleted' }))
+		.catch((err) => res.json({ status: false, message: err }));
 };

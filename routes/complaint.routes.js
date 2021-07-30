@@ -5,9 +5,8 @@ const ComplaintControllers = require('../controllers/complaint.controller');
 
 router.get('/complaint', ComplaintControllers.getAll);
 router.get('/complaint/commnetId', ComplaintControllers.getSingleList);
-// router.get('/complaint/userid/:userid', ComplaintControllers.getListByUserId);
 router.post('/complaint', ComplaintControllers.create);
-// router.put('/complaint/:id', ComplaintControllers.updateList);
-// router.delete('/complaint/:id', ComplaintControllers.removeSingleList);
+router.put('/complaint/:id', ComplaintControllers.updateComplaint);
+router.delete('/complaint/:id', ComplaintControllers.removeComplaint);
 
 module.exports = router;
