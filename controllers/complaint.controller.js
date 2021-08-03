@@ -14,13 +14,13 @@ exports.getAll = async (req, res) => {
 			// 	model:'comment',
 			// 	select:'title content userId',
 			// 	populate:{
-			// 		path:'userId',
+			// 		path:'userId', 
 			// 		model:'user',
 			// 		select:'_id firstname lastname'
 			// 	}
 			// })
-            populate('userId')
-			populate('commentId')
+            .populate('userId')
+			.populate('commentId')
 		const total = await ComplaintModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
