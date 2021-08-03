@@ -19,8 +19,8 @@ exports.getAll = async (req, res) => {
 			// 		select:'_id firstname lastname'
 			// 	}
 			// })
-            .populate('userId')
-			.populate('commentId')
+            .populate('userId','title content')
+			.populate('commentId','firstname lastname')
 		const total = await ComplaintModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
