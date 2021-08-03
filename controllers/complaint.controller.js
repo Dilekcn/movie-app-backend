@@ -9,17 +9,18 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-            .populate({
-				path:'commnetId',
-				model:'comment',
-				select:'title content userId',
-				populate:{
-					path:'userId',
-					model:'user',
-					select:'_id firstname lastname'
-				}
-			})
-                      
+            // .populate({
+			// 	path:'commnetId',
+			// 	model:'comment',
+			// 	select:'title content userId',
+			// 	populate:{
+			// 		path:'userId',
+			// 		model:'user',
+			// 		select:'_id firstname lastname'
+			// 	}
+			// })
+            populate('userId')
+			populate('commentId')
 		const total = await ComplaintModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
