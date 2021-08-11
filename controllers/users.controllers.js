@@ -116,7 +116,7 @@ exports.createUser = async (req, res) => {
 exports.login = async (req, res) => {
 	const { email, password } = req.body;
 
-	await UserModel.findOne({ email: email })
+	UserModel.findOne({ email: email })
 		.then(async (data) => {
 			if (await bcrypt.compare(password, data.password)) {
 				const token = jwt.sign(
@@ -129,9 +129,9 @@ exports.login = async (req, res) => {
 					firstname: data.firstname,
 					lastname: data.lastname,
 					email: data.email,
-					country: country,
-					isActive: isActive,
-					isDeleted: isDeleted,
+					country: data.country,
+					isActive: data.isActive,
+					isDeleted: data.isDeleted,
 					id: data._id,
 					mediaId: data.mediaId,
 					role: data.role,
