@@ -10,3 +10,4 @@ router.put('/complaint/:id', ComplaintControllers.updateComplaint);
 router.delete('/complaint/:id', ComplaintControllers.removeComplaint);
 
 module.exports = router;
+ 
