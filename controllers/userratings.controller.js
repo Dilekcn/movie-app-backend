@@ -1,16 +1,16 @@
-const RatingModel = require('../model/Ratings.model');
+const UserRatingModel = require('../model/UserRatings.model');
 
 
 exports.getAll = async (req, res) => {
 	try {
 		const { page, limit } = req.query;
  
-		const response = await RatingModel.find()
+		const response = await UserRatingModel.find()
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
 		
-		const total = await RatingModel.find().countDocuments();
+		const total = await UserRatingModel.find().countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total, pages, status: 200, response });
 	} catch (error) {
@@ -20,13 +20,13 @@ exports.getAll = async (req, res) => {
 
 exports.getRatingById = (req, res) => {
 	const id = req.params.id;
-	RatingModel.findById({ _id: id })
+	UserRatingModel.findById({ _id: id })
 		.then((data) => res.json(data))
 		.catch((err) => res.json({ message: err, status: false }));
 };
 
 exports.create = async (req, res) => {
-	const newRating = await new RatingModel({
+	const newRating = await new UserRatingModel({
 		userId: req.body.userId,
 		rating: req.body.rating,
 		listId: req.body.listId,
@@ -54,13 +54,13 @@ exports.updateRating = async (req, res) => {
 
 exports.removeRating = (req, res) => {
 	const id = req.params.id;
-	RatingModel.findByIdAndDelete({ _id: id })
+	UserRatingModel.findByIdAndDelete({ _id: id })
 		.then((data) =>
 			res.json({
 				status: 200,
 				message: 'Rating is deleted successfully',
 				data,
-			})  
+			})   
 		)
 		.catch((err) => res.json({ message: err, status: false }));  
 };

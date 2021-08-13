@@ -1,15 +1,16 @@
 const ListsModel = require('../model/List.model');
+const UserRatingModel = require('../model/UserRatings.model');
+
 
 exports.getAll = async (req, res) => {
-	try {
+	try { 
 		const { page = 1, limit } = req.query;
 		const response = await ListsModel.find()
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-			// .populate('userId')
-			// .populated('mediaId')
-			.populate('userRating')
+			.populate('userId','firstname lastname') 
+			.populate('userRatingIds')
 			.populate('movieIds')
 		const total = await ListsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
@@ -20,15 +21,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	const data = async (data) => {
-		const newMedia = await new MediaModel({
-			url: data.Location || null,
-			title: 'users',
-			mediaKey: data.Key,
-			alt: req.body.alt || null,
-		});
 
-		newMedia.save();
 	const {
 		userId,
 		name,
@@ -37,9 +30,8 @@ exports.create = async (req, res) => {
 		isActive,
 		isDeleted,
 		rating,
-		userRating,
-		movieIds,
-		mediaId
+		userRatingIds,
+
 	} = req.body;
 	const newList = await new ListsModel({
 		userId,
@@ -49,17 +41,16 @@ exports.create = async (req, res) => {
 		isActive,
 		isDeleted,
 		rating,
-		userRating,
-		movieIds,
-		mediaId:newMedia._id,
+		userRatingIds,
+		movieIds:JSON.parse(req.body.movieIds),
+		
 	});
 	newList
 		.save()
 		.then((response) => res.json(response))
 		.catch((err) => res.json(err));
     }
-	await S3.uploadNewMedia(req, res, data);
-};
+
 
 exports.getSingleList = async (req, res) => {
 	await ListsModel.findById({ _id: req.params.id }, (err, data) => {
@@ -69,9 +60,8 @@ exports.getSingleList = async (req, res) => {
 			res.json(data);
 		}
 	})
-	// .populate('userId')
-	// .populated('mediaId')
-	.populate('userRating')
+	.populate('userId','firstname lastname') 
+	.populate('userRatingIds')
 	.populate('movieIds')
 };
 
@@ -83,16 +73,104 @@ exports.getListByUserId = async (req, res) => {
 			res.json(data);
 		}
 	})
-	// .populate('userId')
-	// .populated('mediaId')
-	.populate('userRating')
-	.populate('movieIds')
+	.populate('userId','firstname lastname') 
+	.populate('userRatingIds')
+	.populate('movieIds') 
 };
 
 exports.updateList = async (req, res) => {
+		await ListsModel.findById({ _id: req.params.id })
+			.then(async (list) => {
+	
+				const newUserRating =
+					typeof req.body.userRatingIds === 'string'
+						? await JSON.parse(req.body.userRatingIds).map(
+								(userrating) => {
+									return new UserRatingModel({
+										userId: userrating.userId,
+										listId: req.params.id, 
+										rating: userrating.rating,
+									});
+								}
+						  )
+						: req.body.UserRatingModel.map((userrating) => {
+								return new UserRatingModel({
+									userId: userrating.userId,
+									listId: req.params.id,
+									rating: userrating.rating,
+								});
+						  });
+
+				newUserRating.map((userrating) => userrating.save());
+
+				const newUserRatingIds = newUserRating.map((userrating) => userrating._id);
+
+				const {userId,name,description,rating,isPublic} =
+					req.body;
+				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
+				await ListsModel.findByIdAndUpdate(
+					{ _id: req.params.id },
+					{
+						$set: {
+							userId,
+							name, 
+							description,
+							rating,
+							movieIds:newmovieids,
+							isPublic,
+							userRatingIds:newUserRatingIds,
+							isActive: !req.body.isActive
+								? true
+								: req.body.isActive,
+							isDeleted: !req.body.isDeleted
+								? false
+								: req.body.isDeleted,
+						},
+					},
+					{ useFindAndModify: false, new: true }
+				)
+					.then((data) =>
+						res.json({
+							status: 200,
+							message: 'List is updated successfully',
+							data,
+						})
+					)
+					.catch((err) => ({ status: 400, message: err }));
+			})
+			.catch((err) => ({ status: 400, message: err }));
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	await ListsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
 		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err }));
+		.catch((err) => res.json({ message: err })); 
 };
 
 exports.removeSingleList = async (req, res) => {
