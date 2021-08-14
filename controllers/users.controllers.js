@@ -133,7 +133,7 @@ exports.login = async (req, res) => {
 					isActive: data.isActive,
 					isDeleted: data.isDeleted,
 					id: data._id,
-					mediaId: data.mediaId.populate(),
+					mediaId: data.mediaId,
 					role: data.role,
 					token: token,
 				});
