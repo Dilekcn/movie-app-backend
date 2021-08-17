@@ -116,7 +116,7 @@ exports.createUser = async (req, res) => {
 exports.login = async (req, res) => {
 	const { email, password } = req.body;
 
-	UserModel.findOne({ email: email }).populate('mediaId')
+	UserModel.findOne({ email: email }).populate('mediaId','url alt')
 		.then(async (data) => {
 			if (await bcrypt.compare(password, data.password)) {
 				const token = jwt.sign(
