@@ -123,7 +123,7 @@ exports.login = async (req, res) => {
 					{ name: email, role: data.role },
 					process.env.ACCESS_TOKEN_SECRET,
 					{ expiresIn: '1h' }
-				);
+				)
 				res.json({
 					status: true,
 					firstname: data.firstname,
@@ -136,7 +136,7 @@ exports.login = async (req, res) => {
 					mediaId: data.mediaId,
 					role: data.role,
 					token: token,
-				});
+				})
 			} else {
 				res.json({ status: false, message: 'Wrong password' });
 			}
