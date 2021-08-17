@@ -116,7 +116,7 @@ exports.createUser = async (req, res) => {
 exports.login = async (req, res) => {
 	const { email, password } = req.body;
 
-	UserModel.findOne({ email: email })
+	UserModel.findOne({ email: email }).populate('mediaId')
 		.then(async (data) => {
 			if (await bcrypt.compare(password, data.password)) {
 				const token = jwt.sign(
@@ -138,10 +138,10 @@ exports.login = async (req, res) => {
 					token: token,
 				})
 			} else {
-				res.json({ status: false, message: 'Wrong password' });
+				res.json({ status: false, message: 'Wrong password' });  
 			}
 		})
-		.catch((err) => res.json({ message: 'Email does not exist' }));
+		.catch((err) => res.json({ message: 'Email does not exist' })); 
 };
 
 exports.updateUser = async (req, res) => {
