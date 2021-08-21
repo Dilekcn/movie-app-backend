@@ -7,6 +7,7 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
+			
 			.populate({
 				path:'userId',
 				model:'user',
@@ -18,6 +19,7 @@ exports.getAll = async (req, res) => {
 				}
 			})
 			.populate('listId', 'name')
+			.populate('movieId','type imdb_id original_title'); 
 			
 		const total = await CommentsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
@@ -69,7 +71,8 @@ exports.getSingleComment = async (req, res) => {
             select:'url'
         }
     })
-		.populate('listId', 'name');
+		.populate('listId', 'name')
+		.populate('movieId','type imdb_id original_title');
 };
 
 exports.getCommentsByUserId = async (req, res) => {

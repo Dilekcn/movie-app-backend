@@ -9,4 +9,4 @@ const MoviesSchema = new Schema({
 	isDeleted: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model('movies', MoviesSchema);
+module.exports = mongoose.model('movie', MoviesSchema);
