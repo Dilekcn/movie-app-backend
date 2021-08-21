@@ -10,7 +10,7 @@ exports.getAll = async (req, res) => {
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
 			.populate('userId','firstname lastname') 
-			.populate('userRatingIds') 
+			.populate('userRatingIds','userId rating') 
 			.populate('movieIds')
 		const total = await ListsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
