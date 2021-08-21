@@ -18,7 +18,7 @@ exports.getAll = async (req, res) => {
 				}
 			})
 			.populate('listId', 'name')
-			.populate('movieId')
+			
 		const total = await CommentsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
