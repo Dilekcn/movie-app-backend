@@ -61,7 +61,7 @@ exports.getSingleList = async (req, res) => {
 		}
 	})
 	.populate('userId','firstname lastname') 
-	.populate('userRatingIds')
+	.populate('userRatingIds','userId rating') 
 	.populate('movieIds')
 };
 
@@ -74,7 +74,7 @@ exports.getListByUserId = async (req, res) => {
 		}
 	})
 	.populate('userId','firstname lastname') 
-	.populate('userRatingIds')
+	.populate('userRatingIds','userId rating') 
 	.populate('movieIds') 
 };
 
