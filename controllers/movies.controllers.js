@@ -24,6 +24,8 @@ exports.create = async (req, res) => {
 	const newMovie = await new MoviesModel({
 		type: req.body.type,
 		imdb_id: req.body.imdb_id,
+		tmdb_id:req.body.tmdb_id,
+		imdb_rating:req.body.imdb_rating,
 		original_title: req.body.original_title,
 		isActive: req.body.isActive,
 		isDeleted: req.body.isDeleted,
@@ -61,5 +63,5 @@ exports.updateSingleMovie = async (req, res) => {
 exports.removeSingleMovie = async (req, res) => {
 	await MoviesModel.findByIdAndDelete({ _id: req.params.id })
 		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err }));
+		.catch((err) => res.json({ message: err })); 
 };
