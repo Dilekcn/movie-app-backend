@@ -10,15 +10,15 @@ exports.getAll = async (req, res) => {
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
 			.populate('userId','firstname lastname') 
-			.populate('userRatingIds')
+			.populate('userRatingIds') 
 			.populate('movieIds')
 		const total = await ListsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
 		res.status(500).json(error);
-	}
-};
+	} 
+}; 
 
 exports.create = async (req, res) => {
 
@@ -82,7 +82,7 @@ exports.updateList = async (req, res) => {
 		await ListsModel.findById({ _id: req.params.id })
 			.then(async (list) => {
 	
-				const newUserRating =
+				const newUserRating = 
 					typeof req.body.userRatingIds === 'string'
 						? await JSON.parse(req.body.userRatingIds).map(
 								(userrating) => {
@@ -136,37 +136,10 @@ exports.updateList = async (req, res) => {
 							data,
 						})
 					)
-					.catch((err) => ({ status: 400, message: err }));
+					.catch((err) => ({ status: 400, message: err })); 
 			})
 			.catch((err) => ({ status: 400, message: err }));
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	await ListsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
 		.then((data) => res.json(data))
