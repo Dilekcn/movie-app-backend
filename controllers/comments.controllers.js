@@ -17,7 +17,8 @@ exports.getAll = async (req, res) => {
 					select:'url'
 				}
 			})
-			.populate('listId', 'name');
+			.populate('listId', 'name')
+			.populate('movieId')
 		const total = await CommentsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
@@ -33,6 +34,7 @@ exports.create = async (req, res) => {
 		content: req.body.content,
 		listId: req.body.listId,
 		isActive: req.body.isActive,
+		movieId:req.body.movieId,
 		reasonToBlock: req.body.reasonToBlock,
 		isDeleted: req.body.isDeleted,
 	});

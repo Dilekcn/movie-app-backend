@@ -7,6 +7,7 @@ const CommentsSchema = new Schema(
 		title: { type: String, required: true },
 		content: { type: String, required: true },
 		listId: { type: Schema.Types.ObjectId, ref: 'list' },
+		movieId: { type: Schema.Types.ObjectId, ref: 'movie' },
 		isActive: { type: Boolean, default: true },
 		reasonToBlock:{ type: String, default: '' },
 		isDeleted: { type: Boolean, default: false }, 
