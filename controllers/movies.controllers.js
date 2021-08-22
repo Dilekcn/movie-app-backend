@@ -13,6 +13,7 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
+			.populate('userRatingIds','userId rating')
 		const total = await MoviesModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
@@ -53,6 +54,7 @@ exports.getSingleMovie = async (req, res) => {
 			res.json(data);
 		}
 	})
+	.populate('userRatingIds','userId rating')
 };
 
 
