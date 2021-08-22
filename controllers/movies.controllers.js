@@ -13,7 +13,21 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-			.populate('userRatingIds','userId rating')
+			.populate({
+				path:'userRatingIds',
+				model:'userrating',
+				select:'userId rating',
+				populate:{
+					path:'userId',
+					model:'user',
+					select:'firstname lastname',
+					populate:{
+						path:'mediaId',
+						model:'media',
+						select:'url'
+					}
+				}
+			})
 		const total = await MoviesModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
@@ -54,7 +68,21 @@ exports.getSingleMovie = async (req, res) => {
 			res.json(data);
 		}
 	})
-	.populate('userRatingIds','userId rating')
+	.populate({
+		path:'userRatingIds',
+		model:'userrating',
+		select:'userId rating',
+		populate:{
+			path:'userId',
+			model:'user',
+			select:'firstname lastname',
+			populate:{
+				path:'mediaId',
+				model:'media',
+				select:'url'
+			}
+		}
+	})
 };
 
 
@@ -123,8 +151,8 @@ exports.updateSingleMovie = async (req, res) => {
 		await MoviesModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
 		.then((data) => res.json(data))
 		.catch((err) => res.json({ message: err })); 
-};
-
+}; 
+ 
 
 
 
