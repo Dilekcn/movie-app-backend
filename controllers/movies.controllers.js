@@ -116,7 +116,7 @@ exports.updateSingleMovie = async (req, res) => {
 
 			const {type,imdb_id,tmdb_id,imdb_rating,original_title} =
 				req.body;
-			const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
+			
 			await MoviesModel.findByIdAndUpdate(
 				{ _id: req.params.id },
 				{
