@@ -171,7 +171,7 @@ exports.updateUser = async (req, res) => {
 					$set: {
 						firstname,
 						lastname,
-						country:!req.body.country ? user.country : req.body.country,
+						country,
 						mediaId: user.mediaId,
 						isActive: !req.body.isActive ? true : req.body.isActive,
 						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
