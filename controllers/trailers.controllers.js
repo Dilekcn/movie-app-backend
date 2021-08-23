@@ -282,7 +282,7 @@ exports.updateSingleTrailer = async (req, res) => {
 				totalSeasons,
 				seasonNumber,
 				episodeNumber,
-				// director,
+				director,
 				tags,
 				trailerUrl,
 			} = req.body;
@@ -305,7 +305,7 @@ exports.updateSingleTrailer = async (req, res) => {
 						totalSeasons,
 						seasonNumber,
 						episodeNumber,
-						// director,
+						director,
 						tags,
 						trailerUrl,
 						// websiteId: trailer.websiteId,
