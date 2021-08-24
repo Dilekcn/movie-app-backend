@@ -21,7 +21,7 @@ exports.getAll = async (req, res) => {
 			.populate('listId', 'name')
 			.populate('movieId','type imdb_id original_title'); 
 			
-		const total = await CommentsModel.find().count();
+		const total = await CommentsModel.find().countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
