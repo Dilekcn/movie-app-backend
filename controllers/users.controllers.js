@@ -11,9 +11,12 @@ exports.getAllUsers = async (req, res) => {
 	const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 	await UserModel.find()
 		.limit(limit * 1)
-		.skip((page - 1) * limit)
+		.skip((page - 1) * limit) 
 		.sort({ createdAt: -1 })
 		.populate('mediaId', 'url title alt')
+		.populate('watchlist','original_title')
+		.populate('watched','original_title')
+		.populate('liked','original_title')
 		.then((data) => res.json({ total: total, pages, status: 200, data }))
 		.catch((err) => res.json({ message: err }));
 };
@@ -88,6 +91,8 @@ exports.createUser = async (req, res) => {
 			isActive,
 			isDeleted,
 			role,
+		
+
 		} = req.body;
 		const salt = await bcrypt.genSalt();
 		const hashedPassword = await bcrypt.hash(password, salt);
@@ -100,6 +105,9 @@ exports.createUser = async (req, res) => {
 			mediaId: newMedia._id,
 			password: hashedPassword,
 			role,
+			watchlist:[],
+			watched:[],
+			liked:[],
 			isActive,
 			isDeleted,
 		});
@@ -130,6 +138,9 @@ exports.login = async (req, res) => {
 					lastname: data.lastname,
 					email: data.email,
 					country: data.country,
+					watchlist:data.watchlist,
+					watched:data.watched,
+					liked:data.liked,
 					isActive: data.isActive,
 					isDeleted: data.isDeleted,
 					id: data._id,
@@ -164,14 +175,19 @@ exports.updateUser = async (req, res) => {
 				};
 				await S3.updateMedia(req, res, media.mediaKey, data);
 			});
-			const { firstname, lastname, country, role } = req.body;
+			const watchlist = typeof req.body.watchlist=='string' ? JSON.parse(req.body.watchlist):req.body.watchlist;
+			const watched =typeof req.body.watched=='string' ? JSON.parse(req.body.watched):req.body.watched;
+			const liked=typeof req.body.liked=='string' ? JSON.parse(req.body.liked):req.body.liked
 			await UserModel.findByIdAndUpdate(
 				{ _id: req.params.id },
 				{
 					$set: {
-						firstname,
-						lastname,
-						country,
+						firstname:req.body.firstname ? req.body.firstname : user.firstname,
+						lastname:req.body.lastname ? req.body.lastname : user.lastname,
+						country:req.body.country ? req.body.country : user.country,
+						watchlist:req.body.watchlist ? watchlist : user.watchlist,
+						watched:req.body.watched ? watched : user.watched,
+						liked:req.body.liked ? liked : user.liked,
 						mediaId: user.mediaId,
 						isActive: !req.body.isActive ? true : req.body.isActive,
 						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
@@ -198,7 +214,7 @@ exports.deleteUser = async (req, res) => {
 			await MediaModel.findByIdAndUpdate(
 				{ _id: user.mediaId },
 				{
-					$set: { isActive: false },
+					$set: { isActive: false }, 
 				},
 				{ useFindAndModify: false, new: true }
 			);
