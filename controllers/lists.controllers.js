@@ -10,8 +10,8 @@ exports.getAll = async (req, res) => {
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
 			.populate('userId','firstname lastname') 
-			.populate('userRatingIds','userId rating') 
-			.populate('movieIds')
+			.populate('userRatingIds','userId rating')  
+			.populate('movieIds','type imdb_id tmdb_id imdb_rating original_title')
 		const total = await ListsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
