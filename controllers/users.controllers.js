@@ -14,9 +14,9 @@ exports.getAllUsers = async (req, res) => {
 		.skip((page - 1) * limit) 
 		.sort({ createdAt: -1 })
 		.populate('mediaId', 'url title alt')
-		.populate('watchlist','original_title')
-		.populate('watched','original_title')
-		.populate('liked','original_title')
+		.populate('watchlist','original_title imdb_id tmdb_id image_path')
+		.populate('watched','original_title imdb_id tmdb_id image_path')
+		.populate('liked','original_title imdb_id tmdb_id image_path')
 		.then((data) => res.json({ total: total, pages, status: 200, data }))
 		.catch((err) => res.json({ message: err }));
 };
@@ -28,7 +28,10 @@ exports.getSingleUserById = async (req, res) => {
 		} else {
 			res.json(data);
 		}
-	}).populate('mediaId', 'url title alt');
+	}).populate('mediaId', 'url title alt')
+	.populate('watchlist','original_title imdb_id tmdb_id image_path')
+		.populate('watched','original_title imdb_id tmdb_id image_path')
+		.populate('liked','original_title imdb_id tmdb_id image_path')
 };
 
 exports.getSingleUserByFirstName = async (req, res) => {
@@ -38,7 +41,10 @@ exports.getSingleUserByFirstName = async (req, res) => {
 		} else {
 			res.json(data);
 		}
-	}).populate('mediaId', 'url title alt');
+	}).populate('mediaId', 'url title alt')
+	.populate('watchlist','original_title imdb_id tmdb_id image_path')
+		.populate('watched','original_title imdb_id tmdb_id image_path')
+		.populate('liked','original_title imdb_id tmdb_id image_path')
 };
 
 exports.getSingleUserByLastName = async (req, res) => {
@@ -48,7 +54,10 @@ exports.getSingleUserByLastName = async (req, res) => {
 		} else {
 			res.json(data);
 		}
-	}).populate('mediaId', 'url title alt');
+	}).populate('mediaId', 'url title alt')
+	.populate('watchlist','original_title imdb_id tmdb_id image_path')
+		.populate('watched','original_title imdb_id tmdb_id image_path')
+		.populate('liked','original_title imdb_id tmdb_id image_path')
 };
 
 exports.getSingleUserByEmail = async (req, res) => {
@@ -58,7 +67,10 @@ exports.getSingleUserByEmail = async (req, res) => {
 		} else {
 			res.json(data);
 		}
-	}).populate('mediaId', 'url title alt');
+	}).populate('mediaId', 'url title alt')
+	.populate('watchlist','original_title imdb_id tmdb_id image_path')
+		.populate('watched','original_title imdb_id tmdb_id image_path')
+		.populate('liked','original_title imdb_id tmdb_id image_path')
 };
 
 exports.getSingleUserByCountry = async (req, res) => {
@@ -68,7 +80,10 @@ exports.getSingleUserByCountry = async (req, res) => {
 		} else {
 			res.json(data);
 		}
-	}).populate('mediaId', 'url title alt');
+	}).populate('mediaId', 'url title alt')
+	.populate('watchlist','original_title imdb_id tmdb_id image_path')
+		.populate('watched','original_title imdb_id tmdb_id image_path')
+		.populate('liked','original_title imdb_id tmdb_id image_path')
 };
 
 exports.createUser = async (req, res) => {
