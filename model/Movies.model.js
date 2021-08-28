@@ -7,9 +7,10 @@ const MoviesSchema = new Schema({
 	tmdb_id: { type: String },
 	imdb_rating:{ type: String },
 	original_title: { type: String },
+	image_path: { type: String },
 	userRatingIds:[{ type: mongoose.Types.ObjectId, ref: 'userrating' }],
 	isActive: { type: Boolean, default: true },
-	isDeleted: { type: Boolean, default: false }, 
+	isDeleted: { type: Boolean, default: false },  
 
 }); 
 

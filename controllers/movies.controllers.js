@@ -42,6 +42,7 @@ exports.create = async (req, res) => {
 		imdb_id: req.body.imdb_id,
 		tmdb_id:req.body.tmdb_id,
 		imdb_rating:req.body.imdb_rating,
+		image_path:req.body.image_path,
 		original_title: req.body.original_title,
 		isActive: req.body.isActive,
 		isDeleted: req.body.isDeleted,
@@ -110,7 +111,7 @@ exports.updateSingleMovie = async (req, res) => {
 							});
 					  });
  
-			newUserRating.map((userrating) => userrating.save());
+			newUserRating.map((userrating) => userrating.save()); 
 
 			const newUserRatingIds = newUserRating.map((userrating) => userrating._id);
 
@@ -126,6 +127,7 @@ exports.updateSingleMovie = async (req, res) => {
 						tmdb_id,
 						imdb_rating,
 						original_title,
+						image_path,
 						userRatingIds:newUserRatingIds,
 						isActive: !req.body.isActive
 							? true
