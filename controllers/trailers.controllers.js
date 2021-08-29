@@ -156,31 +156,30 @@ exports.updateSingleTrailer = async (req, res) => {
 				{ _id: req.params.id },
 				{
 					$set: {
-						title,
-						episodeTitle,
-						type,
-						year,
-						duration,
-						mediaId: trailer.mediaId,
-						cast,
-						description,
+						title: title ? title : trailer.title,
+						episodeTitle: episodeTitle ? episodeTitle : trailer.episodeTitle,
+						type: type ? type : trailer.type,
+						year: year ? year : trailer.year,
+						duration: duration ? duration : trailer.duration,
+						mediaId: trailer.mediaId, 
+						cast: cast ? cast : trailer.cast,
+						description: description ? description : trailer.description,
 						genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
-						ageRestriction,
-						totalSeasons,
-						seasonNumber,
-						episodeNumber,
-						director,
-						tags,
-						trailerUrl,
-						websiteId:req.body.websiteId  ? JSON.parse(req.body.websiteId) : trailer.websiteId,
+						ageRestriction: ageRestriction ? ageRestriction : trailer.ageRestriction,
+						totalSeasons: totalSeasons ? totalSeasons : trailer.totalSeasons,
+						seasonNumber: seasonNumber ? seasonNumber : trailer.seasonNumber,
+						episodeNumber: episodeNumber ? episodeNumber : trailer.episodeNumber,
+						director: director ? director : trailer.director,
+						tags: tags ? tags : trailer.tags,
+						trailerUrl: trailerUrl ? trailerUrl : trailer.trailerUrl,
+						websiteId:websiteId  ? JSON.parse(websiteId) : trailer.websiteId,
 						isActive: !req.body.isActive ? true : req.body.isActive,
 						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
-						imdb,
+						imdb: imdb ? imdb : trailer.imdb,
 
 					},
 				}
 			)
-
 				.then((data) =>
 					res.json({
 						status: true,
