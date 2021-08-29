@@ -13,8 +13,6 @@ exports.getAll = async (req, res) => {
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
 			.populate('mediaId', 'url title alt')
-			.populate('bannerId', 'url title alt')
-			.populate('websiteId', 'title link')
 			.populate('genre', 'name');
 		const total = await TrailersModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
@@ -25,18 +23,6 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	console.log(typeof req.body.websiteId);
-	if (req.body.websiteId) {
-		const newWebsite = await JSON.parse(req.body.websiteId).map((web) => {
-			const website = web;
-			return new WebsiteModel({
-				title: website.title || null,
-				link: website.link || null,
-			});
-		});
-		newWebsite.map((web) => web.save());
-		const websiteIds = newWebsite.map((web) => web._id);
-
 		const dataMedia = async (data1) => {
 			const newMediaId = await new MediaModel({
 				url: data1.Location || null,
@@ -45,16 +31,6 @@ exports.create = async (req, res) => {
 				alt: req.body.title || null,
 			});
 			newMediaId.save(newMediaId);
-
-			const dataBanner = async (data2) => {
-				const newBannerId = await new MediaModel({
-					url: data2.Location || null,
-					title: 'trailer-banner',
-					mediaKey: data2.Key,
-					alt: req.body.title || null,
-				});
-				newBannerId.save(newBannerId);
-
 				const {
 					imdb,
 					isActive,
@@ -74,7 +50,7 @@ exports.create = async (req, res) => {
 					director,
 					tags,
 					trailerUrl,
-					likes,
+					websiteId
 				} = req.body;
 
 				const newTrailer = await new TrailersModel({
@@ -84,7 +60,6 @@ exports.create = async (req, res) => {
 					year,
 					duration,
 					mediaId: newMediaId._id,
-					bannerId: newBannerId._id,
 					cast: cast.split(','),
 					description,
 					genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
@@ -95,11 +70,10 @@ exports.create = async (req, res) => {
 					director,
 					tags: tags.split(','),
 					trailerUrl,
-					likes,
 					isActive,
 					isDeleted,
-					websiteId: websiteIds,
 					imdb,
+					websiteId:typeof websiteId === 'string' ? JSON.parse(websiteId) : websiteId
 				});
 
 				newTrailer
@@ -108,90 +82,11 @@ exports.create = async (req, res) => {
 						res.json(response);
 					})
 					.catch((err) => res.json(err));
-			};
-
-			S3.uploadNewBanner(req, res, dataBanner);
-		};
-
-		S3.uploadNewMedia(req, res, dataMedia);
-	} else {
-		const dataMedia = async (data1) => {
-			const newMediaId = await new MediaModel({
-				url: data1.Location || null,
-				title: 'trailer-image',
-				mediaKey: data1.Key,
-				alt: req.body.title || null,
-			});
-			newMediaId.save(newMediaId);
-
-			const dataBanner = async (data2) => {
-				const newBannerId = await new MediaModel({
-					url: data2.Location || null,
-					title: 'trailer-banner',
-					mediaKey: data2.Key,
-					alt: req.body.title || null,
-				});
-				newBannerId.save(newBannerId);
-				const {
-					imdb,
-					isActive,
-					isDeleted,
-					title,
-					episodeTitle,
-					type,
-					year,
-					duration,
-					cast,
-					description,
-					genre,
-					ageRestriction,
-					totalSeasons,
-					seasonNumber,
-					episodeNumber,
-					director,
-					tags,
-					trailerUrl,
-					likes,
-				} = req.body;
-
-				const newTrailer = await new TrailersModel({
-					title,
-					episodeTitle,
-					type,
-					year,
-					duration,
-					mediaId: newMediaId._id,
-					bannerId: newBannerId._id,
-					cast: cast.split(','),
-					description,
-					genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
-					ageRestriction,
-					totalSeasons,
-					seasonNumber,
-					episodeNumber,
-					director,
-					tags: tags.split(','),
-					trailerUrl,
-					likes,
-					isActive,
-					isDeleted,
-					imdb,
-				});
-
-				newTrailer
-					.save()
-					.then((response) => {
-						res.json(response);
-					})
-					.catch((err) => res.json(err));
-			};
-
-			S3.uploadNewBanner(req, res, dataBanner);
 		};
 
 		S3.uploadNewMedia(req, res, dataMedia);
 	}
-};
+// };
 
 exports.getSingleTrailer = async (req, res) => {
 	await TrailersModel.findById({ _id: req.params.id }, (err, data) => {
@@ -202,8 +97,6 @@ exports.getSingleTrailer = async (req, res) => {
 		}
 	})
 		.populate('mediaId', 'url title alt')
-		.populate('bannerId', 'url title alt')
-		.populate('websiteId', 'title link')
 		.populate('genre', 'name');
 };
 
@@ -216,75 +109,47 @@ exports.getTrailersByUserId = async (req, res) => {
 		}
 	})
 		.populate('mediaId', 'url title alt')
-		.populate('bannerId', 'url title alt');
 };
 
 exports.updateSingleTrailer = async (req, res) => {
 	await TrailersModel.findById({ _id: req.params.id })
 		.then(async (trailer) => {
-			// await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
-			// 	const data = async (data) => {
-			// 		await MediaModel.findByIdAndUpdate(
-			// 			{ _id: trailer.mediaId },
-			// 			{
-			// 				$set: {
-			// 					url: data.Location || null,
-			// 					title: 'trailer-image',
-			// 					mediaKey: data.Key,
-			// 					alt: req.body.title || null,
-			// 				},
-			// 			},
-			// 			{ useFindAndModify: false, new: true }
-			// 		).catch((err) => res.json({ message: err, status: false }));
-			// 	};
-			// 	await S3.updateMedia(req, res, media.mediaKey, data);
-			// });
-
-			// await MediaModel.findById({ _id: trailer.bannerId }).then(async (banner) => {
-			// 	const data = async (data) => {
-			// 		await MediaModel.findByIdAndUpdate(
-			// 			{ _id: trailer.bannerId },
-			// 			{
-			// 				$set: {
-			// 					url: data.Location || null,
-			// 					title: 'trailer-banner',
-			// 					mediaKey: data.Key,
-			// 					alt: req.body.title || null,
-			// 				},
-			// 			},
-			// 			{ useFindAndModify: false, new: true }
-			// 		)
-			// 	};
-			// 	await S3.updateBanner(req, res, banner.mediaKey, data);
-			// }).catch((err) => res.json({ message: err, status: false }));
-
-			// await trailer.websiteId.map(async (web, index) => {
-			// 	await WebsiteModel.findByIdAndUpdate(
-			// 		{ _id: web },
-			// 		{
-			// 			$set: JSON.parse(req.body.websiteId)[index],
-			// 		},
-			// 		{ useFindAndModify: false, new: true }
-			// 	);
-			// });
-
+			await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
+				const data = async (data) => {
+					await MediaModel.findByIdAndUpdate(
+						{ _id: trailer.mediaId },
+						{
+							$set: {
+								url: data.Location || null,
+								title: 'trailers',
+								mediaKey: data.Key,
+								alt: req.body.alt || null,
+							},
+						},
+						{ useFindAndModify: false, new: true }
+					).catch((err) => res.json({ status: 404, message: err }));
+				};
+				await S3.updateMedia(req, res, media.mediaKey, data);
+			});
 			const {
-				// imdb,
-				title,
-				episodeTitle,
+                title,
 				type,
 				year,
-				duration,
+				duration, 
+				mediaId,
 				cast,
 				description,
 				genre,
 				ageRestriction,
+				tags,
+				trailerUrl,
 				totalSeasons,
 				seasonNumber,
 				episodeNumber,
-				director,
-				tags,
-				trailerUrl,
+				episodeTitle,
+				director, 
+				imdb,
+				websiteId
 			} = req.body;
 
 			await TrailersModel.findByIdAndUpdate(
@@ -296,8 +161,7 @@ exports.updateSingleTrailer = async (req, res) => {
 						type,
 						year,
 						duration,
-						// mediaId: trailer.mediaId,
-						// bannerId: trailer.bannerId,
+						mediaId: trailer.mediaId,
 						cast,
 						description,
 						genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
@@ -308,14 +172,11 @@ exports.updateSingleTrailer = async (req, res) => {
 						director,
 						tags,
 						trailerUrl,
-						// websiteId: trailer.websiteId,
-						// likes: req.body.likes ? req.body.likes : trailer.likes,
+						websiteId:req.body.websiteId  ? JSON.parse(req.body.websiteId) : trailer.websiteId,
 						isActive: !req.body.isActive ? true : req.body.isActive,
 						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
-						// imdb,
-						// userRating: req.body.userRating
-						// 	? [...trailer.userRating, req.body.userRating]
-						// 	: trailer.userRating,
+						imdb,
+
 					},
 				}
 			)

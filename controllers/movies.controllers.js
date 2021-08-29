@@ -1,14 +1,35 @@
 const MoviesModel = require('../model/Movies.model');
 const MediaModel = require('../model/Media.model');
 const WebsiteModel = require('../model/Website.model');
+const UserModel = require('../model/User.model');
 const UserRatingModel = require('../model/UserRatings.model');
 require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
 
 exports.getAll = async (req, res) => {
 	try {
-		const { page = 1, limit } = req.query;
+		const update = await MoviesModel.find();
+        update.map(async (item, index) => {
+			const watchCount = await UserModel.count({
+				watched: { $in: item._id.toString() },
+			});
+			const watchlistCount = await UserModel.count({
+				watchlist: { $in: item._id.toString() },
+			});
+			const likeCount = await UserModel.count({
+				 liked: { $in: item._id.toString() },
+			});
+			await MoviesModel.findByIdAndUpdate(
+				{ _id: item._id },
+				{ $set: { 
+					watchCount: watchCount,
+					watchlistCount:watchlistCount,
+					likeCount:likeCount
+				 } }  
+			);
+		}); 
 
+		const { page = 1, limit } = req.query; 
 		const response = await MoviesModel.find() 
 			.limit(limit * 1)
 			.skip((page - 1) * limit) 
@@ -17,7 +38,7 @@ exports.getAll = async (req, res) => {
 				path:'userRatingIds',
 				model:'userrating',
 				select:'userId rating',
-				populate:{
+				populate:{ 
 					path:'userId',
 					model:'user',
 					select:'firstname lastname',
@@ -28,7 +49,7 @@ exports.getAll = async (req, res) => {
 					}
 				}
 			})
-		const total = await MoviesModel.find().count();
+		const total = await MoviesModel.find().countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
@@ -44,6 +65,9 @@ exports.create = async (req, res) => {
 		imdb_rating:req.body.imdb_rating,
 		image_path:req.body.image_path,
 		original_title: req.body.original_title,
+		watchCount:req.body.watchCount,
+		watchlistCount:req.body.watchListCount,
+		likeCount:req.body.likeCount,
 		isActive: req.body.isActive,
 		isDeleted: req.body.isDeleted,
 		userRatingIds:req.body.userRatingIds, 
@@ -122,20 +146,21 @@ exports.updateSingleMovie = async (req, res) => {
 				{ _id: req.params.id },
 				{
 					$set: { 
-						type,
-						imdb_id,
-						tmdb_id,
-						imdb_rating,
-						original_title,
-						image_path,
+						type:req.body.type ?req.body.type:movie.type ,
+						imdb_id:req.body.imdb_id ?req.body.imdb_id : movie.imdb_id ,
+						tmdb_id:req.body.tmdb_id ? req.body.tmdb_id : movie.tmdb_id,
+						imdb_rating:req.body.imdb_rating ? req.body.imdb_rating :movie.imdb_rating,
+						original_title:req.body.original_title ? req.body.original_title :movie.original_title,
+						image_path:req.body.image_path ? req.body.image_path :movie.image_path,
 						userRatingIds:newUserRatingIds,
+						watchCount:req.body.watchCount, 
 						isActive: !req.body.isActive
 							? true
 							: req.body.isActive,
 						isDeleted: !req.body.isDeleted
 							? false
 							: req.body.isDeleted,
-					},
+					}, 
 				},
 				{ useFindAndModify: false, new: true }
 			)

@@ -5,11 +5,11 @@ exports.getAll = async (req, res) => {
 	try {
 		const update = await CategoriesModel.find();
 		update.map(async (item, index) => {
-			const count = await TrailersModel.count({
+			const count = await TrailersModel.count({  
 				genre: { $in: item._id.toString() },
 			});
 			await CategoriesModel.findByIdAndUpdate(
-				{ _id: item._id },
+				{ _id: item._id }, 
 				{ $set: { movieCount: count } }
 			);
 		});
