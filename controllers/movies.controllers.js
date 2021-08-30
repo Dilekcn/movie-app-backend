@@ -1,6 +1,5 @@
 const MoviesModel = require('../model/Movies.model');
 const MediaModel = require('../model/Media.model');
-const WebsiteModel = require('../model/Website.model');
 const UserModel = require('../model/User.model');
 const UserRatingModel = require('../model/UserRatings.model');
 require('dotenv').config();

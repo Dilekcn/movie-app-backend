@@ -1,6 +1,5 @@
 const TrailersModel = require('../model/Trailer.model');
 const MediaModel = require('../model/Media.model');
-const WebsiteModel = require('../model/Website.model');
 require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
 
@@ -13,7 +12,9 @@ exports.getAll = async (req, res) => {
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
 			.populate('mediaId', 'url title alt')
-			.populate('genre', 'name');
+			.populate('genre', 'name')
+		
+		
 		const total = await TrailersModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
@@ -156,7 +157,7 @@ exports.updateSingleTrailer = async (req, res) => {
 				{ _id: req.params.id },
 				{
 					$set: {
-						title: title ? title : trailer.title,
+						title: title ? title : trailer.title, 
 						episodeTitle: episodeTitle ? episodeTitle : trailer.episodeTitle,
 						type: type ? type : trailer.type,
 						year: year ? year : trailer.year,
@@ -164,7 +165,7 @@ exports.updateSingleTrailer = async (req, res) => {
 						mediaId: trailer.mediaId, 
 						cast: cast ? cast : trailer.cast,
 						description: description ? description : trailer.description,
-						genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
+						genre: genre ? (typeof genre === 'string' ? JSON.parse(genre) : genre) : trailer.genre,
 						ageRestriction: ageRestriction ? ageRestriction : trailer.ageRestriction,
 						totalSeasons: totalSeasons ? totalSeasons : trailer.totalSeasons,
 						seasonNumber: seasonNumber ? seasonNumber : trailer.seasonNumber,
