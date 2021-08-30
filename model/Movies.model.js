@@ -14,8 +14,10 @@ const MoviesSchema = new Schema({
 	likeCount:{ type: Number },
 	isActive: { type: Boolean, default: true },
 	isDeleted: { type: Boolean, default: false },  
-
-}); 
+ 
+},
+{ timestamps: true }
+); 
 
 module.exports = mongoose.model('movie', MoviesSchema);
  
