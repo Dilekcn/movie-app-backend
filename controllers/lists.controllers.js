@@ -7,7 +7,7 @@ exports.getAll = async (req, res) => {
 		const { page = 1, limit } = req.query;
 		const response = await ListsModel.find()
 			.limit(limit * 1)
-			.skip((page - 1) * limit)
+			.skip((page - 1) * limit) 
 			.sort({ createdAt: -1 })
 			.populate('userId','firstname lastname') 
 			.populate('userRatingIds','userId rating')  
@@ -27,9 +27,10 @@ exports.create = async (req, res) => {
 		name,
 		description,
 		isPublic,
-		isActive,
+		isActive, 
 		isDeleted,
 		rating,
+		tags,
 		userRatingIds,
 
 	} = req.body;
@@ -41,6 +42,7 @@ exports.create = async (req, res) => {
 		isActive,
 		isDeleted,
 		rating,
+		tags: tags.split(','),
 		userRatingIds,
 		movieIds:JSON.parse(req.body.movieIds),
 		
@@ -105,7 +107,7 @@ exports.updateList = async (req, res) => {
 
 				const newUserRatingIds = newUserRating.map((userrating) => userrating._id);
 
-				const {userId,name,description,rating,isPublic} =
+				const {userId,name,description,rating,tags,isPublic} =
 					req.body;
 				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
 				await ListsModel.findByIdAndUpdate(
@@ -116,6 +118,7 @@ exports.updateList = async (req, res) => {
 							name, 
 							description,
 							rating,
+							tags: tags.split(','),
 							movieIds:newmovieids,
 							isPublic,
 							userRatingIds:newUserRatingIds,
