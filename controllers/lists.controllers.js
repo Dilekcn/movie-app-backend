@@ -10,7 +10,7 @@ exports.getAll = async (req, res) => {
 			.skip((page - 1) * limit) 
 			.sort({ createdAt: -1 })
 			.populate('userRatingIds','userId rating')  
-			.populate('movieIds','type imdb_id tmdb_id imdb_rating original_title')
+			.populate('movieIds','type imdb_id tmdb_id imdb_rating original_title image_path')
 			.populate({
 				path:'userId',
 				model:'user',
