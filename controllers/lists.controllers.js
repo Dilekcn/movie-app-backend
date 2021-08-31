@@ -1,9 +1,23 @@
 const ListsModel = require('../model/List.model');
 const UserRatingModel = require('../model/UserRatings.model');
-
+const CommentModel = require('../model/Comment.model');
+ 
 
 exports.getAll = async (req, res) => {
 	try { 
+
+		const update=await ListsModel.find()
+		update.map(async(item,index)=>{
+			const commentCount = await CommentModel.count({
+				listId: { $in: item._id.toString() },
+			});
+			await ListsModel.findByIdAndUpdate(
+				{ _id: item._id },
+				{ $set: { 
+					commentCount:commentCount
+				 } }  
+			);
+		})
 		const { page = 1, limit } = req.query;
 		const response = await ListsModel.find()
 			.limit(limit * 1)
