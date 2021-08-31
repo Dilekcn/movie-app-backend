@@ -11,8 +11,8 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-			.populate('mediaId', 'url title alt')
-			.populate('genre', 'name')
+		
+			
 		
 		
 		const total = await TrailersModel.find().count();
@@ -24,14 +24,7 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-		const dataMedia = async (data1) => {
-			const newMediaId = await new MediaModel({
-				url: data1.Location || null,
-				title: 'trailer-image',
-				mediaKey: data1.Key,
-				alt: req.body.title || null,
-			});
-			newMediaId.save(newMediaId);
+	
 				const {
 					imdb,
 					isActive,
@@ -47,11 +40,12 @@ exports.create = async (req, res) => {
 					ageRestriction,
 					totalSeasons,
 					seasonNumber,
-					episodeNumber,
+					episodeNumber, 
 					director,
 					tags,
 					trailerUrl,
-					websiteId
+					websiteId,
+					mediaUrl
 				} = req.body;
 
 				const newTrailer = await new TrailersModel({
@@ -60,8 +54,8 @@ exports.create = async (req, res) => {
 					type,
 					year,
 					duration,
-					mediaId: newMediaId._id,
-					cast: cast.split(','),
+					mediaUrl,
+					cast:typeof cast === 'string' ? JSON.parse(cast) : cast,
 					description,
 					genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
 					ageRestriction,
@@ -69,12 +63,12 @@ exports.create = async (req, res) => {
 					seasonNumber,
 					episodeNumber,
 					director,
-					tags: tags.split(','),
+					// tags: tags.split(','),
 					trailerUrl,
 					isActive,
 					isDeleted,
 					imdb,
-					websiteId:typeof websiteId === 'string' ? JSON.parse(websiteId) : websiteId
+					// websiteId:typeof websiteId === 'string' ? JSON.parse(websiteId) : websiteId
 				});
 
 				newTrailer
@@ -83,11 +77,9 @@ exports.create = async (req, res) => {
 						res.json(response);
 					})
 					.catch((err) => res.json(err));
-		};
 
-		S3.uploadNewMedia(req, res, dataMedia);
 	}
-// };
+
 
 exports.getSingleTrailer = async (req, res) => {
 	await TrailersModel.findById({ _id: req.params.id }, (err, data) => {
