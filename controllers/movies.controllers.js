@@ -32,7 +32,7 @@ exports.getAll = async (req, res) => {
 		const response = await MoviesModel.find() 
 			.limit(limit * 1)
 			.skip((page - 1) * limit) 
-			.sort({ createdAt: -1 })
+			.sort({ createdAt: -1 }) 
 			.populate({
 				path:'userRatingIds',
 				model:'userrating',

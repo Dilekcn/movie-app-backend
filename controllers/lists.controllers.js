@@ -9,9 +9,23 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit) 
 			.sort({ createdAt: -1 })
-			.populate('userId','firstname lastname') 
 			.populate('userRatingIds','userId rating')  
 			.populate('movieIds','type imdb_id tmdb_id imdb_rating original_title')
+			.populate({
+				path:'userId',
+				model:'user',
+				select:'firstname lastname mediaId',
+				populate:{ 
+					path:'mediaId',
+					model:'media',
+					select:'url',
+					populate:{
+						path:'mediaId',
+						model:'media',
+						select:'url'
+					}
+				}
+			})
 		const total = await ListsModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });

@@ -159,7 +159,7 @@ exports.updateSingleTrailer = async (req, res) => {
 					$set: {
 						title: title ? title : trailer.title, 
 						episodeTitle: episodeTitle ? episodeTitle : trailer.episodeTitle,
-						type: type ? type : trailer.type,
+						type: type ? type : trailer.type, 
 						year: year ? year : trailer.year,
 						duration: duration ? duration : trailer.duration,
 						mediaId: trailer.mediaId, 
