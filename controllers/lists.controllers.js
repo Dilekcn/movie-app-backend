@@ -24,6 +24,7 @@ exports.getAll = async (req, res) => {
 			.skip((page - 1) * limit) 
 			.sort({ createdAt: -1 })
 			.populate('userRatingIds','userId rating')  
+			.populate('likes','firstname lastname') 
 			.populate('movieIds','type imdb_id tmdb_id imdb_rating original_title image_path')
 			.populate({
 				path:'userId',
@@ -95,6 +96,7 @@ exports.getSingleList = async (req, res) => {
 	.populate('userId','firstname lastname') 
 	.populate('userRatingIds','userId rating') 
 	.populate('movieIds')
+	.populate('likes','firstname lastname') 
 };
 
 exports.getListByUserId = async (req, res) => {
@@ -108,6 +110,7 @@ exports.getListByUserId = async (req, res) => {
 	.populate('userId','firstname lastname') 
 	.populate('userRatingIds','userId rating') 
 	.populate('movieIds') 
+	.populate('likes','firstname lastname') 
 };
 
 exports.updateList = async (req, res) => {
