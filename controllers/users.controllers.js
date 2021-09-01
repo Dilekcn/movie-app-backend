@@ -18,7 +18,7 @@ exports.getAllUsers = async (req, res) => {
 		.populate('watched','original_title imdb_id tmdb_id image_path')
 		.populate('liked','original_title imdb_id tmdb_id image_path')
 		.then((data) => res.json({ total: total, pages, status: 200, data }))
-		.catch((err) => res.json({ message: err }));
+		.catch((err) => res.json({ message: err })); 
 };
 
 exports.getSingleUserById = async (req, res) => {

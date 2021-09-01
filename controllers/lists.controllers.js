@@ -74,7 +74,7 @@ exports.create = async (req, res) => {
 		tags: tags.split(','),
 		userRatingIds,
 		movieIds:JSON.parse(req.body.movieIds),
-		likes
+		likes:JSON.parse(req.body.likes)
 		
 	});
 	newList
