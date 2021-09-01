@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const ListsSchema = new Schema(
 	{
 		userId: { type: mongoose.Types.ObjectId, ref: 'user' },
+		likes: { type: mongoose.Types.ObjectId, ref: 'user' },
 		name: { type: String, required: true },
 		description: { type: String, required: true },
 		rating:{ type: Number, default: 0 },
@@ -18,5 +19,5 @@ const ListsSchema = new Schema(
 	{ timestamps: true }
 ); 
 
-module.exports = mongoose.model('list', ListsSchema);
+module.exports = mongoose.model('list', ListsSchema); 
   

@@ -60,6 +60,7 @@ exports.create = async (req, res) => {
 		rating,
 		tags,
 		userRatingIds,
+		likes
 
 	} = req.body;
 	const newList = await new ListsModel({
@@ -73,6 +74,7 @@ exports.create = async (req, res) => {
 		tags: tags.split(','),
 		userRatingIds,
 		movieIds:JSON.parse(req.body.movieIds),
+		likes
 		
 	});
 	newList
@@ -135,7 +137,7 @@ exports.updateList = async (req, res) => {
 
 				const newUserRatingIds = newUserRating.map((userrating) => userrating._id);
 
-				const {userId,name,description,rating,tags,isPublic} =
+				const {userId,name,description,rating,tags,likes,isPublic} =
 					req.body;
 				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
 				await ListsModel.findByIdAndUpdate(
@@ -149,6 +151,7 @@ exports.updateList = async (req, res) => {
 							tags: tags.split(','),
 							movieIds:newmovieids,
 							isPublic,
+							likes,
 							userRatingIds:newUserRatingIds,
 							isActive: !req.body.isActive
 								? true
