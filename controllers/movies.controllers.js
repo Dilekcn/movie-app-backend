@@ -63,6 +63,7 @@ exports.create = async (req, res) => {
 		tmdb_id:req.body.tmdb_id,
 		imdb_rating:req.body.imdb_rating,
 		image_path:req.body.image_path,
+		backdrop_path:req.body.backdrop_path,
 		original_title: req.body.original_title,
 		watchCount:req.body.watchCount,
 		watchlistCount:req.body.watchListCount,
@@ -151,8 +152,8 @@ exports.updateSingleMovie = async (req, res) => {
 						imdb_rating:req.body.imdb_rating ? req.body.imdb_rating :movie.imdb_rating,
 						original_title:req.body.original_title ? req.body.original_title :movie.original_title,
 						image_path:req.body.image_path ? req.body.image_path :movie.image_path,
+						backdrop_path:req.body.backdrop_path ? req.body.backdrop_path : movie.backdrop_path,
 						userRatingIds:newUserRatingIds,
-						watchCount:req.body.watchCount, 
 						isActive: !req.body.isActive
 							? true
 							: req.body.isActive,

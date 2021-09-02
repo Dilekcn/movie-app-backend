@@ -8,6 +8,7 @@ const MoviesSchema = new Schema({
 	imdb_rating:{ type: String }, 
 	original_title: { type: String },
 	image_path: { type: String },
+	backdrop_path: { type: String },
 	userRatingIds:[{ type: mongoose.Types.ObjectId, ref: 'userrating' }],
 	watchCount:{ type: Number},
 	watchlistCount:{ type: Number },
