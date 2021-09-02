@@ -93,10 +93,24 @@ exports.getSingleList = async (req, res) => {
 			res.json(data);
 		}
 	})
-	.populate('userId','firstname lastname') 
 	.populate('userRatingIds','userId rating') 
 	.populate('movieIds')
 	.populate('likes','firstname lastname') 
+	.populate({
+		path:'userId',
+		model:'user',
+		select:'firstname lastname mediaId',
+		populate:{ 
+			path:'mediaId',
+			model:'media',
+			select:'url',
+			populate:{
+				path:'mediaId',
+				model:'media',
+				select:'url'
+			}
+		}
+	})
 };
 
 exports.getListByUserId = async (req, res) => {
