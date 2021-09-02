@@ -85,30 +85,30 @@ exports.create = async (req, res) => {
 		.catch((err) => res.json({ status: false, message: err }));
 };
 
-exports.getSingleMovie = async (req, res) => {
-	await MoviesModel.findById({ _id: req.params.id }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		}
-	})
-	.populate({
-		path:'userRatingIds',
-		model:'userrating',
-		select:'userId rating',
-		populate:{
-			path:'userId',
-			model:'user',
-			select:'firstname lastname',
-			populate:{
-				path:'mediaId',
-				model:'media',
-				select:'url'
-			}
-		}
-	})
-};
+// exports.getSingleMovie = async (req, res) => {
+// 	await MoviesModel.findById({ _id: req.params.id }, (err, data) => {
+// 		if (err) {
+// 			res.json({ message: err });
+// 		} else {
+// 			res.json(data);
+// 		}
+// 	})
+// 	.populate({
+// 		path:'userRatingIds',
+// 		model:'userrating',
+// 		select:'userId rating',
+// 		populate:{
+// 			path:'userId',
+// 			model:'user',
+// 			select:'firstname lastname',
+// 			populate:{
+// 				path:'mediaId',
+// 				model:'media',
+// 				select:'url'
+// 			}
+// 		}
+// 	})
+// };
 
 
 
@@ -187,7 +187,7 @@ exports.getSingleMovieByTmdb = async (req, res) => {
 			res.json({ message: err });
 		} else {
 			res.json(data);
-		}
+		} 
 	})
 
 };
