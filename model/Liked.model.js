@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
- 
-const WatchedSchema = new Schema(
+
+const LikedSchema = new Schema(
 	{ 
 		userId: { type: Schema.Types.ObjectId, ref: 'user'},
 		movieId: { type: Schema.Types.ObjectId, ref: 'movie' },
@@ -11,4 +11,4 @@ const WatchedSchema = new Schema(
 	{ timestamps: true }  
 );    
 
-module.exports = mongoose.model('watched', WatchedSchema);      
+module.exports = mongoose.model('liked', LikedSchema);        

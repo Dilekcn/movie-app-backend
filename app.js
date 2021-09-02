@@ -22,10 +22,12 @@ const moviesRouter = require('./routes/movies.routes');
 const complaintRouter =require('./routes/complaint.routes')
 const userRatingsRouter =require('./routes/userratings.routes')
 const watchlistRouter =require('./routes/watchlist.routes')
+const watchedRouter =require('./routes/watcheds.routes')
+const likedRouter =require('./routes/liked.routes')
 
 //middlewares
 // const verifyToken = require('./auth/verifyToken');
-// const isAdmin = require('./auth/isAdmin');
+// const isAdmin = require('./auth/isAdmin'); 
 
 var app = express();
 app.use(function (req, res, next) {
@@ -62,18 +64,20 @@ app.use('/', mediasRouter);
 app.use('/', trailersRouter);
 app.use('/', categoriesRouter);
 app.use('/', notificationRouter);
-app.use('/', staticPageRouter);
+app.use('/', staticPageRouter); 
 app.use('/', moviesRouter);
 app.use('/',complaintRouter);
 app.use('/',userRatingsRouter);
 app.use('/',watchlistRouter);
+app.use('/',watchedRouter);
+app.use('/',likedRouter);
 
 
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	next(createError(404));
-});
+}); 
 
 // error handler
 app.use(function (err, req, res, next) {

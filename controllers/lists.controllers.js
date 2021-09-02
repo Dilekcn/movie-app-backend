@@ -3,51 +3,84 @@ const UserRatingModel = require('../model/UserRatings.model');
 const CommentModel = require('../model/Comment.model');
  
 
-exports.getAll = async (req, res) => {
-	try { 
+exports.getAll =async (req,res)=>{
+	const{page=1,limit=10}=req.query
+	const total = await ListsModel.find().countDocuments();
+	await ListsModel.aggregate(
+	[
+		{
+		   $sort:
+		   {
+			createdAt: -1
+		   }
+		},
+		{
+			$skip:(page - 1) * limit
+		},
+		{
+			$limit:limit*1 
+		},
+		
+		
+	],
+	(err,response)=>{
+	if(err)res.json(err);
+	const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+	res.json({ total,pages, status: 200, response })
+}) 
+}
 
-		const update=await ListsModel.find()
-		update.map(async(item,index)=>{
-			const commentCount = await CommentModel.count({
-				listId: { $in: item._id.toString() },
-			});
-			await ListsModel.findByIdAndUpdate(
-				{ _id: item._id },
-				{ $set: { 
-					commentCount:commentCount
-				 } }  
-			);
-		})
-		const { page = 1, limit } = req.query;
-		const response = await ListsModel.find()
-			.limit(limit * 1)
-			.skip((page - 1) * limit) 
-			.sort({ createdAt: -1 })
-			.populate('userRatingIds','userId rating')  
-			.populate('likes','firstname lastname') 
-			.populate('movieIds','type imdb_id tmdb_id imdb_rating original_title image_path')
-			.populate({
-				path:'userId',
-				model:'user',
-				select:'firstname lastname mediaId',
-				populate:{ 
-					path:'mediaId',
-					model:'media',
-					select:'url',
-					populate:{
-						path:'mediaId',
-						model:'media',
-						select:'url'
-					}
-				}
-			})
-		const total = await ListsModel.find().count();
-		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-		res.json({ total: total, pages, status: 200, response });
-	} catch (error) {
-		res.status(500).json(error);
-	} 
-}; 
+
+
+
+
+
+// exports.getAll = async (req, res) => {
+// 	try { 
+
+// 		const update=await ListsModel.find()
+// 		update.map(async(item,index)=>{
+// 			const commentCount = await CommentModel.count({
+// 				listId: { $in: item._id.toString() },
+// 			});
+// 			await ListsModel.findByIdAndUpdate(
+// 				{ _id: item._id },
+// 				{ $set: { 
+// 					commentCount:commentCount
+// 				 } }  
+// 			);
+// 		}) 
+// 		const { page = 1, limit } = req.query;
+// 		const response = await ListsModel.find()
+// 			.limit(limit * 1)
+// 			.skip((page - 1) * limit) 
+// 			.sort({ createdAt: -1 })
+// 			.populate('userRatingIds','userId rating')  
+// 			.populate('likes','firstname lastname') 
+// 			.populate('movieIds','type imdb_id tmdb_id imdb_rating original_title image_path')
+// 			.populate({
+// 				path:'userId',
+// 				model:'user',
+// 				select:'firstname lastname mediaId',
+// 				populate:{ 
+// 					path:'mediaId',
+// 					model:'media',
+// 					select:'url',
+// 					populate:{
+// 						path:'mediaId',
+// 						model:'media',
+// 						select:'url'
+// 					}
+// 				}
+// 			})
+// 		const total = await ListsModel.find().count();
+// 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+// 		res.json({ total: total, pages, status: 200, response });
+// 	} catch (error) {
+// 		res.status(500).json(error);
+// 	} 
+// }; 
+
 
 exports.create = async (req, res) => {
 
@@ -197,8 +230,8 @@ exports.updateList = async (req, res) => {
 		.catch((err) => res.json({ message: err })); 
 };
 
-// exports.removeSingleList = async (req, res) => {
-// 	await ListsModel.findByIdAndDelete({ _id: req.params.id })
-// 		.then((data) => res.json(data))
-// 		.catch((err) => res.json({ message: err }));
-// };
+exports.removeSingleList = async (req, res) => {
+	await ListsModel.findByIdAndDelete({ _id: req.params.id })
+		.then((data) => res.json(data))
+		.catch((err) => res.json({ message: err }));
+};

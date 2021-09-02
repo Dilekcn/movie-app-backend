@@ -5,56 +5,120 @@ const UserRatingModel = require('../model/UserRatings.model');
 require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
 
-exports.getAll = async (req, res) => {
-	try {
-		// const update = await MoviesModel.find();
-        // update.map(async (item, index) => {
-		// 	const watchCount = await UserModel.count({
-		// 		watched: { $in: item._id.toString() },
-		// 	});
-		// 	const watchlistCount = await UserModel.count({
-		// 		watchlist: { $in: item._id.toString() },
-		// 	});
-		// 	const likeCount = await UserModel.count({
-		// 		 liked: { $in: item._id.toString() },
-		// 	});
-		// 	await MoviesModel.findByIdAndUpdate(
-		// 		{ _id: item._id },
-		// 		{ $set: { 
-		// 			watchCount: watchCount,
-		// 			watchlistCount:watchlistCount,
-		// 			likeCount:likeCount
-		// 		 } }  
-		// 	);
-		// }); 
+exports.getAll =async (req,res)=>{
+	const{page=1,limit=10}=req.query
+	const total = await MoviesModel.find().countDocuments();
+	await MoviesModel.aggregate(
+	[ 
+		{ 
+			$sort:
+			{
+			 createdAt: -1
+			}  
+		 },
+		 {
+			 $skip:(page - 1) * limit 
+		 },
+		 {
+			 $limit:limit*1 
+		 }, 
+		 {
+            $lookup:{
+				from:'watchlists',
+				localField:"_id",
+				foreignField:'movieId',
+				as:'watchlistCount'
+			},
+			
+		},
+		{
+			$addFields: { watchlistCount: { $size: "$watchlistCount" } }
+		},
+		{
+            $lookup:{
+				from:'watcheds',
+				localField:"_id",
+				foreignField:'movieId',
+				as:'watchedCount'
+			},
+			
+		},
+		{
+			$addFields: { watchedCount: { $size: "$watchedCount" } }
+		},
+		{
+            $lookup:{
+				from:'likes',
+				localField:"_id",
+				foreignField:'movieId',
+				as:'likesCount'
+			},
+			
+		},
+		{
+			$addFields: { likesCount: { $size: "$likesCount" } }
+		}
+	
+	],
+	(err,response)=>{
+	if(err)res.json(err);
+	const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+	res.json({ total,pages, status: 200, response })
+}) 
+}
 
-		const { page = 1, limit } = req.query; 
-		const response = await MoviesModel.find() 
-			.limit(limit * 1)
-			.skip((page - 1) * limit) 
-			.sort({ createdAt: -1 }) 
-			.populate({
-				path:'userRatingIds',
-				model:'userrating',
-				select:'userId rating',
-				populate:{ 
-					path:'userId',
-					model:'user',
-					select:'firstname lastname',
-					populate:{
-						path:'mediaId',
-						model:'media',
-						select:'url'
-					}
-				}
-			})
-		const total = await MoviesModel.find().countDocuments();
-		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-		res.json({ total: total, pages, status: 200, response });
-	} catch (error) {
-		res.status(500).json(error);
-	}
-};
+
+
+// exports.getAll = async (req, res) => {
+// 	try {
+// 		const update = await MoviesModel.find();
+//         update.map(async (item, index) => {
+// 			const watchCount = await UserModel.count({
+// 				watched: { $in: item._id.toString() },
+// 			});
+// 			const watchlistCount = await UserModel.count({
+// 				watchlist: { $in: item._id.toString() },
+// 			});
+// 			const likeCount = await UserModel.count({
+// 				 liked: { $in: item._id.toString() },
+// 			});
+// 			await MoviesModel.findByIdAndUpdate(
+// 				{ _id: item._id },
+// 				{ $set: { 
+// 					watchCount: watchCount,
+// 					watchlistCount:watchlistCount,
+// 					likeCount:likeCount
+// 				 } }  
+// 			);
+// 		}); 
+
+// 		const { page = 1, limit } = req.query;  
+// 		const response = await MoviesModel.find() 
+// 			.limit(limit * 1)
+// 			.skip((page - 1) * limit) 
+// 			.sort({ createdAt: -1 }) 
+// 			.populate({
+// 				path:'userRatingIds',
+// 				model:'userrating',
+// 				select:'userId rating',
+// 				populate:{ 
+// 					path:'userId',
+// 					model:'user',
+// 					select:'firstname lastname',
+// 					populate:{
+// 						path:'mediaId',
+// 						model:'media',
+// 						select:'url'
+// 					}
+// 				}
+// 			})
+// 		const total = await MoviesModel.find().countDocuments();
+// 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+// 		res.json({ total: total, pages, status: 200, response });
+// 	} catch (error) {
+// 		res.status(500).json(error);
+// 	}
+// };
 
 exports.create = async (req, res) => {
 	const newMovie = await new MoviesModel({
