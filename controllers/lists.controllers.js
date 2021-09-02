@@ -86,7 +86,7 @@ exports.create = async (req, res) => {
 
 
 exports.getSingleList = async (req, res) => {
-	await ListsModel.findById({ _id: req.params.id }, (err, data) => {
+	await ListsModel.findById({ _id: req.params.id }, (err, data) => { 
 		if (err) {
 			res.json({ message: err })
 		} else { 
@@ -197,8 +197,8 @@ exports.updateList = async (req, res) => {
 		.catch((err) => res.json({ message: err })); 
 };
 
-exports.removeSingleList = async (req, res) => {
-	await ListsModel.findByIdAndDelete({ _id: req.params.id })
-		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err }));
-};
+// exports.removeSingleList = async (req, res) => {
+// 	await ListsModel.findByIdAndDelete({ _id: req.params.id })
+// 		.then((data) => res.json(data))
+// 		.catch((err) => res.json({ message: err }));
+// };

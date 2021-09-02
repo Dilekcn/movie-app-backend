@@ -7,26 +7,26 @@ const S3 = require('../config/aws.s3.config');
 
 exports.getAll = async (req, res) => {
 	try {
-		const update = await MoviesModel.find();
-        update.map(async (item, index) => {
-			const watchCount = await UserModel.count({
-				watched: { $in: item._id.toString() },
-			});
-			const watchlistCount = await UserModel.count({
-				watchlist: { $in: item._id.toString() },
-			});
-			const likeCount = await UserModel.count({
-				 liked: { $in: item._id.toString() },
-			});
-			await MoviesModel.findByIdAndUpdate(
-				{ _id: item._id },
-				{ $set: { 
-					watchCount: watchCount,
-					watchlistCount:watchlistCount,
-					likeCount:likeCount
-				 } }  
-			);
-		}); 
+		// const update = await MoviesModel.find();
+        // update.map(async (item, index) => {
+		// 	const watchCount = await UserModel.count({
+		// 		watched: { $in: item._id.toString() },
+		// 	});
+		// 	const watchlistCount = await UserModel.count({
+		// 		watchlist: { $in: item._id.toString() },
+		// 	});
+		// 	const likeCount = await UserModel.count({
+		// 		 liked: { $in: item._id.toString() },
+		// 	});
+		// 	await MoviesModel.findByIdAndUpdate(
+		// 		{ _id: item._id },
+		// 		{ $set: { 
+		// 			watchCount: watchCount,
+		// 			watchlistCount:watchlistCount,
+		// 			likeCount:likeCount
+		// 		 } }  
+		// 	);
+		// }); 
 
 		const { page = 1, limit } = req.query; 
 		const response = await MoviesModel.find() 
