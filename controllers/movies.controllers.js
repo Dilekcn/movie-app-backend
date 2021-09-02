@@ -170,7 +170,7 @@ exports.updateSingleMovie = async (req, res) => {
 						message: 'Movie is updated successfully',
 						data,
 					})
-				)
+				) 
 				.catch((err) => ({ status: 400, message: err })); 
 		})
 		.catch((err) => ({ status: 400, message: err }));
@@ -181,17 +181,16 @@ exports.updateSingleMovie = async (req, res) => {
 }; 
  
 
+exports.getSingleMovieByTmdb = async (req, res) => {
+	await MoviesModel.find({ tmdb_id: req.params.tmdbid }, (err, data) => {
+		if (err) {
+			res.json({ message: err });
+		} else {
+			res.json(data);
+		}
+	})
 
-
-
-
-
-
-
-
-
-
-
+};
 
 
 exports.removeSingleMovie = async (req, res) => {
