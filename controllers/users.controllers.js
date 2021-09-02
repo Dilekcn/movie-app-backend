@@ -59,14 +59,23 @@ exports.getAllUsers = async (req, res) => {
 		{
             $lookup:{ 
 				from:'media',
-				let:{"mediaId":"$_id"},
-				pipeline:[
-                  {$project:{_id:0,url:1}}
-				],
-				as:"mediaId"
-
+				localField:"mediaId",
+				foreignField:'_id',
+				as:'mediaId'
 			}
 		},
+		// {
+        //     $lookup:{ 
+		// 		from:'media',
+		// 		let:{"mediaId":"$_id"},
+		// 		pipeline:[
+		// 		//   { $match: {mediaId:"$_id"}},
+        //           {$project:{_id:0,url:1}}
+		// 		],
+		// 		as:"mediaId"
+
+		// 	}
+		// },
 	
 	
 	],
