@@ -121,32 +121,42 @@ exports.getAll =async (req,res)=>{
 // };
 
 exports.create = async (req, res) => {
-	const newMovie = await new MoviesModel({
-		type: req.body.type,
-		imdb_id: req.body.imdb_id,
-		tmdb_id:req.body.tmdb_id,
-		imdb_rating:req.body.imdb_rating,
-		image_path:req.body.image_path,
-		backdrop_path:req.body.backdrop_path,
-		original_title: req.body.original_title,
-		watchCount:req.body.watchCount,
-		watchlistCount:req.body.watchListCount,
-		likeCount:req.body.likeCount,
-		isActive: req.body.isActive,
-		isDeleted: req.body.isDeleted,
-		userRatingIds:req.body.userRatingIds, 
-	});
+	await MoviesModel.findOne({tmdb_id:req.body.tmdb_id}, async (err, result) => {
 
-	newMovie
-		.save()
-		.then((data) =>
-			res.json({
-				status: true,
-				message: 'Added new movie successfully',
-				data,
-			})
-		)
-		.catch((err) => res.json({ status: false, message: err }));
+		if(err) res.json({status: false, message: err })
+
+		if(result === null) {
+			const newMovie = await new MoviesModel({
+				type: req.body.type,
+				imdb_id: req.body.imdb_id,
+				tmdb_id:req.body.tmdb_id,
+				imdb_rating:req.body.imdb_rating,
+				image_path:req.body.image_path,
+				backdrop_path:req.body.backdrop_path,
+				original_title: req.body.original_title,
+				watchCount:req.body.watchCount,
+				watchlistCount:req.body.watchListCount,
+				likeCount:req.body.likeCount,
+				isActive: req.body.isActive,
+				isDeleted: req.body.isDeleted,
+				userRatingIds:req.body.userRatingIds, 
+			});
+		
+			newMovie
+				.save()
+				.then((data) =>
+					res.json({
+						status: true,
+						message: 'Added new movie successfully',
+						data,
+					})
+				)
+				.catch((err) => res.json({ status: false, message: err }));
+		} else {
+			return res.json({status: false, message: 'This movie already exist.', data: result})
+		}
+	})
+	
 };
 
 // exports.getSingleMovie = async (req, res) => {
