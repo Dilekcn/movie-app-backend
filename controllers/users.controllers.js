@@ -40,7 +40,7 @@ exports.getAllUsers = async (req, res) => {
 		// 		'watchlist.movieId':1
 		// 	}
 		// }
-		{
+		{ 
             $lookup:{
 				from:'watcheds',
 				localField:"_id",
@@ -54,6 +54,14 @@ exports.getAllUsers = async (req, res) => {
 				localField:"_id",
 				foreignField:'userId',
 				as:'liked'
+			}
+		},
+		{
+            $lookup:{ 
+				from:'media',
+				localField:"mediaId",
+				foreignField:'_id',
+				as:'mediaId'
 			}
 		},
 	
