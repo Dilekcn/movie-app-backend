@@ -20,8 +20,8 @@ exports.getAllUsers = async (req, res) => {
 		.then((data) => res.json({ total: total, pages, status: 200, data }))
 		.catch((err) => res.json({ message: err })); 
 };
-
-exports.getSingleUserById = async (req, res) => {
+ 
+exports.getSingleUserById = async (req, res) => { 
 	await UserModel.findById({ _id: req.params.id }, (err, data) => {
 		if (err) {
 			res.json({ message: err });
@@ -29,7 +29,7 @@ exports.getSingleUserById = async (req, res) => {
 			res.json(data);
 		}
 	}).populate('mediaId', 'url title alt')
-	.populate('watchlist','original_title imdb_id tmdb_id image_path')
+	    .populate('watchlist','original_title imdb_id tmdb_id image_path')
 		.populate('watched','original_title imdb_id tmdb_id image_path')
 		.populate('liked','original_title imdb_id tmdb_id image_path')
 };
@@ -139,7 +139,11 @@ exports.createUser = async (req, res) => {
 exports.login = async (req, res) => {
 	const { email, password } = req.body;
 
-	UserModel.findOne({ email: email }).populate('mediaId','url alt')
+	UserModel.findOne({ email: email })
+	.populate('mediaId','url alt')
+	.populate('watchlist','original_title imdb_id tmdb_id image_path')
+	.populate('watched','original_title imdb_id tmdb_id image_path')
+	.populate('liked','original_title imdb_id tmdb_id image_path')
 		.then(async (data) => {
 			if (await bcrypt.compare(password, data.password)) {
 				const token = jwt.sign(
