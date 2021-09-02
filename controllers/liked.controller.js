@@ -1,9 +1,9 @@
-const WatchlistModel = require('../model/Watchlist.model');
+const LikedModel = require('../model/Liked.model');
 
 exports.getAll = async (req, res) => {
 	try { 
 		const { page = 1, limit } = req.query;
-		const response = await WatchlistModel.find()
+		const response = await LikedModel.find()
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
@@ -19,7 +19,7 @@ exports.getAll = async (req, res) => {
 			// })	
 			.populate('movieId','type imdb_id original_title');  
 			
-		const total = await WatchlistModel.find().countDocuments();
+		const total = await LikedModel.find().countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
@@ -28,14 +28,14 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	const newWatchList = await new WatchlistModel({
+	const newLikedList = await new LikedModel({
 		userId: req.body.userId,
 		movieId: req.body.movieId,
         isActive: req.body.isActive,
 		isDeleted: req.body.isDeleted,
 	}); 
 
-	newWatchList
+	newLikedList
 		.save() 
 		.then((response) =>
 			res.json({
@@ -47,8 +47,8 @@ exports.create = async (req, res) => {
 		.catch((err) => res.json({ status: false, message: err }));
 };
 
-exports.getSingleWatchlist = async (req, res) => {
-	await WatchlistModel.findById({ _id: req.params.id }, (err, data) => {
+exports.getSingleLiked = async (req, res) => {
+	await LikedModel.findById({ _id: req.params.id }, (err, data) => {
 		if (err) {
 			res.json({ status: false, message: err });
 		} else {
@@ -68,8 +68,8 @@ exports.getSingleWatchlist = async (req, res) => {
 		.populate('movieId','type imdb_id original_title');
 };
 
-exports.getWatchlistByUserId = async (req, res) => {
-	await WatchlistModel.find({ userId: req.params.id }, (err, data) => {
+exports.getLikedByUserId = async (req, res) => {
+	await LikedModel.find({ userId: req.params.id }, (err, data) => {
 		if (err) {
 			res.json({ status: false, message: err });
 		} else {
@@ -90,8 +90,8 @@ exports.getWatchlistByUserId = async (req, res) => {
 };
 
 
-exports.updateWatchlist = async (req, res) => {
-	await WatchlistModel.findByIdAndUpdate(
+exports.updateLiked = async (req, res) => {
+	await LikedModel.findByIdAndUpdate(
 		{ _id: req.params.id }, 
 		{ $set: {
 			userId:req.body.userId,
@@ -104,8 +104,9 @@ exports.updateWatchlist = async (req, res) => {
 		.catch((err) => res.json({ message: err }));
 };
 
-exports.removeSingleWatchlist = async (req, res) => {
-	await WatchlistModel.findByIdAndDelete({ _id: req.params.id })
+exports.removeSingleLiked = async (req, res) => {
+	await LikedModel.findByIdAndDelete({ _id: req.params.id })
 		.then((data) => res.json({ status: 200, data }))
 		.catch((err) => res.json({ status: false, message: err }));
 };
+ 

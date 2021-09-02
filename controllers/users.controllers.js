@@ -6,21 +6,83 @@ require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
 
 exports.getAllUsers = async (req, res) => {
-	const { page = 1, limit } = req.query;
-	const total = await UserModel.find().count();
+	const{page=1,limit=10}=req.query
+	const total = await UserModel.find().countDocuments();
+	await UserModel.aggregate(
+	[
+		{
+			$sort:
+			{
+			 createdAt: -1
+			}
+		},
+		{
+			 $skip:(page - 1) * limit 
+		},
+		{
+			 $limit:limit*1 
+		},
+		{
+            $lookup:{
+				from:'watchlists',
+				localField:"_id",
+				foreignField:'userId',
+				as:'watchlist'
+			}
+		},
+		// {
+		// 	$unwind:"$watchlist"
+		// },
+		// {
+		// 	$project:{
+		// 		isActive:1,isDeleted:1,role:1,firstname:1,
+		// 		email:1,mediaId:1,password:1,createdAt:1,updatedAt:1,
+		// 		'watchlist.movieId':1
+		// 	}
+		// }
+		{
+            $lookup:{
+				from:'watcheds',
+				localField:"_id",
+				foreignField:'userId',
+				as:'watched'
+			}
+		}, 
+		{
+            $lookup:{ 
+				from:'likeds',
+				localField:"_id",
+				foreignField:'userId',
+				as:'liked'
+			}
+		},
+	
+	],
+	(err,response)=>{
+	if(err)res.json(err);
 	const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-	await UserModel.find()
-		.limit(limit * 1)
-		.skip((page - 1) * limit) 
-		.sort({ createdAt: -1 })
-		.populate('mediaId', 'url title alt')
-		.populate('watchlist','original_title imdb_id tmdb_id image_path')
-		.populate('watched','original_title imdb_id tmdb_id image_path')
-		.populate('liked','original_title imdb_id tmdb_id image_path')
-		.then((data) => res.json({ total: total, pages, status: 200, data }))
-		.catch((err) => res.json({ message: err })); 
+	res.json({ total,pages, status: 200, response })
+}) 
 };
- 
+
+
+
+// exports.getAllUsers = async (req, res) => {
+// 	const { page = 1, limit } = req.query;
+// 	const total = await UserModel.find().count();
+// 	const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+// 	await UserModel.find()
+// 		.limit(limit * 1)
+// 		.skip((page - 1) * limit) 
+// 		.sort({ createdAt: -1 })
+// 		.populate('mediaId', 'url title alt')
+// 		.populate('watchlist','original_title imdb_id tmdb_id image_path')
+// 		.populate('watched','original_title imdb_id tmdb_id image_path') 
+// 		.populate('liked','original_title imdb_id tmdb_id image_path')
+// 		.then((data) => res.json({ total: total, pages, status: 200, data }))
+// 		.catch((err) => res.json({ message: err })); 
+// };
+  
 exports.getSingleUserById = async (req, res) => { 
 	await UserModel.findById({ _id: req.params.id }, (err, data) => {
 		if (err) {
@@ -59,7 +121,7 @@ exports.getSingleUserByLastName = async (req, res) => {
 		.populate('watched','original_title imdb_id tmdb_id image_path')
 		.populate('liked','original_title imdb_id tmdb_id image_path')
 };
-
+ 
 exports.getSingleUserByEmail = async (req, res) => {
 	await UserModel.findById({ email: req.params.email }, (err, data) => {
 		if (err) {
