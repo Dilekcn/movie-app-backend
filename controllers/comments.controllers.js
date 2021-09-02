@@ -97,25 +97,44 @@ exports.getCommentsByUserId = async (req, res) => {
 };
 
 exports.getCommentsByList = async (req, res) => {
-	await CommentsModel.find({ listId: req.params.listid }, (err, data) => {
-		if (err) {
-			res.json({ status: false, message: err });
-		} else {
-			res.json({ status: 200, data });
-		}
-	})
-	.populate({
-        path:'userId',
-        model:'user',
-        select:'firstname lastname mediaId',
-        populate:{
-            path:'mediaId',
-            model:'media',
-            select:'url'
-        }
-    })
-		.populate('listId', 'name');
+	try { 
+		const { page = 1, limit } = req.query;
+		const response = await CommentsModel.find({ listId: req.params.listid })
+			.limit(limit * 1)
+			.skip((page - 1) * limit)
+			.sort({ createdAt: -1 })
+			
+			.populate({
+				path:'userId',
+				model:'user',
+				select:'firstname lastname mediaId',
+				populate:{
+					path:'mediaId',
+					model:'media',
+					select:'url'
+				}
+			})
+			.populate('listId', 'name')
+			.populate('movieId','type imdb_id original_title'); 
+			
+		const total = await CommentsModel.find({ listId: req.params.listid }).countDocuments();
+		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+		res.json({ total: total, pages, status: 200, response });
+	} catch (error) {
+		res.status(500).json(error);
+	}
+
 };
+
+
+
+
+
+
+
+
+
+
 
 exports.updateComment = async (req, res) => {
 	await CommentsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
