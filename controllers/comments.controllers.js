@@ -115,7 +115,7 @@ exports.getCommentsByList = async (req, res) => {
 				}
 			})
 			.populate('listId', 'name')
-			.populate('movieId','type imdb_id original_title'); 
+		
 			
 		const total = await CommentsModel.find({ listId: req.params.listid }).countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
@@ -134,7 +134,7 @@ exports.getCommentsByList = async (req, res) => {
 
 
 
-
+ 
 
 exports.updateComment = async (req, res) => {
 	await CommentsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })

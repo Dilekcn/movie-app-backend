@@ -5,10 +5,10 @@ const listsControllers = require('../controllers/lists.controllers');
 
 router.get('/lists', listsControllers.getAll);
 router.get('/lists/:id', listsControllers.getSingleList);
-router.get('/lists/userid/:userid', listsControllers.getListByUserId);
+router.get('/lists/userid/:id', listsControllers.getListByUserId);
 router.post('/lists', listsControllers.create);
 router.put('/lists/:id', listsControllers.updateList);
-router.delete('/lists/:id', listsControllers.removeSingleList);
+router.delete('/lists/:id', listsControllers.removeSingleList); 
 
 module.exports = router;
  

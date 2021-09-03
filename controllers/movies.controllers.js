@@ -2,6 +2,7 @@ const MoviesModel = require('../model/Movies.model');
 const MediaModel = require('../model/Media.model');
 const UserModel = require('../model/User.model');
 const UserRatingModel = require('../model/UserRatings.model');
+const mongoose = require('mongoose');
 require('dotenv').config();
 const S3 = require('../config/aws.s3.config');
 
@@ -28,7 +29,7 @@ exports.getAll =async (req,res)=>{
 				localField:"_id",
 				foreignField:'movieId',
 				as:'watchlistCount'
-			},
+			}, 
 			
 		},
 		{
@@ -52,12 +53,20 @@ exports.getAll =async (req,res)=>{
 				localField:"_id",
 				foreignField:'movieId',
 				as:'likesCount'
-			},
+			}, 
 			
 		},
 		{
-			$addFields: { likesCount: { $size: "$likesCount" } }
-		}
+			$addFields: { likesCount: { $size: "$likesCount" } } 
+		}, 
+		{ 
+            $lookup:{
+				from:'userratings',
+				localField:"_id",
+				foreignField:'movieId', 
+				as:'userRatingIds'
+			} 
+		},
 	
 	],
 	(err,response)=>{
@@ -69,56 +78,6 @@ exports.getAll =async (req,res)=>{
 
 
 
-// exports.getAll = async (req, res) => {
-// 	try {
-// 		const update = await MoviesModel.find();
-//         update.map(async (item, index) => {
-// 			const watchCount = await UserModel.count({
-// 				watched: { $in: item._id.toString() },
-// 			});
-// 			const watchlistCount = await UserModel.count({
-// 				watchlist: { $in: item._id.toString() },
-// 			});
-// 			const likeCount = await UserModel.count({
-// 				 liked: { $in: item._id.toString() },
-// 			});
-// 			await MoviesModel.findByIdAndUpdate(
-// 				{ _id: item._id },
-// 				{ $set: { 
-// 					watchCount: watchCount,
-// 					watchlistCount:watchlistCount,
-// 					likeCount:likeCount
-// 				 } }  
-// 			);
-// 		}); 
-
-// 		const { page = 1, limit } = req.query;  
-// 		const response = await MoviesModel.find() 
-// 			.limit(limit * 1)
-// 			.skip((page - 1) * limit) 
-// 			.sort({ createdAt: -1 }) 
-// 			.populate({
-// 				path:'userRatingIds',
-// 				model:'userrating',
-// 				select:'userId rating',
-// 				populate:{ 
-// 					path:'userId',
-// 					model:'user',
-// 					select:'firstname lastname',
-// 					populate:{
-// 						path:'mediaId',
-// 						model:'media',
-// 						select:'url'
-// 					}
-// 				}
-// 			})
-// 		const total = await MoviesModel.find().countDocuments();
-// 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-// 		res.json({ total: total, pages, status: 200, response });
-// 	} catch (error) {
-// 		res.status(500).json(error);
-// 	}
-// };
 
 exports.create = async (req, res) => {
 	await MoviesModel.findOne({tmdb_id:req.body.tmdb_id}, async (err, result) => {
@@ -135,7 +94,7 @@ exports.create = async (req, res) => {
 				backdrop_path:req.body.backdrop_path,
 				original_title: req.body.original_title,
 				watchCount:req.body.watchCount,
-				watchlistCount:req.body.watchListCount,
+				watchlistCount:req.body.watchListCount, 
 				likeCount:req.body.likeCount,
 				isActive: req.body.isActive,
 				isDeleted: req.body.isDeleted,
@@ -158,31 +117,65 @@ exports.create = async (req, res) => {
 	})
 	
 };
+exports.getSingleMovie =async (req,res)=>{
 
-// exports.getSingleMovie = async (req, res) => {
-// 	await MoviesModel.findById({ _id: req.params.id }, (err, data) => {
-// 		if (err) {
-// 			res.json({ message: err });
-// 		} else {
-// 			res.json(data);
-// 		}
-// 	})
-// 	.populate({
-// 		path:'userRatingIds',
-// 		model:'userrating',
-// 		select:'userId rating',
-// 		populate:{
-// 			path:'userId',
-// 			model:'user',
-// 			select:'firstname lastname',
-// 			populate:{
-// 				path:'mediaId',
-// 				model:'media',
-// 				select:'url'
-// 			}
-// 		}
-// 	})
-// };
+	await MoviesModel.aggregate(
+	[ 
+		{
+			$match: { _id: mongoose.Types.ObjectId(req.params.id) }
+		},
+		 {
+            $lookup:{
+				from:'watchlists',
+				localField:"_id",
+				foreignField:'movieId',
+				as:'watchlistCount'
+			}, 
+			
+		},
+		{
+			$addFields: { watchlistCount: { $size: "$watchlistCount" } }
+		},
+		{
+            $lookup:{
+				from:'watcheds',
+				localField:"_id",
+				foreignField:'movieId',
+				as:'watchedCount'
+			},
+			 
+		},
+		{
+			$addFields: { watchedCount: { $size: "$watchedCount" } }
+		},
+		{
+            $lookup:{
+				from:'likes',
+				localField:"_id",
+				foreignField:'movieId',
+				as:'likesCount'
+			}, 
+			
+		},
+		{
+			$addFields: { likesCount: { $size: "$likesCount" } } 
+		}, 
+		{ 
+            $lookup:{
+				from:'userratings',
+				localField:"_id",
+				foreignField:'movieId', 
+				as:'userRatingIds'
+			} 
+		},
+	
+	],
+	(err,response)=>{
+	if(err)res.json(err);
+	res.json({status: 200, response })
+}) 
+}
+
 
 
 

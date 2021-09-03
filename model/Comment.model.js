@@ -13,6 +13,6 @@ const CommentsSchema = new Schema(
 		isDeleted: { type: Boolean, default: false }, 
 	},
 	{ timestamps: true }
-);
+); 
 
 module.exports = mongoose.model('comment', CommentsSchema);

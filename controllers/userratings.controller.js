@@ -9,6 +9,8 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
+			.populate('userId','firstname lastname')
+			.populate('listId','name')
 		
 		const total = await UserRatingModel.find().countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
@@ -22,7 +24,7 @@ exports.getRatingById = (req, res) => {
 	const id = req.params.id;
 	UserRatingModel.findById({ _id: id })
 		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err, status: false }));
+		.catch((err) => res.json({ message: err, status: false })); 
 };
 
 exports.create = async (req, res) => {
@@ -30,6 +32,7 @@ exports.create = async (req, res) => {
 		userId: req.body.userId,
 		rating: req.body.rating,
 		listId: req.body.listId,
+		movieId:req.body.movieId,
 		isActive: req.body.isActive,
 		isDeleted: req.body.isDeleted,
 	});
@@ -41,7 +44,7 @@ exports.create = async (req, res) => {
 				status: 200,
 				message: 'New rating is created successfully',
 				response,
-			})
+			})  
 		)
 		.catch((err) => res.json({ status: false, message: err }));
 };

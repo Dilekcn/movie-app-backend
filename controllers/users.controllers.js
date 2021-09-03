@@ -64,19 +64,7 @@ exports.getAllUsers = async (req, res) => {
 				as:'mediaId'
 			}
 		},
-		// {
-        //     $lookup:{ 
-		// 		from:'media',
-		// 		let:{"mediaId":"$_id"},
-		// 		pipeline:[
-		// 		//   { $match: {mediaId:"$_id"}},
-        //           {$project:{_id:0,url:1}}
-		// 		],
-		// 		as:"mediaId"
-
-		// 	}
-		// },
-	
+		
 	
 	],
 	(err,response)=>{

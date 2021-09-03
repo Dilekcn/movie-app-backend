@@ -1,6 +1,7 @@
 const ListsModel = require('../model/List.model');
 const UserRatingModel = require('../model/UserRatings.model');
 const CommentModel = require('../model/Comment.model');
+const mongoose = require('mongoose');
  
 
 exports.getAll =async (req,res)=>{
@@ -8,17 +9,60 @@ exports.getAll =async (req,res)=>{
 	const total = await ListsModel.find().countDocuments();
 	await ListsModel.aggregate(
 	[
+		{$sort:{createdAt: -1}},
+		{$skip:(page - 1) * limit}, 
+		{$limit:limit*1},
 		{
-		   $sort:
-		   {
-			createdAt: -1
-		   }
+            $lookup:{
+				from:'movies',
+				localField:"movieIds",
+				foreignField:'_id', 
+				as:'movieIds'
+			}
 		},
 		{
-			$skip:(page - 1) * limit
+            $lookup:{
+				from:'users',
+				localField:"userId",
+				foreignField:'_id', 
+				as:'userId'
+			}  
+		},
+         
+		{
+            $lookup:{
+				from:'users',
+				localField:"likes",
+				foreignField:'_id', 
+				as:'likes'
+			}  
 		},
 		{
-			$limit:limit*1 
+            $lookup:{
+				from:'comments',
+				localField:"comments",
+				foreignField:'listId', 
+				as:'comments'
+			}  
+		},
+		// {
+        //     $lookup:{
+		// 		from:'users',
+		// 		let:{userId:"$userId"},
+		// 		pipeline:[
+		// 			{$match:{$expr:{$eq:[mongoose.Types.ObjectId("$_id"),"$$userId"]}}},
+		// 			{$project:{firstname:1}}
+		// 		],
+		// 		as:'likes'
+		// 	} 
+		// },
+		{
+            $lookup:{
+				from:'userratings',
+				localField:"userRatingIds",
+				foreignField:'listId', 
+				as:'userRatingIds'
+			} 
 		},
 		
 		
@@ -33,55 +77,6 @@ exports.getAll =async (req,res)=>{
 
 
 
-
-
-// exports.getAll = async (req, res) => {
-// 	try { 
-
-// 		const update=await ListsModel.find()
-// 		update.map(async(item,index)=>{
-// 			const commentCount = await CommentModel.count({
-// 				listId: { $in: item._id.toString() },
-// 			});
-// 			await ListsModel.findByIdAndUpdate(
-// 				{ _id: item._id },
-// 				{ $set: { 
-// 					commentCount:commentCount
-// 				 } }  
-// 			);
-// 		}) 
-// 		const { page = 1, limit } = req.query;
-// 		const response = await ListsModel.find()
-// 			.limit(limit * 1)
-// 			.skip((page - 1) * limit) 
-// 			.sort({ createdAt: -1 })
-// 			.populate('userRatingIds','userId rating')  
-// 			.populate('likes','firstname lastname') 
-// 			.populate('movieIds','type imdb_id tmdb_id imdb_rating original_title image_path')
-// 			.populate({
-// 				path:'userId',
-// 				model:'user',
-// 				select:'firstname lastname mediaId',
-// 				populate:{ 
-// 					path:'mediaId',
-// 					model:'media',
-// 					select:'url',
-// 					populate:{
-// 						path:'mediaId',
-// 						model:'media',
-// 						select:'url'
-// 					}
-// 				}
-// 			})
-// 		const total = await ListsModel.find().count();
-// 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-// 		res.json({ total: total, pages, status: 200, response });
-// 	} catch (error) {
-// 		res.status(500).json(error);
-// 	} 
-// }; 
-
-
 exports.create = async (req, res) => {
 
 	const {
@@ -93,9 +88,7 @@ exports.create = async (req, res) => {
 		isDeleted,
 		rating,
 		tags,
-		userRatingIds,
-		likes
-
+		userRatingIds
 	} = req.body;
 	const newList = await new ListsModel({
 		userId,
@@ -106,7 +99,7 @@ exports.create = async (req, res) => {
 		isDeleted,
 		rating,
 		tags: tags.split(','),
-		userRatingIds,
+		userRatingIds, 
 		movieIds:JSON.parse(req.body.movieIds),
 		likes:JSON.parse(req.body.likes)
 		
@@ -117,92 +110,144 @@ exports.create = async (req, res) => {
 		.catch((err) => res.json(err));
     }
 
+	exports.getSingleList = async (req, res) => {
+		
+		await ListsModel.aggregate(
+			
+			[
+	          
+				{
+					$match: { _id: mongoose.Types.ObjectId(req.params.id) }
+				},
+				{
+					$lookup:{
+						from:'movies',
+						localField:"movieIds",
+						foreignField:'_id', 
+						as:'movieIds'
+					}
+				},
+				{
+					$lookup:{
+						from:'users',
+						localField:"userId",
+						foreignField:'_id', 
+						as:'userId'
+					}  
+				},
+				{
+					$lookup:{
+						from:'users',
+						localField:"likes",
+						foreignField:'_id', 
+						as:'likes'
+					} 
+				},
+				{
+					$lookup:{
+						from:'comments',
+						localField:"comments",
+						foreignField:'listId', 
+						as:'comments'
+					}  
+				},
+				{
+					$lookup:{
+						from:'userratings',
+						localField:"userRatingIds",
+						foreignField:'listId', 
+						as:'userRatingIds'
+					} 
+				},
+				
+				
+			],
+			(err,response)=>{
+			if(err)res.json(err);
+			res.json({response })
+		}) 
+	}
 
-exports.getSingleList = async (req, res) => {
-	await ListsModel.findById({ _id: req.params.id }, (err, data) => { 
-		if (err) {
-			res.json({ message: err })
-		} else { 
-			res.json(data);
-		}
-	})
-	.populate('userRatingIds','userId rating') 
-	.populate('movieIds')
-	.populate('likes','firstname lastname') 
-	.populate({
-		path:'userId',
-		model:'user',
-		select:'firstname lastname mediaId',
-		populate:{ 
-			path:'mediaId',
-			model:'media',
-			select:'url',
-			populate:{
-				path:'mediaId',
-				model:'media',
-				select:'url'
-			}
-		}
-	})
-};
+
+
+
 
 exports.getListByUserId = async (req, res) => {
-	await ListsModel.find({ userId: req.params.id }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		}
-	})
-	.populate('userId','firstname lastname') 
-	.populate('userRatingIds','userId rating') 
-	.populate('movieIds') 
-	.populate('likes','firstname lastname') 
+		
+	await ListsModel.aggregate(
+			
+		[
+		  
+			{
+				$match: { userId: mongoose.Types.ObjectId(req.params.id) }
+			},
+			{
+				$lookup:{
+					from:'movies',
+					localField:"movieIds",
+					foreignField:'_id', 
+					as:'movieIds'
+				}
+			},
+			{
+				$lookup:{
+					from:'users',
+					localField:"userId",
+					foreignField:'_id', 
+					as:'userId'
+				}  
+			},
+			{
+				$lookup:{
+					from:'users',
+					localField:"likes",
+					foreignField:'_id', 
+					as:'likes'
+				} 
+			},
+			{
+				$lookup:{
+					from:'comments',
+					localField:"comments",
+					foreignField:'listId', 
+					as:'comments'
+				}  
+			},
+			{
+				$lookup:{
+					from:'userratings',
+					localField:"userRatingIds",
+					foreignField:'listId', 
+					as:'userRatingIds'
+				} 
+			},
+			
+			
+		],
+		(err,response)=>{
+		if(err)res.json(err);
+		res.json({response })
+	})  
 };
 
 exports.updateList = async (req, res) => {
 		await ListsModel.findById({ _id: req.params.id })
 			.then(async (list) => {
-	
-				const newUserRating = 
-					typeof req.body.userRatingIds === 'string'
-						? await JSON.parse(req.body.userRatingIds).map(
-								(userrating) => {
-									return new UserRatingModel({
-										userId: userrating.userId,
-										listId: req.params.id, 
-										rating: userrating.rating,
-									});
-								}
-						  )
-						: req.body.UserRatingModel.map((userrating) => {
-								return new UserRatingModel({
-									userId: userrating.userId,
-									listId: req.params.id,
-									rating: userrating.rating,
-								});
-						  });
 
-				newUserRating.map((userrating) => userrating.save());
-
-				const newUserRatingIds = newUserRating.map((userrating) => userrating._id);
-
-				const {userId,name,description,rating,tags,likes,isPublic} =
+				const {userId,name,description,rating,tags,isPublic} =
 					req.body;
 				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
 				await ListsModel.findByIdAndUpdate(
 					{ _id: req.params.id },
 					{
 						$set: {
-							userId,
-							name, 
-							description,
-							rating,
-							tags: tags.split(','),
-							movieIds:newmovieids,
-							isPublic,
-							likes,
-							userRatingIds:newUserRatingIds,
+							userId:userId ? userId : list.userId,
+							name:name?name:list.name, 
+							description:description ? description : list.description,
+							rating:rating?rating:list.rating,
+							tags: tags ? tags.split(',') : user.tags,
+							movieIds:req.body.movieIds ? [...user.movieIds,newmovieids]:user.movieIds,
+							isPublic:isPublic ? isPublic : list.isPublic,
 							isActive: !req.body.isActive
 								? true
 								: req.body.isActive,
@@ -216,7 +261,7 @@ exports.updateList = async (req, res) => {
 					.then((data) =>
 						res.json({
 							status: 200,
-							message: 'List is updated successfully',
+							message: 'List is updated successfully', 
 							data,
 						})
 					)
@@ -224,10 +269,10 @@ exports.updateList = async (req, res) => {
 			})
 			.catch((err) => ({ status: 400, message: err }));
 	
-
-	await ListsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
-		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err })); 
+ 
+	// await ListsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
+	// 	.then((data) => res.json(data))
+	// 	.catch((err) => res.json({ message: err })); 
 };
 
 exports.removeSingleList = async (req, res) => {

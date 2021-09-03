@@ -7,10 +7,21 @@ exports.getAllNotifications = async (req, res) => {
 		const response = await NotificationModel.find()
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
-			.sort({ createdAt: -1 });
+			.sort({ createdAt: -1 })
+			.populate({
+				path:'userId',
+				model:'user',
+				select:'firstname lastname mediaId',
+				populate:{
+					path:'mediaId',
+					model:'media',
+					select:'url'
+				}
+			})
 		const total = await NotificationModel.find().count();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-		res.json({ total: total, pages, status: 200, response });
+		res.json({ total: total, pages, status: 200, response })
+		
 	} catch (error) {
 		res.status(500).json(error);
 	}
@@ -20,7 +31,7 @@ exports.createNotification = async (req, res) => {
 	const newNotification = await new NotificationModel({
 		userId: req.body.userId,
 		title: req.body.title,
-		content: req.body.content,
+		content: req.body.content,  
 		isRead: req.body.isRead,
 		isDeleted: req.body.isDeleted,
 	});

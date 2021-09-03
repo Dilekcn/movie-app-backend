@@ -10,4 +10,4 @@ router.post('/watchlist', watchlistControllers.create);
 router.put('/watchlist/:id', watchlistControllers.updateWatchlist);
 router.delete('/watchlist/:id', watchlistControllers.removeSingleWatchlist);
 
-module.exports = router;   
+module.exports = router;         
