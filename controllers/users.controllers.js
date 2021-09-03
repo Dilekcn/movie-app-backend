@@ -30,16 +30,6 @@ exports.getAllUsers = async (req, res) => {
 				as:'watchlist'
 			}
 		},
-		// {
-		// 	$unwind:"$watchlist"
-		// },
-		// {
-		// 	$project:{
-		// 		isActive:1,isDeleted:1,role:1,firstname:1,
-		// 		email:1,mediaId:1,password:1,createdAt:1,updatedAt:1,
-		// 		'watchlist.movieId':1
-		// 	}
-		// }
 		{ 
             $lookup:{
 				from:'watcheds',
@@ -59,13 +49,14 @@ exports.getAllUsers = async (req, res) => {
 		{
             $lookup:{ 
 				from:'media',
-				localField:"mediaId",
-				foreignField:'_id',
-				as:'mediaId'
-			}
+				let:{"mediaId":"$mediaId"},
+				pipeline:[
+					{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
+					{$project:{url:1}},
+				],
+				as:'mediaId' 
+			} 
 		},
-		
-	
 	],
 	(err,response)=>{
 	if(err)res.json(err);

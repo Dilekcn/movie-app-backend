@@ -6,7 +6,7 @@ const UserRatingsSchema = new Schema(
 		userId: { type: mongoose.Types.ObjectId, ref: 'user' },
         listId:{ type: mongoose.Types.ObjectId, ref: 'list' },
 		movieId:{ type: mongoose.Types.ObjectId, ref: 'movie' },
-        rating:Number,
+        rating:Number, 
 		isActive: { type: Boolean, default: false },
 		isDeleted: { type: Boolean, default: false },
 	},  

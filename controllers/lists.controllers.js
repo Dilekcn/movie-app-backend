@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
  
 
 exports.getAll =async (req,res)=>{
+
 	const{page=1,limit=10}=req.query
 	const total = await ListsModel.find().countDocuments();
 	await ListsModel.aggregate(
@@ -15,47 +16,69 @@ exports.getAll =async (req,res)=>{
 		{
             $lookup:{
 				from:'movies',
-				localField:"movieIds",
-				foreignField:'_id', 
-				as:'movieIds'
-			}
+				let:{"movieIds":"$movieIds"},
+				pipeline:[
+					{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
+					{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
+				],
+				as:'movieIds' 
+			} 
 		},
 		{
             $lookup:{
 				from:'users',
-				localField:"userId",
-				foreignField:'_id', 
+				let:{"userId":"$userId"},
+				pipeline:[
+					{$match:{$expr:{$eq:["$_id","$$userId"]}}},
+					{$project:{firstname:1,lastname:1,mediaId:1}},
+					
+					// {
+					// 	$lookup:{
+					// 		from:'medias',
+					// 		let:{"mediaId":"$mediaId"},
+					// 		pipeline:[
+					// 			{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
+					// 			{$project:{url:1}},
+					// 		],
+					// 		as:'mediaId'  
+					// 	}
+					// }
+				],
 				as:'userId'
-			}  
+			} 
 		},
-         
-		{
-            $lookup:{
-				from:'users',
-				localField:"likes",
-				foreignField:'_id', 
-				as:'likes'
-			}  
-		},
+		
 		{
             $lookup:{
 				from:'comments',
-				localField:"comments",
+				localField:"commentIds",
 				foreignField:'listId', 
-				as:'comments'
+				as:'commentIds'
 			}  
 		},
+	
 		// {
         //     $lookup:{
-		// 		from:'users',
-		// 		let:{userId:"$userId"},
+		// 		from:'comments',
+		// 		let:{"commentIds":mongoose.Types.ObjectId("$commentIds")},
 		// 		pipeline:[
-		// 			{$match:{$expr:{$eq:[mongoose.Types.ObjectId("$_id"),"$$userId"]}}},
-		// 			{$project:{firstname:1}}
+		// 			{$match:{$expr:{$eq:["$_id","$$commentIds"]}}},
+		// 			{$project:{title:1}}
 		// 		],
-		// 		as:'likes'
+		// 		as:'commentIds' 
 		// 	} 
 		// },
+		{
+            $lookup:{
+				from:'users',
+				let:{"likes":"$likes"},
+				pipeline:[
+					{$match:{$expr:{$in:["$_id","$$likes"]}}},
+					{$project:{firstname:1,lastname:1}}
+				],
+				as:'likes'
+			} 
+		},
 		{
             $lookup:{
 				from:'userratings',
@@ -65,6 +88,7 @@ exports.getAll =async (req,res)=>{
 			} 
 		},
 		
+
 		
 	],
 	(err,response)=>{
@@ -75,7 +99,7 @@ exports.getAll =async (req,res)=>{
 }
 
 
-
+ 
 
 exports.create = async (req, res) => {
 
@@ -122,33 +146,54 @@ exports.create = async (req, res) => {
 				{
 					$lookup:{
 						from:'movies',
-						localField:"movieIds",
-						foreignField:'_id', 
-						as:'movieIds'
-					}
+						let:{"movieIds":"$movieIds"},
+						pipeline:[
+							{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
+							{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
+						],
+						as:'movieIds' 
+					} 
 				},
 				{
 					$lookup:{
 						from:'users',
-						localField:"userId",
-						foreignField:'_id', 
+						let:{"userId":"$userId"},
+						pipeline:[
+							{$match:{$expr:{$eq:["$_id","$$userId"]}}},
+							{$project:{firstname:1,lastname:1,mediaId:1}},
+							
+							// {
+							// 	$lookup:{
+							// 		from:'medias',
+							// 		let:{"mediaId":"$mediaId"},
+							// 		pipeline:[
+							// 			{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
+							// 			{$project:{url:1}},
+							// 		],
+							// 		as:'mediaId'  
+							// 	}
+							// }
+						],
 						as:'userId'
-					}  
+					} 
 				},
 				{
 					$lookup:{
 						from:'users',
-						localField:"likes",
-						foreignField:'_id', 
+						let:{"likes":"$likes"},
+						pipeline:[
+							{$match:{$expr:{$in:["$_id","$$likes"]}}},
+							{$project:{firstname:1,lastname:1}}
+						],
 						as:'likes'
 					} 
 				},
 				{
 					$lookup:{
 						from:'comments',
-						localField:"comments",
+						localField:"commentIds",
 						foreignField:'listId', 
-						as:'comments'
+						as:'commentIds'
 					}  
 				},
 				{
@@ -184,33 +229,54 @@ exports.getListByUserId = async (req, res) => {
 			{
 				$lookup:{
 					from:'movies',
-					localField:"movieIds",
-					foreignField:'_id', 
-					as:'movieIds'
-				}
+					let:{"movieIds":"$movieIds"},
+					pipeline:[
+						{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
+						{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
+					],
+					as:'movieIds' 
+				} 
 			},
 			{
 				$lookup:{
 					from:'users',
-					localField:"userId",
-					foreignField:'_id', 
+					let:{"userId":"$userId"},
+					pipeline:[
+						{$match:{$expr:{$eq:["$_id","$$userId"]}}},
+						{$project:{firstname:1,lastname:1,mediaId:1}},
+						
+						// {
+						// 	$lookup:{
+						// 		from:'medias',
+						// 		let:{"mediaId":"$mediaId"},
+						// 		pipeline:[
+						// 			{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
+						// 			{$project:{url:1}},
+						// 		],
+						// 		as:'mediaId'  
+						// 	}
+						// }
+					],
 					as:'userId'
-				}  
+				} 
 			},
 			{
 				$lookup:{
 					from:'users',
-					localField:"likes",
-					foreignField:'_id', 
+					let:{"likes":"$likes"},
+					pipeline:[
+						{$match:{$expr:{$in:["$_id","$$likes"]}}},
+						{$project:{firstname:1,lastname:1}}
+					],
 					as:'likes'
 				} 
 			},
 			{
 				$lookup:{
 					from:'comments',
-					localField:"comments",
+					localField:"commentIds",
 					foreignField:'listId', 
-					as:'comments'
+					as:'commentIds'
 				}  
 			},
 			{

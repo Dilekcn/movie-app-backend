@@ -5,7 +5,7 @@ const ListsSchema = new Schema(
 	{
 		userId: { type: mongoose.Types.ObjectId, ref: 'user' },
 		likes: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
-		comments: [{ type: mongoose.Types.ObjectId, ref: 'comment' }],
+		commentIds: [{ type: mongoose.Types.ObjectId, ref: 'comment' }],
 		name: { type: String, required: true },
 		description: { type: String, required: true },
 		rating:{ type: Number, default: 0 }, 
