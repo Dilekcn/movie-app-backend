@@ -10,7 +10,7 @@ exports.getAll =async (req,res)=>{
 	const total = await ListsModel.find().countDocuments();
 	await ListsModel.aggregate(
 	[
-		{$sort:{createdAt: -1}},
+		{$sort:{createdAt: -1}},  
 		{$skip:(page - 1) * limit}, 
 		{$limit:limit*1},
 		{
@@ -30,7 +30,7 @@ exports.getAll =async (req,res)=>{
 				let:{"userId":"$userId"},
 				pipeline:[
 					{$match:{$expr:{$eq:["$_id","$$userId"]}}},
-					{$project:{firstname:1,lastname:1,mediaId:1}}, 
+					{$project:{firstname:1,lastname:1,mediaId:1}},  
 						{
 						$lookup:{
 							from:'media',
@@ -59,7 +59,7 @@ exports.getAll =async (req,res)=>{
             $lookup:{
 				from:'users', 
 				let:{"likes":"$likes"},
-				pipeline:[
+				pipeline:[ 
 					{$match:{$expr:{$in:["$_id","$$likes"]}}},
 					{$project:{firstname:1,lastname:1}}
 				],

@@ -62,7 +62,7 @@ exports.getAllUsers = async (req, res) => {
 		},
 		{
 			$project:{
-				firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,'watchlist.movieId':true,'watched.movieId':true,'liked.movieId':true,
+				firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,'watchlist.movieId':true,'watched.movieId':true,'liked.movieId':true,createdAt:true,updatedAt:true
 			}
 		},
 	],
@@ -121,16 +121,16 @@ exports.getSingleUserById = async (req, res) => {
 						{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
 						{$project:{url:1}},
 					],
-					as:'mediaId' 
+					as:'mediaId'  
 				} 
 			},
 			{
 				$project:{
-					firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,'watchlist.movieId':true,'watched.movieId':true,'liked.movieId':true,
+					firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,'watchlist.movieId':true,'watched.movieId':true,'liked.movieId':true,createdAt:true,updatedAt:true
 				}
 			},
 		],
-		(err,response)=>{
+		(err,response)=>{ 
 		if(err)res.json(err);
 		res.json({response })
 	}) 
@@ -147,7 +147,7 @@ exports.createUser = async (req, res) => {
 			url: data.Location || null,
 			title: 'users',
 			mediaKey: data.Key,
-			alt: req.body.alt || null,
+			alt: 'users',
 		});
 
 		newMedia.save();
@@ -195,7 +195,7 @@ exports.login = async (req, res) => {
 	const { email, password } = req.body;
 
 	UserModel.findOne({ email: email })
-	.populate('mediaId','url alt')
+	.populate('mediaId','url alt') 
 		.then(async (data) => {
 			if (await bcrypt.compare(password, data.password)) {
 				const token = jwt.sign(
