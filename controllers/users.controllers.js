@@ -196,9 +196,6 @@ exports.login = async (req, res) => {
 
 	UserModel.findOne({ email: email })
 	.populate('mediaId','url alt')
-	.populate('watchlist','original_title imdb_id tmdb_id image_path')
-	.populate('watched','original_title imdb_id tmdb_id image_path')
-	.populate('liked','original_title imdb_id tmdb_id image_path')
 		.then(async (data) => {
 			if (await bcrypt.compare(password, data.password)) {
 				const token = jwt.sign(
