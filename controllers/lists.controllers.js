@@ -14,7 +14,7 @@ exports.getAll =async (req,res)=>{
 		{$skip:(page - 1) * limit}, 
 		{$limit:limit*1},
 		{
-            $lookup:{
+            $lookup:{ 
 				from:'movies',
 				let:{"movieIds":"$movieIds"},
 				pipeline:[
@@ -31,7 +31,14 @@ exports.getAll =async (req,res)=>{
 				pipeline:[
 					{$match:{$expr:{$eq:["$_id","$$userId"]}}},
 					{$project:{firstname:1,lastname:1,mediaId:1}},
-					
+					{ $lookup:
+						{
+						   from: "media",
+						   localField: "mediaId",
+						   foreignField: "_id",
+						   as: "mediaId"
+						}
+					}
 					// {
 					// 	$lookup:{
 					// 		from:'medias',

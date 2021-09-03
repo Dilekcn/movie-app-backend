@@ -49,7 +49,7 @@ exports.getAll =async (req,res)=>{
 		},
 		{
             $lookup:{
-				from:'likes',
+				from:'liked',
 				localField:"_id",
 				foreignField:'movieId',
 				as:'likesCount'
