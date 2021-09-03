@@ -58,11 +58,11 @@ exports.getAll =async (req,res)=>{
 	
 		// {
         //     $lookup:{
-		// 		from:'comment',
+		// 		from:'comments',
 		// 		let:{"commentIds":"$commentIds"},
 		// 		pipeline:[
 		// 			{$match:{$expr:{$in:["$_id","$$commentIds"]}}},
-		// 			{$project:{title:1}}
+		// 			{$project:{title:1,content:1}}
 		// 		],
 		// 		as:'commentIds' 
 		// 	} 
@@ -81,7 +81,7 @@ exports.getAll =async (req,res)=>{
 		{
             $lookup:{
 				from:'userratings',
-				localField:"userRatingIds",
+				localField:"_id", 
 				foreignField:'listId', 
 				as:'userRatingIds'
 			} 
