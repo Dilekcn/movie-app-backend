@@ -30,7 +30,7 @@ exports.getAll =async (req,res)=>{
 				let:{"userId":"$userId"},
 				pipeline:[
 					{$match:{$expr:{$eq:["$_id","$$userId"]}}},
-					{$project:{firstname:1,lastname:1,mediaId:1}},
+					{$project:{firstname:1,lastname:1,mediaId:1}}, 
 						{
 						$lookup:{
 							from:'media',
@@ -39,7 +39,7 @@ exports.getAll =async (req,res)=>{
 								{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
 								{$project:{url:1}},
 							],
-							as:'mediaId'  
+							as:'mediaId'   
 						}
 					}
 				],
@@ -69,7 +69,7 @@ exports.getAll =async (req,res)=>{
 		// },
 		{
             $lookup:{
-				from:'users',
+				from:'users', 
 				let:{"likes":"$likes"},
 				pipeline:[
 					{$match:{$expr:{$in:["$_id","$$likes"]}}},
@@ -86,7 +86,11 @@ exports.getAll =async (req,res)=>{
 				as:'userRatingIds'
 			} 
 		},
-		
+		{
+			$project:{
+				likes:true,commentIds:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true
+			}
+		},
 
 		
 	],
