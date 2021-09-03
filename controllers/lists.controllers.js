@@ -50,23 +50,11 @@ exports.getAll =async (req,res)=>{
 		{
             $lookup:{
 				from:'comments',
-				localField:"commentIds",
+				localField:"_id",
 				foreignField:'listId', 
 				as:'commentIds'
 			}  
 		},
-	
-		// {
-        //     $lookup:{
-		// 		from:'comments',
-		// 		let:{"commentIds":"$commentIds"},
-		// 		pipeline:[
-		// 			{$match:{$expr:{$in:["$_id","$$commentIds"]}}},
-		// 			{$project:{title:1,content:1}}
-		// 		],
-		// 		as:'commentIds' 
-		// 	} 
-		// },
 		{
             $lookup:{
 				from:'users', 
@@ -88,7 +76,7 @@ exports.getAll =async (req,res)=>{
 		},
 		{
 			$project:{
-				likes:true,commentIds:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true
+				likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
 			}
 		},
 
