@@ -58,10 +58,10 @@ exports.getAll =async (req,res)=>{
 	
 		// {
         //     $lookup:{
-		// 		from:'comments',
-		// 		let:{"commentIds":mongoose.Types.ObjectId("$commentIds")},
+		// 		from:'comment',
+		// 		let:{"commentIds":"$commentIds"},
 		// 		pipeline:[
-		// 			{$match:{$expr:{$eq:["$_id","$$commentIds"]}}},
+		// 			{$match:{$expr:{$in:["$_id","$$commentIds"]}}},
 		// 			{$project:{title:1}}
 		// 		],
 		// 		as:'commentIds' 
