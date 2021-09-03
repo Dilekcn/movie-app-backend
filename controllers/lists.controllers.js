@@ -77,7 +77,7 @@ exports.getAll =async (req,res)=>{
 		{
 			$project:{
 				likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
-			}
+			} 
 		},
 
 		
@@ -135,7 +135,7 @@ exports.create = async (req, res) => {
 					$match: { _id: mongoose.Types.ObjectId(req.params.id) }
 				},
 				{
-					$lookup:{
+					$lookup:{ 
 						from:'movies',
 						let:{"movieIds":"$movieIds"},
 						pipeline:[
@@ -151,26 +151,34 @@ exports.create = async (req, res) => {
 						let:{"userId":"$userId"},
 						pipeline:[
 							{$match:{$expr:{$eq:["$_id","$$userId"]}}},
-							{$project:{firstname:1,lastname:1,mediaId:1}},
-							
-							// {
-							// 	$lookup:{
-							// 		from:'medias',
-							// 		let:{"mediaId":"$mediaId"},
-							// 		pipeline:[
-							// 			{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
-							// 			{$project:{url:1}},
-							// 		],
-							// 		as:'mediaId'  
-							// 	}
-							// }
+							{$project:{firstname:1,lastname:1,mediaId:1}}, 
+								{
+								$lookup:{
+									from:'media',
+									let:{"mediaId":"$mediaId"},
+									pipeline:[
+										{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
+										{$project:{url:1}},
+									],
+									as:'mediaId'   
+								}
+							}
 						],
 						as:'userId'
 					} 
 				},
+				
 				{
 					$lookup:{
-						from:'users',
+						from:'comments',
+						localField:"_id",
+						foreignField:'listId', 
+						as:'commentIds'
+					}  
+				},
+				{
+					$lookup:{
+						from:'users', 
 						let:{"likes":"$likes"},
 						pipeline:[
 							{$match:{$expr:{$in:["$_id","$$likes"]}}},
@@ -181,20 +189,18 @@ exports.create = async (req, res) => {
 				},
 				{
 					$lookup:{
-						from:'comments',
-						localField:"commentIds",
-						foreignField:'listId', 
-						as:'commentIds'
-					}  
-				},
-				{
-					$lookup:{
 						from:'userratings',
-						localField:"userRatingIds",
+						localField:"_id", 
 						foreignField:'listId', 
 						as:'userRatingIds'
 					} 
 				},
+				{
+					$project:{
+						likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
+					} 
+				},
+		
 				
 				
 			],
