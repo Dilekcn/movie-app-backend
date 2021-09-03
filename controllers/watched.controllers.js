@@ -7,16 +7,16 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-			// .populate({
-			// 	path:'userId',
-			// 	model:'user',
-			// 	select:'firstname lastname mediaId',
-			// 	populate:{
-			// 		path:'mediaId',
-			// 		model:'media',
-			// 		select:'url'
-			// 	} 
-			// })	
+			.populate({
+				path:'userId',
+				model:'user',
+				select:'firstname lastname mediaId',
+				populate:{
+					path:'mediaId',
+					model:'media',
+					select:'url'
+				} 
+			})	
 			.populate('movieId','type imdb_id original_title');  
 			
 		const total = await WatchedModel.find().countDocuments();

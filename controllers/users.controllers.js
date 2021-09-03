@@ -14,7 +14,7 @@ exports.getAllUsers = async (req, res) => {
 			$sort:
 			{
 			 createdAt: -1
-			}
+			} 
 		},
 		{
 			 $skip:(page - 1) * limit 
@@ -22,14 +22,7 @@ exports.getAllUsers = async (req, res) => {
 		{
 			 $limit:limit*1 
 		},
-		{
-            $lookup:{
-				from:'watchlists',
-				localField:"_id",
-				foreignField:'userId',
-				as:'watchlist'
-			}
-		},
+	
 		{ 
             $lookup:{
 				from:'watcheds',
@@ -42,8 +35,17 @@ exports.getAllUsers = async (req, res) => {
             $lookup:{ 
 				from:'likeds',
 				localField:"_id",
-				foreignField:'userId',
+				foreignField:'userId', 
 				as:'liked'
+			}
+		},
+	
+		{
+            $lookup:{ 
+				from:'watchlists',
+				localField:"_id",
+				foreignField:'userId', 
+				as:'watchlist'
 			}
 		},
 		{
@@ -56,6 +58,11 @@ exports.getAllUsers = async (req, res) => {
 				],
 				as:'mediaId' 
 			} 
+		},
+		{
+			$project:{
+				firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,'watchlist.movieId':true,'watched.movieId':true,'liked.movieId':true,
+			}
 		},
 	],
 	(err,response)=>{
