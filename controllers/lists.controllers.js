@@ -31,25 +31,17 @@ exports.getAll =async (req,res)=>{
 				pipeline:[
 					{$match:{$expr:{$eq:["$_id","$$userId"]}}},
 					{$project:{firstname:1,lastname:1,mediaId:1}},
-					{ $lookup:
 						{
-						   from: "media",
-						   localField: "mediaId",
-						   foreignField: "_id",
-						   as: "mediaId"
+						$lookup:{
+							from:'media',
+							let:{"mediaId":"$mediaId"},
+							pipeline:[
+								{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
+								{$project:{url:1}},
+							],
+							as:'mediaId'  
 						}
 					}
-					// {
-					// 	$lookup:{
-					// 		from:'medias',
-					// 		let:{"mediaId":"$mediaId"},
-					// 		pipeline:[
-					// 			{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
-					// 			{$project:{url:1}},
-					// 		],
-					// 		as:'mediaId'  
-					// 	}
-					// }
 				],
 				as:'userId'
 			} 
