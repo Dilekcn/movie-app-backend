@@ -46,7 +46,7 @@ exports.getAll =async (req,res)=>{
 		},
 		{
 			$addFields: { watchedCount: { $size: "$watchedCount" } }
-		},
+		}, 
 		{
             $lookup:{
 				from:'liked',
@@ -65,6 +65,11 @@ exports.getAll =async (req,res)=>{
 				localField:"_id",
 				foreignField:'movieId', 
 				as:'userRatingIds'
+			} 
+		},
+		{
+			$project:{
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true
 			} 
 		},
 	
@@ -168,6 +173,11 @@ exports.getSingleMovie =async (req,res)=>{
 				as:'userRatingIds'
 			} 
 		},
+		{
+			$project:{
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true
+			} 
+		},
 	
 	],
 	(err,response)=>{
@@ -182,33 +192,6 @@ exports.getSingleMovie =async (req,res)=>{
 exports.updateSingleMovie = async (req, res) => {
 	await MoviesModel.findById({ _id: req.params.id })
 		.then(async (movie) => {
-
-			const newUserRating = 
-				typeof req.body.userRatingIds === 'string'
-					? await JSON.parse(req.body.userRatingIds).map(
-							(userrating) => {
-								return new UserRatingModel({
-									userId: userrating.userId,
-									movieId: req.params.id, 
-									rating: userrating.rating,
-								});
-							}
-					  )
-					: req.body.UserRatingModel.map((userrating) => {
-							return new UserRatingModel({
-								userId: userrating.userId,
-								movieId: req.params.id,
-								rating: userrating.rating,
-							});
-					  });
- 
-			newUserRating.map((userrating) => userrating.save()); 
-
-			const newUserRatingIds = newUserRating.map((userrating) => userrating._id);
-
-			const {type,imdb_id,tmdb_id,imdb_rating,original_title} =
-				req.body;
-			
 			await MoviesModel.findByIdAndUpdate(
 				{ _id: req.params.id },
 				{
@@ -220,7 +203,6 @@ exports.updateSingleMovie = async (req, res) => {
 						original_title:req.body.original_title ? req.body.original_title :movie.original_title,
 						image_path:req.body.image_path ? req.body.image_path :movie.image_path,
 						backdrop_path:req.body.backdrop_path ? req.body.backdrop_path : movie.backdrop_path,
-						userRatingIds:newUserRatingIds,
 						isActive: !req.body.isActive
 							? true
 							: req.body.isActive,
