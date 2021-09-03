@@ -201,8 +201,7 @@ exports.create = async (req, res) => {
 					} 
 				},
 		
-				
-				
+
 			],
 			(err,response)=>{
 			if(err)res.json(err);
@@ -231,7 +230,7 @@ exports.getListByUserId = async (req, res) => {
 						{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
 						{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
 					],
-					as:'movieIds' 
+					as:'movieIds'  
 				} 
 			},
 			{
@@ -297,7 +296,7 @@ exports.updateList = async (req, res) => {
 		await ListsModel.findById({ _id: req.params.id })
 			.then(async (list) => {
 
-				const {userId,name,description,rating,tags,isPublic} =
+				const {userId,name,description,rating,tags,likes,isPublic} =
 					req.body;
 				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
 				await ListsModel.findByIdAndUpdate(
@@ -311,6 +310,7 @@ exports.updateList = async (req, res) => {
 							tags: tags ? tags.split(',') : user.tags,
 							movieIds:req.body.movieIds ? [...user.movieIds,newmovieids]:user.movieIds,
 							isPublic:isPublic ? isPublic : list.isPublic,
+							likes:likes ? JSON.parse(req.body.likes) :list.likes,
 							isActive: !req.body.isActive
 								? true
 								: req.body.isActive,
@@ -333,9 +333,9 @@ exports.updateList = async (req, res) => {
 			.catch((err) => ({ status: 400, message: err }));
 	
  
-	// await ListsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
-	// 	.then((data) => res.json(data))
-	// 	.catch((err) => res.json({ message: err })); 
+	await ListsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
+		.then((data) => res.json(data))
+		.catch((err) => res.json({ message: err })); 
 };
 
 exports.removeSingleList = async (req, res) => {
