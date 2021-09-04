@@ -9,6 +9,7 @@ const MoviesSchema = new Schema({
 	original_title: { type: String },
 	image_path: { type: String },
 	backdrop_path: { type: String },
+	runtime: { type: Number },
 	isActive: { type: Boolean, default: true },
 	isDeleted: { type: Boolean, default: false },   
  

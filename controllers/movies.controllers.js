@@ -77,7 +77,7 @@ exports.getAll =async (req,res)=>{
 		},
 		{
 			$project:{
-				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true,runtime:true
 			} 
 		},
 	
@@ -106,6 +106,7 @@ exports.create = async (req, res) => {
 				image_path:req.body.image_path,
 				backdrop_path:req.body.backdrop_path,
 				original_title: req.body.original_title,
+				runtime:req.body.runtime,
 				isActive: req.body.isActive,
 				isDeleted: req.body.isDeleted,
 
@@ -180,7 +181,7 @@ exports.getSingleMovie =async (req,res)=>{
 		},
 		{
 			$project:{
-				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true
 			} 
 		},
 	
@@ -208,6 +209,7 @@ exports.updateSingleMovie = async (req, res) => {
 						original_title:req.body.original_title ? req.body.original_title :movie.original_title,
 						image_path:req.body.image_path ? req.body.image_path :movie.image_path,
 						backdrop_path:req.body.backdrop_path ? req.body.backdrop_path : movie.backdrop_path,
+						runtime:req.body.runtime ? req.body.runtime:movie.runtime,
 						isActive: !req.body.isActive
 							? true
 							: req.body.isActive,
