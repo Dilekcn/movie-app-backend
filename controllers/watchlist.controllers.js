@@ -33,7 +33,7 @@ exports.create = async (req, res) => {
 		movieId: req.body.movieId,
         isActive: req.body.isActive,
 		isDeleted: req.body.isDeleted,
-	}); 
+	});   
 
 	newWatchList
 		.save() 

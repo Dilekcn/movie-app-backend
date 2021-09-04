@@ -49,7 +49,7 @@ exports.getAll =async (req,res)=>{
 		}, 
 		{
             $lookup:{
-				from:'liked',
+				from:'likeds',
 				localField:"_id",
 				foreignField:'movieId',
 				as:'likesCount'
@@ -69,7 +69,7 @@ exports.getAll =async (req,res)=>{
 		},
 		{
 			$project:{
-				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true
 			} 
 		},
 	
@@ -98,12 +98,12 @@ exports.create = async (req, res) => {
 				image_path:req.body.image_path,
 				backdrop_path:req.body.backdrop_path,
 				original_title: req.body.original_title,
-				watchCount:req.body.watchCount,
-				watchlistCount:req.body.watchListCount, 
-				likeCount:req.body.likeCount,
+				// watchCount:req.body.watchCount,
+				// watchlistCount:req.body.watchListCount, 
+				// likeCount:req.body.likeCount,
 				isActive: req.body.isActive,
 				isDeleted: req.body.isDeleted,
-				userRatingIds:req.body.userRatingIds, 
+				// userRatingIds:req.body.userRatingIds, 
 			});
 		
 			newMovie

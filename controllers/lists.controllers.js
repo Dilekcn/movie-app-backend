@@ -116,7 +116,6 @@ exports.create = async (req, res) => {
 		tags: tags.split(','),
 		userRatingIds, 
 		movieIds:JSON.parse(req.body.movieIds),
-		likes:JSON.parse(req.body.likes)
 		
 	});
 	newList
@@ -299,18 +298,24 @@ exports.updateList = async (req, res) => {
 				const {userId,name,description,rating,tags,likes,isPublic} =
 					req.body;
 				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
+				// const newlikes=typeof req.body.likes === 'string' ? JSON.parse(req.body.likes): req.body.likes
+				const indexLikes = list.likes.indexOf(req.body.likes)
+				console.log(indexLikes)
+				const updatedLikes= indexLikes>-1 
+				? list.likes.filter((item,index)=> index!==indexLikes)
+				:[...list.likes,req.body.likes]
 				await ListsModel.findByIdAndUpdate(
 					{ _id: req.params.id },
 					{
 						$set: {
-							userId:userId ? userId : list.userId,
+							userId:userId ? userId : list.userId, 
 							name:name?name:list.name, 
 							description:description ? description : list.description,
 							rating:rating?rating:list.rating,
-							tags: tags ? tags.split(',') : user.tags,
-							movieIds:req.body.movieIds ? [...user.movieIds,newmovieids]:user.movieIds,
+							tags: tags ? tags.split(',') : list.tags,
+							movieIds:req.body.movieIds ? [...list.movieIds,newmovieids]:list.movieIds,
 							isPublic:isPublic ? isPublic : list.isPublic,
-							likes:likes ? JSON.parse(req.body.likes) :list.likes,
+							likes:likes ? updatedLikes:list.likes,
 							isActive: !req.body.isActive
 								? true
 								: req.body.isActive,
@@ -333,9 +338,7 @@ exports.updateList = async (req, res) => {
 			.catch((err) => ({ status: 400, message: err }));
 	
  
-	await ListsModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
-		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err })); 
+
 };
 
 exports.removeSingleList = async (req, res) => {
