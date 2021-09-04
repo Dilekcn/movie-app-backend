@@ -296,8 +296,8 @@ exports.updateList = async (req, res) => {
 			.then(async (list) => {
 
 				const {userId,name,description,rating,tags,likes,isPublic} =
-					req.body;
-				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
+					req.body; 
+				// const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
 				// const newlikes=typeof req.body.likes === 'string' ? JSON.parse(req.body.likes): req.body.likes
 				const indexLikes = list.likes.indexOf(req.body.likes)
 				console.log(indexLikes)
@@ -313,7 +313,7 @@ exports.updateList = async (req, res) => {
 							description:description ? description : list.description,
 							rating:rating?rating:list.rating,
 							tags: tags ? tags.split(',') : list.tags,
-							movieIds:req.body.movieIds ? [...list.movieIds,newmovieids]:list.movieIds,
+							movieIds:req.body.movieIds ? list.movieIds.concat(JSON.parse(req.body.movieIds)):list.movieIds,
 							isPublic:isPublic ? isPublic : list.isPublic,
 							likes:likes ? updatedLikes:list.likes,
 							isActive: !req.body.isActive
