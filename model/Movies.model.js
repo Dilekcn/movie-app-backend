@@ -5,7 +5,7 @@ const MoviesSchema = new Schema({
 	type: { type: String },
 	imdb_id: { type: String },
 	tmdb_id: { type: String },
-	imdb_rating:{ type: String }, 
+	imdb_rating:{ type: String },  
 	original_title: { type: String },
 	image_path: { type: String },
 	backdrop_path: { type: String },
