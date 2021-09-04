@@ -347,47 +347,37 @@ exports.updateList = async (req, res) => {
 exports.removeMovieFromList = async (req, res) => { 
 	await ListsModel.findById({ _id: req.params.id })
 		.then(async (list) => {
-			console.log(list)
-			
+	//    const toRemove= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds	
+    const updatedMovieIds = list.movieIds.filter(item=>!req.body.movieIds.includes(item))
+     console.log(updatedMovieIds)
 
-		//    const newMovies= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
-		   
-		//    newMovies.map(item=>{
-		// 	   const movieIndex = list.movieIds.indexOf(item)
-			   
-		// 	   console.log(list.movieIds.filter((movie,index)=>index!==movieIndex))
-		//    })
-
-
-
-
-			// await ListsModel.findByIdAndUpdate(
-			// 	{ _id: req.params.id },
-			// 	{
-			// 		$set: {
-			// 			userId:list.userId, 
-			// 			name:list.name, 
-			// 			description:list.description,
-			// 			rating:list.rating,
-			// 			tags:list.tags,
-			// 			movieIds:req.body.movieIds ? list.movieIds.concat(newMovies):list.movieIds,
-			// 			isPublic:list.isPublic,
-			// 			likes:list.likes,
-			// 			isActive: list.isActive,
-			// 			isDeleted: list.isDeleted
+			await ListsModel.findByIdAndUpdate(
+				{ _id: req.params.id },
+				{
+					$set: {
+						userId:list.userId, 
+						name:list.name, 
+						description:list.description,
+						rating:list.rating,
+						tags:list.tags,
+						movieIds:updatedMovieIds,
+						isPublic:list.isPublic,
+						likes:list.likes,
+						isActive: list.isActive,
+						isDeleted: list.isDeleted
 	
-			// 		},
-			// 	},
-			// 	{ useFindAndModify: false, new: true }
-			// )
-			// 	.then((data) =>
-			// 		res.json({
-			// 			status: 200,
-			// 			message: 'Movie is removed successfully', 
-			// 			data,
-			// 		})
-			// 	)
-			// 	.catch((err) => ({ status: 400, message: err })); 
+					},
+				},
+				{ useFindAndModify: false, new: true }
+			)
+				.then((data) =>
+					res.json({
+						status: 200,
+						message: 'Movie is removed successfully', 
+						data,
+					})
+				)
+				.catch((err) => ({ status: 400, message: err })); 
 		})
 		.catch((err) => ({ status: 400, message: err }));
 };
