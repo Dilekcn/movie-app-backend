@@ -84,7 +84,7 @@ exports.getCommentsByUserId = async (req, res) => {
 		}
 	})
 	.populate({
-        path:'userId',
+        path:'userId', 
         model:'user',
         select:'firstname lastname mediaId',
         populate:{
@@ -118,6 +118,35 @@ exports.getCommentsByList = async (req, res) => {
 		
 			
 		const total = await CommentsModel.find({ listId: req.params.listid }).countDocuments();
+		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+		res.json({ total: total, pages, status: 200, response });
+	} catch (error) {
+		res.status(500).json(error);
+	}
+
+};
+exports.getCommentsByMovie = async (req, res) => {
+	try { 
+		const { page = 1, limit } = req.query;
+		const response = await CommentsModel.find({ movieId: req.params.movieid })
+			.limit(limit * 1)
+			.skip((page - 1) * limit)
+			.sort({ createdAt: -1 })
+			
+			.populate({
+				path:'userId',
+				model:'user',
+				select:'firstname lastname mediaId',
+				populate:{
+					path:'mediaId',
+					model:'media',
+					select:'url'
+				}
+			})
+			.populate('movieId', 'original_title')
+		
+			
+		const total = await CommentsModel.find({ movieId: req.params.movieid }).countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {

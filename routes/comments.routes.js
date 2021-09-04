@@ -7,9 +7,10 @@ router.get('/comments', commentsControllers.getAll);
 router.get('/comments/:id', commentsControllers.getSingleComment);
 router.get('/comments/user/:userid', commentsControllers.getCommentsByUserId);
 router.get('/comments/list/:listid', commentsControllers.getCommentsByList);
+router.get('/comments/movie/:movieid', commentsControllers.getCommentsByMovie);
 router.post('/comments', commentsControllers.create);
 router.put('/comments/:id', commentsControllers.updateComment);
-router.delete('/comments/:id', commentsControllers.removeSingleComment);  
+router.delete('/comments/:id', commentsControllers.removeSingleComment);   
 
 module.exports = router;
   
