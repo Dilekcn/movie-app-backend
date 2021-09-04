@@ -167,14 +167,14 @@ exports.create = async (req, res) => {
 					} 
 				},
 				
-				{
-					$lookup:{
-						from:'comments',
-						localField:"_id",
-						foreignField:'listId', 
-						as:'commentIds'
-					}  
-				},
+				// {
+				// 	$lookup:{
+				// 		from:'comments',
+				// 		localField:"_id",
+				// 		foreignField:'listId', 
+				// 		as:'commentIds'
+				// 	}  
+				// },
 				{
 					$lookup:{
 						from:'users', 
@@ -382,7 +382,7 @@ exports.removeMovieFromList = async (req, res) => {
 		.catch((err) => ({ status: 400, message: err }));
 };
 
-
+ 
 exports.removeSingleList = async (req, res) => {
 	await ListsModel.findByIdAndDelete({ _id: req.params.id })
 		.then((data) => res.json(data))
