@@ -213,7 +213,7 @@ exports.updateSingleMovie = async (req, res) => {
 						backdrop_path:req.body.backdrop_path ? req.body.backdrop_path : movie.backdrop_path,
 						runtime:req.body.runtime ? req.body.runtime:movie.runtime,
 						genre:req.body.genre ? req.body.genre : movie.genre,
-						release_date:req.body.release_date ? req.body.release_date : movie.release_date
+						release_date:req.body.release_date ? req.body.release_date : movie.release_date,
 						isActive: !req.body.isActive
 							? true
 							: req.body.isActive,
