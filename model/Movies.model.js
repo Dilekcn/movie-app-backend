@@ -10,10 +10,12 @@ const MoviesSchema = new Schema({
 	image_path: { type: String },
 	backdrop_path: { type: String },
 	runtime: { type: Number },
+	genre: { type: Array },
+	release_date: { type: String },
 	isActive: { type: Boolean, default: true },
 	isDeleted: { type: Boolean, default: false },   
  
-},
+}, 
 { timestamps: true }
 ); 
  

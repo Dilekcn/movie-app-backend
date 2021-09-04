@@ -77,7 +77,7 @@ exports.getAll =async (req,res)=>{
 		},
 		{
 			$project:{
-				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true,runtime:true
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true,runtime:true,release_date:true
 			} 
 		},
 	
@@ -107,6 +107,8 @@ exports.create = async (req, res) => {
 				backdrop_path:req.body.backdrop_path,
 				original_title: req.body.original_title,
 				runtime:req.body.runtime,
+				genre:req.body.genre,
+				release_date:req.body.release_date,
 				isActive: req.body.isActive,
 				isDeleted: req.body.isDeleted,
 
@@ -181,7 +183,7 @@ exports.getSingleMovie =async (req,res)=>{
 		},
 		{
 			$project:{
-				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true,genre:true,release_date:true
 			} 
 		},
 	
@@ -210,6 +212,8 @@ exports.updateSingleMovie = async (req, res) => {
 						image_path:req.body.image_path ? req.body.image_path :movie.image_path,
 						backdrop_path:req.body.backdrop_path ? req.body.backdrop_path : movie.backdrop_path,
 						runtime:req.body.runtime ? req.body.runtime:movie.runtime,
+						genre:req.body.genre ? req.body.genre : movie.genre,
+						release_date:req.body.release_date ? req.body.release_date : movie.release_date
 						isActive: !req.body.isActive
 							? true
 							: req.body.isActive,
