@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const CommentsSchema = new Schema(
 	{
 		userId: { type: Schema.Types.ObjectId, ref: 'user' },
-		title: { type: String, required: true },
+		title: { type: String},
 		content: { type: String, required: true },
 		listId: { type: Schema.Types.ObjectId, ref: 'list' },
 		movieId: { type: Schema.Types.ObjectId, ref: 'movie' },
