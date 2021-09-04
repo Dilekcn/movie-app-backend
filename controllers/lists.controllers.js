@@ -294,16 +294,22 @@ exports.getListByUserId = async (req, res) => {
 exports.updateList = async (req, res) => {
 		await ListsModel.findById({ _id: req.params.id })
 			.then(async (list) => {
-
 				const {userId,name,description,rating,tags,likes,isPublic} =
 					req.body; 
-				// const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
-				// const newlikes=typeof req.body.likes === 'string' ? JSON.parse(req.body.likes): req.body.likes
+				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
+              
+				const updatedMovies = []
+				newmovieids.map(item=>{
+					if(!list.movieIds.includes(item)){
+						updatedMovies.push(item)
+					}
+				})
+		    
 				const indexLikes = list.likes.indexOf(req.body.likes)
-				console.log(indexLikes)
 				const updatedLikes= indexLikes>-1 
 				? list.likes.filter((item,index)=> index!==indexLikes)
 				:[...list.likes,req.body.likes]
+				
 				await ListsModel.findByIdAndUpdate(
 					{ _id: req.params.id },
 					{
@@ -313,11 +319,11 @@ exports.updateList = async (req, res) => {
 							description:description ? description : list.description,
 							rating:rating?rating:list.rating,
 							tags: tags ? tags.split(',') : list.tags,
-							movieIds:req.body.movieIds ? list.movieIds.concat(JSON.parse(req.body.movieIds)):list.movieIds,
+							movieIds:req.body.movieIds ? list.movieIds.concat(updatedMovies):list.movieIds,
 							isPublic:isPublic ? isPublic : list.isPublic,
 							likes:likes ? updatedLikes:list.likes,
 							isActive: !req.body.isActive
-								? true
+								? true 
 								: req.body.isActive,
 							isDeleted: !req.body.isDeleted
 								? false
@@ -336,10 +342,56 @@ exports.updateList = async (req, res) => {
 					.catch((err) => ({ status: 400, message: err })); 
 			})
 			.catch((err) => ({ status: 400, message: err }));
-	
- 
-
 };
+
+exports.removeMovieFromList = async (req, res) => { 
+	await ListsModel.findById({ _id: req.params.id })
+		.then(async (list) => {
+			console.log(list)
+			
+
+		//    const newMovies= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
+		   
+		//    newMovies.map(item=>{
+		// 	   const movieIndex = list.movieIds.indexOf(item)
+			   
+		// 	   console.log(list.movieIds.filter((movie,index)=>index!==movieIndex))
+		//    })
+
+
+
+
+			// await ListsModel.findByIdAndUpdate(
+			// 	{ _id: req.params.id },
+			// 	{
+			// 		$set: {
+			// 			userId:list.userId, 
+			// 			name:list.name, 
+			// 			description:list.description,
+			// 			rating:list.rating,
+			// 			tags:list.tags,
+			// 			movieIds:req.body.movieIds ? list.movieIds.concat(newMovies):list.movieIds,
+			// 			isPublic:list.isPublic,
+			// 			likes:list.likes,
+			// 			isActive: list.isActive,
+			// 			isDeleted: list.isDeleted
+	
+			// 		},
+			// 	},
+			// 	{ useFindAndModify: false, new: true }
+			// )
+			// 	.then((data) =>
+			// 		res.json({
+			// 			status: 200,
+			// 			message: 'Movie is removed successfully', 
+			// 			data,
+			// 		})
+			// 	)
+			// 	.catch((err) => ({ status: 400, message: err })); 
+		})
+		.catch((err) => ({ status: 400, message: err }));
+};
+
 
 exports.removeSingleList = async (req, res) => {
 	await ListsModel.findByIdAndDelete({ _id: req.params.id })
