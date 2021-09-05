@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
  
 const ListsSchema = new Schema(
 	{
-		userId: { type: mongoose.Types.ObjectId, ref: 'user' },
+		userId: { type: mongoose.Types.ObjectId, ref: 'user',required:true },
 		likes: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
 		name: { type: String, required: true },
 		description: { type: String, required: true },
