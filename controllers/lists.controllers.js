@@ -324,7 +324,7 @@ exports.updateList = async (req, res) => {
 							description:description ? description : list.description,
 							rating:rating?rating:list.rating,
 							tags: tags ? tags.split(',') : list.tags,
-							// movieIds:req.body.movieIds ? list.movieIds.concat(updatedMovies):list.movieIds,
+							movieIds:req.body.movieIds ? list.movieIds.concat(updatedMovies):list.movieIds,
 							isPublic:isPublic ? isPublic : list.isPublic,
 							likes:likes ? updatedLikes:list.likes,
 							isActive: !req.body.isActive
