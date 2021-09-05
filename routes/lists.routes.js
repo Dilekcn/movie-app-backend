@@ -11,5 +11,5 @@ router.put('/lists/:id', listsControllers.updateList);
 router.put('/lists/removemovies/:id', listsControllers.removeMovieFromList);
 router.delete('/lists/:id', listsControllers.removeSingleList); 
 
-module.exports = router;
+module.exports = router;  
  
