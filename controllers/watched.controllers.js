@@ -12,7 +12,7 @@ exports.getAll = async (req, res) => {
 				model:'user',
 				select:'firstname lastname mediaId',
 				populate:{
-					path:'mediaId',
+					path:'mediaId', 
 					model:'media',
 					select:'url'
 				} 
@@ -86,7 +86,7 @@ exports.getWatchedByUserId = async (req, res) => {
             select:'url'
         }
     })
-		;
+	.populate('movieId','type imdb_id original_title');  
 };
 
 

@@ -86,7 +86,7 @@ exports.getWatchlistByUserId = async (req, res) => {
             select:'url'
         }
     })
-		;
+	.populate('movieId','type imdb_id original_title');  
 };
 
 
