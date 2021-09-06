@@ -308,7 +308,7 @@ exports.updateList = async (req, res) => {
 						}
 					})
 				}
-				
+				 
 		    
 				const indexLikes = list.likes.indexOf(req.body.likes)
 				const updatedLikes= indexLikes>-1 
@@ -319,7 +319,7 @@ exports.updateList = async (req, res) => {
 					{ _id: req.params.id },
 					{
 						$set: {
-							userId:userId ? userId : list.userId, 
+							userId:userId ? userId : list.userId,  
 							name:name?name:list.name, 
 							description:description ? description : list.description,
 							rating:rating?rating:list.rating,
@@ -354,7 +354,7 @@ exports.removeMovieFromList = async (req, res) => {
 	await ListsModel.findById({ _id: req.params.id })
 		.then(async (list) => {
 	//    const toRemove= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds	
-    const updatedMovieIds = list.movieIds.filter(item=>!req.body.movieIds.includes(item))
+    const updatedMovieIds = list.movieIds.filter(item=>!req.body.movieIds.includes(item)) 
      console.log(updatedMovieIds)
 
 			await ListsModel.findByIdAndUpdate(

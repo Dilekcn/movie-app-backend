@@ -101,7 +101,7 @@ exports.updateWatched = async (req, res) => {
 
 		} })
 		.then((data) => res.json({ message: 'Successfully updated', data }))
-		.catch((err) => res.json({ message: err }));
+		.catch((err) => res.json({ message: err })); 
 };
 
 exports.removeSingleWatched = async (req, res) => {

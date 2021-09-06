@@ -31,7 +31,7 @@ exports.getAll =async (req,res)=>{
 				as:'watchlistCount'
 			}, 
 			
-		},
+		}, 
 		{
 			$addFields: { watchlistCount: { $size: "$watchlistCount" } }
 		},
@@ -183,7 +183,7 @@ exports.getSingleMovie =async (req,res)=>{
 		},
 		{
 			$project:{
-				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true,genre:true,release_date:true
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true,genre:true,release_date:true,watchlistCount:true,watchedCount:true,likesCount:true
 			} 
 		},
 	

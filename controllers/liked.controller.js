@@ -69,7 +69,7 @@ exports.getSingleLiked = async (req, res) => {
 };
 
 exports.getLikedByUserId = async (req, res) => {
-	await LikedModel.find({ userId: req.params.id }, (err, data) => {
+	await LikedModel.find({ userId: req.params.id }, (err, data) => { 
 		if (err) {
 			res.json({ status: false, message: err });
 		} else {
