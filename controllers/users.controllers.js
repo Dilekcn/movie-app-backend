@@ -24,30 +24,74 @@ exports.getAllUsers = async (req, res) => {
 			 $limit:limit*1 
 		},
 		{
-            $lookup:{ 
-				from:'likeds',
-				localField:"_id",
-				foreignField:'userId', 
-				as:'liked'
-			}
-		},
-	
-		{
-            $lookup:{ 
+			$lookup:{ 
 				from:'watchlists',
-				localField:"_id",
-				foreignField:'userId', 
-				as:'watchlist'
-			}
+				let:{"userId":"$_id"},
+				pipeline:[ 
+					{$match:{$expr:{$eq:["$userId","$$userId"]}}},
+					{$project:{movieId:1}},
+					{ $unwind: "$movieId" },
+					{
+						$lookup:{
+							from:"movies",
+							let:{"movieId":"$movieId"},
+							pipeline:[
+								{$match:{$expr:{$eq:["$_id","$$movieId"]}}},
+								{$project:{image_path:1,tmdb_id:1}},
+							],
+							as:"movieId"
+						}
+					}
+				],
+				as:'watchlist'  
+			} 
 		},
-		{ 
-            $lookup:{
+		{
+			$lookup:{ 
 				from:'watcheds',
-				localField:"_id",
-				foreignField:'userId',
-				as:'watched'
-			}
-		}, 
+				let:{"userId":"$_id"},
+				pipeline:[ 
+					{$match:{$expr:{$eq:["$userId","$$userId"]}}},
+					{$project:{movieId:1}},
+					{ $unwind: "$movieId" }, 
+					{
+						$lookup:{
+							from:"movies",
+							let:{"movieId":"$movieId"},
+							pipeline:[
+								{$match:{$expr:{$eq:["$_id","$$movieId"]}}},
+								{$project:{image_path:1,tmdb_id:1}},
+							],
+							as:"movieId"
+						}
+					}
+				],
+				as:'watched'  
+			} 
+		},
+		{
+			$lookup:{ 
+				from:'likeds',
+				let:{"userId":"$_id"},
+				pipeline:[ 
+					{$match:{$expr:{$eq:["$userId","$$userId"]}}},
+					{$project:{movieId:1}},
+					{ $unwind: "$movieId" },
+					{
+						$lookup:{
+							from:"movies",
+							let:{"movieId":"$movieId"},
+							pipeline:[
+								{$match:{$expr:{$eq:["$_id","$$movieId"]}}},
+								{$project:{image_path:1,tmdb_id:1}},
+							],
+							as:"movieId"
+						}
+					}
+				],
+				as:'liked'  
+			} 
+		},
 		{
             $lookup:{ 
 				from:'media',
@@ -61,7 +105,7 @@ exports.getAllUsers = async (req, res) => {
 		},  
 		{
 			$project:{
-				firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,'watchlist.movieId':true,'watched.movieId':true,'liked.movieId':true,createdAt:true,updatedAt:true 
+				firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,watched:true,liked:true,watchlist:true,createdAt:true,updatedAt:true 
 			}
 		},
 	],
@@ -86,15 +130,6 @@ exports.getSingleUserById = async (req, res) => {
 				 createdAt: -1
 				} 
 			},
-		
-			// { 
-			// 	$lookup:{
-			// 		from:'watcheds',
-			// 		localField:"_id",
-			// 		foreignField:'userId',
-			// 		as:'watched'
-			// 	}
-			// }, 
 			{
 				$lookup:{ 
 					from:'watcheds',
@@ -118,22 +153,51 @@ exports.getSingleUserById = async (req, res) => {
 					as:'watched'  
 				} 
 			},
-			{ 
+			{
 				$lookup:{ 
 					from:'likeds',
-					localField:"_id",
-					foreignField:'userId',   
-					as:'liked'
-				}
+					let:{"userId":"$_id"},
+					pipeline:[ 
+						{$match:{$expr:{$eq:["$userId","$$userId"]}}},
+						{$project:{movieId:1}},
+						{ $unwind: "$movieId" },
+						{
+							$lookup:{
+								from:"movies",
+								let:{"movieId":"$movieId"},
+								pipeline:[
+									{$match:{$expr:{$eq:["$_id","$$movieId"]}}},
+									{$project:{image_path:1,tmdb_id:1}},
+								],
+								as:"movieId"
+							}
+						}
+					],
+					as:'liked'  
+				} 
 			},
-		
 			{
 				$lookup:{ 
 					from:'watchlists',
-					localField:"_id",
-					foreignField:'userId', 
-					as:'watchlist'
-				}
+					let:{"userId":"$_id"},
+					pipeline:[ 
+						{$match:{$expr:{$eq:["$userId","$$userId"]}}},
+						{$project:{movieId:1}},
+						{ $unwind: "$movieId" },
+						{
+							$lookup:{
+								from:"movies",
+								let:{"movieId":"$movieId"},
+								pipeline:[
+									{$match:{$expr:{$eq:["$_id","$$movieId"]}}},
+									{$project:{image_path:1,tmdb_id:1}},
+								],
+								as:"movieId"
+							}
+						}
+					],
+					as:'watchlist'  
+				} 
 			},
 			{
 				$lookup:{ 
@@ -148,7 +212,7 @@ exports.getSingleUserById = async (req, res) => {
 			},
 			{
 				$project:{
-					firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,'watchlist.movieId':true,'liked.movieId':true,createdAt:true,updatedAt:true,watched:true    
+					firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,createdAt:true,updatedAt:true,watched:true,liked:true,watchlist:true
 				}
 			},
 		],
