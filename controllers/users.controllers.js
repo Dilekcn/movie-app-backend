@@ -99,7 +99,7 @@ exports.getSingleUserById = async (req, res) => {
 				$lookup:{ 
 					from:'watcheds',
 					let:{"userId":"$_id"},
-					pipeline:[
+					pipeline:[ 
 						{$match:{$expr:{$eq:["$userId","$$userId"]}}},
 						{$project:{movieId:1}},
 						{ $unwind: "$movieId" },
@@ -109,7 +109,7 @@ exports.getSingleUserById = async (req, res) => {
 								let:{"movieId":"$movieId"},
 								pipeline:[
 									{$match:{$expr:{$eq:["$_id","$$movieId"]}}},
-									{$project:{type:1}},
+									{$project:{image_path:1,tmdb_id:1}},
 								],
 								as:"movieId"
 							}
@@ -122,7 +122,7 @@ exports.getSingleUserById = async (req, res) => {
 				$lookup:{ 
 					from:'likeds',
 					localField:"_id",
-					foreignField:'userId',  
+					foreignField:'userId',   
 					as:'liked'
 				}
 			},
