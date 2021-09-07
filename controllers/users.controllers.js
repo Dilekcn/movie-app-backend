@@ -228,53 +228,66 @@ exports.getSingleUserById = async (req, res) => {
 
 
 exports.createUser = async (req, res) => {
-	const data = async (data) => {
-		const newMedia = await new MediaModel({
-			url: data.Location || null,
-			title: 'users',
-			mediaKey: data.Key,
-			alt: 'users',
-		});
-
-		newMedia.save();
-
-		const {
-			firstname,
-			lastname,
-			email,
-			password,
-			country,
-			isActive,
-			isDeleted,
-			role,
-		
-
-		} = req.body;
-		const salt = await bcrypt.genSalt();
-		const hashedPassword = await bcrypt.hash(password, salt);
-
-		const newUser = await new UserModel({
-			firstname,
-			lastname,
-			email,
-			country,
-			mediaId: newMedia._id,
-			password: hashedPassword,
-			role,
-			watchlist:[],
-			watched:[],
-			liked:[],
-			isActive,
-			isDeleted,
-		});
-		newUser
-			.save()
-			.then((response) =>
-				res.json({ status: true, message: 'Signed up successfully.', response })
-			)
-			.catch((err) => res.json({ status: false, message: err }));
+	const data = async (dataAvatar) => {
+		const bdImgData = async (dataBgImg) => {
+			const newMediaAvatar = await new MediaModel({
+				url: dataAvatar.Location || null,
+				title: 'users',
+				mediaKey: dataAvatar.Key,
+				alt: 'users',
+			});
+	
+			newMediaAvatar.save();
+	
+			const newMediaBackground = await new MediaModel({
+				url: dataBgImg.Location || null,
+				title: 'users',
+				mediaKey: dataBgImg.Key,
+				alt: 'background-image',
+			});
+	
+			newMediaBackground.save();
+	
+			const {
+				firstname,
+				lastname,
+				email,
+				password,
+				country,
+				isActive,
+				isDeleted,
+				role,
+			
+	
+			} = req.body;
+			const salt = await bcrypt.genSalt();
+			const hashedPassword = await bcrypt.hash(password, salt);
+	
+			const newUser = await new UserModel({
+				firstname,
+				lastname,
+				email,
+				country,
+				mediaId: newMediaAvatar._id,
+				backgroundImageId: newMediaBackground._id,
+				password: hashedPassword,
+				role,
+				watchlist:[],
+				watched:[],
+				liked:[],
+				isActive,
+				isDeleted,
+			});
+			newUser
+				.save()
+				.then((response) =>
+					res.json({ status: true, message: 'Signed up successfully.', response })
+				)
+				.catch((err) => res.json({ status: false, message: err }));
+		}
+		await S3.uploadUserBackgroundImage(req, res, bdImgData)
 	};
-	await S3.uploadNewMedia(req, res, data);
+	await S3.uploadNewMedia(req, res, data)
 };
 
 exports.login = async (req, res) => {

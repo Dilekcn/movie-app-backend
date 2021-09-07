@@ -12,6 +12,7 @@ const UserSchema = new Schema(
 		isActive: { type: Boolean, default: true },
 		isDeleted: { type: Boolean, default: false }, 
 		role: { type: String, default: 'user' },
+		backgroundImageId: {type:String},
 		alt:String
 	},
 	{ timestamps: true }

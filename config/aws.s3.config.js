@@ -26,6 +26,23 @@ const uploadNewMedia = (req, res, callback) => {
 	});
 };
 
+const uploadUserBackgroundImage = async (req, res, callback) => {
+
+	const file = __dirname + '/user-background-default-image.jpg';
+	const data = fs.readFileSync(file);
+	const params = {
+		Bucket: Bucket_Name,
+		Key: uuid(),
+		Body: req.files ? req.files.backgroundImageId.data : data,
+		ContentType: 'image/JPG',
+	};
+	 await S3.upload(params, async (err, data) => {
+		if (err) return res.json(err);
+		callback(data)
+	});
+	
+};
+
 const uploadNewBanner = (req, res, callback) => {
 	const file = __dirname + '/noImage.jpg';
 	const data = fs.readFileSync(file);
@@ -178,4 +195,5 @@ module.exports = {
 	updateBanner,
 	updateLogo,
 	deleteMedia,
+	uploadUserBackgroundImage
 };
