@@ -33,7 +33,7 @@ const uploadUserBackgroundImage = async (req, res, callback) => {
 	const params = {
 		Bucket: Bucket_Name,
 		Key: uuid(),
-		Body: req.files ? req.files.backgroundImageId.data : data,
+		Body: req.files.backgroundImageId ? req.files.backgroundImageId.data : data,
 		ContentType: 'image/JPG',
 	};
 	 await S3.upload(params, async (err, data) => {
@@ -75,16 +75,55 @@ const uploadNewLogo = (req, res, callback) => {
 
 const updateMedia = (req, res, mediaKey, callback) => {
 	if (req.files) {
+		if(req.files.mediaId) {
+			const params = {
+				Bucket: Bucket_Name,
+				Key: mediaKey,
+				Body: req.files ? req.files.mediaId.data : null,
+				ContentType: 'image/JPG',
+			};
+			S3.upload(params, (err, data) => {
+				if (err) return res.json({ message: 'error from aws update', err });
+				callback(data);
+			});
+		}
+	} else {
 		const params = {
 			Bucket: Bucket_Name,
 			Key: mediaKey,
-			Body: req.files ? req.files.mediaId.data : null,
-			ContentType: 'image/JPG',
 		};
-		S3.upload(params, (err, data) => {
+
+		S3.getObject(params, (err, data) => {
 			if (err) return res.json({ message: 'error from aws update', err });
-			callback(data);
+
+			const updateParams = {
+				Bucket: Bucket_Name,
+				Key: mediaKey,
+				Body: data.Body,
+				ContentType: 'image/JPG',
+			};
+			S3.upload(updateParams, (err, updateData) => {
+				if (err) return res.json({ message: 'error from aws update', err });
+				callback(updateData);
+			});
 		});
+	}
+};
+
+const updateBackgroundImage = (req, res, mediaKey, callback) => {
+	if (req.files) {
+		if(req.files.backgroundImageId) {
+			const params = {
+				Bucket: Bucket_Name,
+				Key: mediaKey,
+				Body: req.files.backgroundImageId ? req.files.backgroundImageId.data : null,
+				ContentType: 'image/JPG',
+			};
+			S3.upload(params, (err, data) => {
+				if (err) return res.json({ message: 'error from aws update', err });
+				callback(data);
+			});
+		}
 	} else {
 		const params = {
 			Bucket: Bucket_Name,
@@ -195,5 +234,6 @@ module.exports = {
 	updateBanner,
 	updateLogo,
 	deleteMedia,
-	uploadUserBackgroundImage
+	uploadUserBackgroundImage,
+	updateBackgroundImage
 };

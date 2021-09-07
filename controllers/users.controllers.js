@@ -367,7 +367,25 @@ exports.updateUser = async (req, res) => {
 					).catch((err) => res.json({ status: 404, message: err }));
 				};
 				await S3.updateMedia(req, res, media.mediaKey, data);
-			});
+			}).catch((err) => res.json({ status: 404, message: err }));
+
+			await MediaModel.findById({ _id: user.backgroundImageId }).then(async (mediaBg) => {
+				const dataBg = async (dataBg) => {
+					await MediaModel.findByIdAndUpdate(
+						{ _id: user.backgroundImageId },
+						{
+							$set: {
+								url: dataBg.Location || null,
+								title: 'users',
+								mediaKey: dataBg.Key,
+								alt: req.body.alt || null,
+							},
+						},
+						{ useFindAndModify: false, new: true }
+					).catch((err) => res.json({ status: 404, message: err }));
+				};
+				await S3.updateBackgroundImage(req, res, mediaBg.mediaKey, dataBg);
+			}).catch((err) => res.json({ status: 404, message: err }));
 	
 			await UserModel.findByIdAndUpdate(
 				{ _id: req.params.id },
@@ -376,7 +394,6 @@ exports.updateUser = async (req, res) => {
 						firstname:req.body.firstname ? req.body.firstname : user.firstname,
 						lastname:req.body.lastname ? req.body.lastname : user.lastname,
 						country:req.body.country ? req.body.country : user.country,
-						mediaId: user.mediaId,
 						isActive: !req.body.isActive ? true : req.body.isActive,
 						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
 						role: !req.body.role ? user.role : req.body.role,
