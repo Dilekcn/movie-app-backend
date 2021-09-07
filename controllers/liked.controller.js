@@ -28,23 +28,34 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	const newLikedList = await new LikedModel({
-		userId: req.body.userId,
-		movieId: req.body.movieId,
-        isActive: req.body.isActive,
-		isDeleted: req.body.isDeleted,
-	}); 
+	await LikedModel.find({ userId: req.body.userId,movieId: req.body.movieId } )
+	.then(data=>{
+		if(data.length>0){
+		   LikedModel.findByIdAndDelete({ _id: data[0]._id })
+		  .then((data) => res.json({ status: 200,message:"Removed from liked", data }))
+		  .catch((err) => res.json({ status: false, message: err }));
 
-	newLikedList
-		.save() 
-		.then((response) =>
-			res.json({
-				status: 200,
-				message: 'New watchlist is created successfully',
-				response,
-			})
-		)
-		.catch((err) => res.json({ status: false, message: err }));
+		}else{
+		   const newLiked = new LikedModel({
+			   userId: req.body.userId,
+			   movieId: req.body.movieId,
+			   isActive: req.body.isActive, 
+			   isDeleted: req.body.isDeleted,  
+			 });   
+   
+	   newLiked
+		   .save() 
+		   .then((response) =>
+			   res.json({
+				   status: 200,
+				   message: 'New liked is created successfully', 
+				   response,
+			   })
+		   )
+		   .catch((err) => res.json({ status: false, message: err }));
+		}
+	})
+	.catch(err=>console.log(err))
 };
 
 exports.getSingleLiked = async (req, res) => {

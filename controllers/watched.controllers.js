@@ -28,23 +28,34 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-	const newWatched = await new WatchedModel({
-		userId: req.body.userId,
-		movieId: req.body.movieId,
-        isActive: req.body.isActive,
-		isDeleted: req.body.isDeleted,
-	}); 
+	await WatchedModel.find({ userId: req.body.userId,movieId: req.body.movieId } )
+	.then(data=>{
+		if(data.length>0){
+		   WatchedModel.findByIdAndDelete({ _id: data[0]._id })
+		  .then((data) => res.json({ status: 200,message:"Removed from watched", data }))
+		  .catch((err) => res.json({ status: false, message: err }));
 
-	newWatched
-		.save() 
-		.then((response) =>
-			res.json({
-				status: 200,
-				message: 'New watchlist is created successfully',
-				response,
-			})
-		)
-		.catch((err) => res.json({ status: false, message: err }));
+		}else{
+		   const newWatched = new WatchedModel({
+			   userId: req.body.userId,
+			   movieId: req.body.movieId,
+			   isActive: req.body.isActive, 
+			   isDeleted: req.body.isDeleted,  
+			 });   
+   
+	   newWatched
+		   .save() 
+		   .then((response) =>
+			   res.json({
+				   status: 200,
+				   message: 'New watched is created successfully', 
+				   response,
+			   })
+		   )
+		   .catch((err) => res.json({ status: false, message: err }));
+		}
+	})
+	.catch(err=>console.log(err))
 };
 
 exports.getSingleWatched = async (req, res) => {

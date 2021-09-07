@@ -27,24 +27,37 @@ exports.getAll = async (req, res) => {
 	}
 };
 
-exports.create = async (req, res) => {
-	const newWatchList = await new WatchlistModel({
-		userId: req.body.userId,
-		movieId: req.body.movieId,
-        isActive: req.body.isActive,
-		isDeleted: req.body.isDeleted,
-	});   
+exports.create = async (req, res) => { 
+	
+ await WatchlistModel.find({ userId: req.body.userId,movieId: req.body.movieId } )
+	 .then(data=>{
+		 if(data.length>0){
+			console.log(data,'denem')
+			WatchlistModel.findByIdAndDelete({ _id: data[0]._id })
+	       .then((data) => res.json({ status: 200,message:"Removed from watchlist", data }))
+	       .catch((err) => res.json({ status: false, message: err }));
 
-	newWatchList
-		.save() 
-		.then((response) =>
-			res.json({
-				status: 200,
-				message: 'New watchlist is created successfully',
-				response,
-			})
-		)
-		.catch((err) => res.json({ status: false, message: err }));
+		 }else{
+			const newWatchList = new WatchlistModel({
+				userId: req.body.userId,
+				movieId: req.body.movieId,
+				isActive: req.body.isActive, 
+				isDeleted: req.body.isDeleted,  
+			  });   
+	
+		newWatchList
+			.save() 
+			.then((response) =>
+				res.json({
+					status: 200,
+					message: 'New watchlist is created successfully', 
+					response,
+				})
+			)
+			.catch((err) => res.json({ status: false, message: err }));
+		 }
+	 })
+	 .catch(err=>console.log(err))
 };
 
 exports.getSingleWatchlist = async (req, res) => {
