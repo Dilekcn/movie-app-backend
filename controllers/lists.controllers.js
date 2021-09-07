@@ -19,7 +19,10 @@ exports.getAll =async (req,res)=>{
 				let:{"movieIds":"$movieIds"},
 				pipeline:[
 					{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
-					{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
+					{$project:{type:1,imdb_id:1,imdb_rating:1, 
+						original_title:1,image_path:1,backdrop_path:1,
+						runtime:1,release_date:1,genre:1
+					}},
 				],
 				as:'movieIds' 
 			} 
@@ -95,7 +98,7 @@ exports.getPopular =async (req,res)=>{
 	const{page=1,limit=10}=req.query
 	const total = await ListsModel.find().countDocuments();
 	await ListsModel.aggregate(
-	[
+	[ 
 		{$sort:{rating: -1}},  
 		{$skip:(page - 1) * limit}, 
 		{$limit:limit*1},
@@ -105,7 +108,7 @@ exports.getPopular =async (req,res)=>{
 				let:{"movieIds":"$movieIds"},
 				pipeline:[
 					{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
-					{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
+					{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1,runtime:1,release_date:1,genre:1}},
 				],
 				as:'movieIds' 
 			} 
@@ -157,12 +160,14 @@ exports.getPopular =async (req,res)=>{
 				from:'userratings',
 				localField:"_id", 
 				foreignField:'listId', 
-				as:'userRatingIds'
+				as:'userRatingIds' 
 			} 
 		},
 		{
 			$project:{
-				likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
+				likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
+				isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,
+				'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
 			} 
 		},
 

@@ -14,7 +14,7 @@ const ListsSchema = new Schema(
 		isActive: { type: Boolean, default: false }, 
 		isDeleted: { type: Boolean, default: false },  
 	},  
-	{ timestamps: true }
+	{ timestamps: true } 
 ); 
 
 module.exports = mongoose.model('list', ListsSchema); 
