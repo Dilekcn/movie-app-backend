@@ -102,10 +102,22 @@ exports.getAllUsers = async (req, res) => {
 				],
 				as:'mediaId' 
 			} 
-		},  
+		}, 
+		{
+            $lookup:{  
+				from:'media',
+				let:{"backgroundImageId":"$backgroundImageId"}, 
+				pipeline:[
+					{$match:{$expr:{$eq:["$_id","$$backgroundImageId"]}}},
+					{$project:{url:1}},
+				],
+				as:'backgroundImageId' 
+			} 
+		}, 
 		{
 			$project:{
-				firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,watched:true,liked:true,watchlist:true,createdAt:true,updatedAt:true 
+				firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,watched:true,liked:true,watchlist:true,createdAt:true,updatedAt:true,
+				backgroundImageId:true 
 			}
 		},
 	],
@@ -211,8 +223,19 @@ exports.getSingleUserById = async (req, res) => {
 				} 
 			},
 			{
+				$lookup:{  
+					from:'media',
+					let:{"backgroundImageId":"$backgroundImageId"}, 
+					pipeline:[
+						{$match:{$expr:{$eq:["$_id","$$backgroundImageId"]}}},
+						{$project:{url:1}},
+					],
+					as:'backgroundImageId' 
+				} 
+			}, 
+			{
 				$project:{
-					firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,createdAt:true,updatedAt:true,watched:true,liked:true,watchlist:true
+					firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,backgroundImageId:true,createdAt:true,updatedAt:true,watched:true,liked:true,watchlist:true
 				}
 			},
 		],
@@ -246,7 +269,7 @@ exports.createUser = async (req, res) => {
 				alt: 'background-image',
 			});
 	
-			newMediaBackground.save();
+			newMediaBackground.save(); 
 	
 			const {
 				firstname,
