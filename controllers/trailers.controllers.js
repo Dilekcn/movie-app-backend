@@ -20,61 +20,127 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
+	if(req.files) {
+		const data = async(data) => {
+			const newMedia = new MediaModel({
+				url: data.Location || null,
+				title: 'trailers',
+				mediaKey: data.Key,
+				alt: 'trailers',
+			})
+
+			newMedia.save()
+
+			const {
+				imdb,
+				isActive,
+				isDeleted,
+				title,
+				episodeTitle,
+				type,
+				year,
+				duration,
+				cast,
+				description,
+				genre,
+				ageRestriction,
+				totalSeasons,
+				seasonNumber,
+				episodeNumber, 
+				director,
+				tags,
+				trailerUrl,
+				websiteId,
+				mediaUrl
+			} = req.body;
 	
-				const {
-					imdb,
-					isActive,
-					isDeleted,
-					title,
-					episodeTitle,
-					type,
-					year,
-					duration,
-					cast,
-					description,
-					genre,
-					ageRestriction,
-					totalSeasons,
-					seasonNumber,
-					episodeNumber, 
-					director,
-					tags,
-					trailerUrl,
-					websiteId,
-					mediaUrl
-				} = req.body;
+			const newTrailer = await new TrailersModel({
+				title,
+				episodeTitle,
+				type,
+				year,
+				duration,
+				mediaUrl,
+				cast:typeof cast === 'string' ? JSON.parse(cast) : cast,
+				description,
+				genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
+				ageRestriction,
+				totalSeasons,
+				seasonNumber,
+				episodeNumber,
+				director,
+				// tags: tags.split(','),
+				trailerUrl:newMedia.url,
+				isActive,
+				isDeleted,
+				imdb,
+				// websiteId:typeof websiteId === 'string' ? JSON.parse(websiteId) : websiteId
+			});
+	
+			newTrailer
+				.save()
+				.then((response) => {
+					res.json(response);
+				})
+				.catch((err) => res.json(err));
+			
+		}
+		await S3.uploadNewMedia(req, res, data)
+	} else {
+		const {
+			imdb,
+			isActive,
+			isDeleted,
+			title,
+			episodeTitle,
+			type,
+			year,
+			duration,
+			cast,
+			description,
+			genre,
+			ageRestriction,
+			totalSeasons,
+			seasonNumber,
+			episodeNumber, 
+			director,
+			tags,
+			trailerUrl,
+			websiteId,
+			mediaUrl
+		} = req.body;
 
-				const newTrailer = await new TrailersModel({
-					title,
-					episodeTitle,
-					type,
-					year,
-					duration,
-					mediaUrl,
-					cast:typeof cast === 'string' ? JSON.parse(cast) : cast,
-					description,
-					genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
-					ageRestriction,
-					totalSeasons,
-					seasonNumber,
-					episodeNumber,
-					director,
-					// tags: tags.split(','),
-					trailerUrl,
-					isActive,
-					isDeleted,
-					imdb,
-					// websiteId:typeof websiteId === 'string' ? JSON.parse(websiteId) : websiteId
-				});
+		const newTrailer = await new TrailersModel({
+			title,
+			episodeTitle,
+			type,
+			year,
+			duration,
+			mediaUrl,
+			cast:typeof cast === 'string' ? JSON.parse(cast) : cast,
+			description,
+			genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
+			ageRestriction,
+			totalSeasons,
+			seasonNumber,
+			episodeNumber,
+			director,
+			// tags: tags.split(','),
+			trailerUrl,
+			isActive,
+			isDeleted,
+			imdb,
+			// websiteId:typeof websiteId === 'string' ? JSON.parse(websiteId) : websiteId
+		});
 
-				newTrailer
-					.save()
-					.then((response) => {
-						res.json(response);
-					})
-					.catch((err) => res.json(err));
-
+		newTrailer
+			.save()
+			.then((response) => {
+				res.json(response);
+			})
+			.catch((err) => res.json(err));
 	}
+}
 
 
 exports.getSingleTrailer = async (req, res) => {
@@ -101,25 +167,83 @@ exports.getTrailersByUserId = async (req, res) => {
 };
 
 exports.updateSingleTrailer = async (req, res) => {
-	await TrailersModel.findById({ _id: req.params.id })
+	if(req.files) {
+		await TrailersModel.findById({ _id: req.params.id })
 		.then(async (trailer) => {
-			await MediaModel.findById({ _id: trailer.mediaId }).then(async (media) => {
-				const data = async (data) => {
-					await MediaModel.findByIdAndUpdate(
-						{ _id: trailer.mediaId },
-						{
-							$set: {
-								url: data.Location || null,
-								title: 'trailers',
-								mediaKey: data.Key,
-								alt: req.body.alt || null,
-							},
+			const data = async(data) => {
+				const newMedia = await new MediaModel({
+					url: data.Location || null,
+					title: 'trailers',
+					mediaKey: data.Key,
+					alt: 'trailers',
+				});
+		
+				newMedia.save();
+				const {
+					title,
+					type,
+					year,
+					duration, 
+					mediaId,
+					cast,
+					description,
+					genre,
+					ageRestriction,
+					tags,
+					trailerUrl,
+					totalSeasons,
+					seasonNumber,
+					episodeNumber,
+					episodeTitle,
+					director, 
+					imdb,
+					websiteId
+				} = req.body;
+	
+				await TrailersModel.findByIdAndUpdate(
+					{ _id: req.params.id },
+					{
+						$set: {
+							title: title ? title : trailer.title, 
+							episodeTitle: episodeTitle ? episodeTitle : trailer.episodeTitle,
+							type: type ? type : trailer.type, 
+							year: year ? year : trailer.year,
+							duration: duration ? duration : trailer.duration,
+							mediaId: trailer.mediaId, 
+							cast: cast ? cast : trailer.cast,
+							description: description ? description : trailer.description,
+							genre: genre ? (typeof genre === 'string' ? JSON.parse(genre) : genre) : trailer.genre,
+							ageRestriction: ageRestriction ? ageRestriction : trailer.ageRestriction,
+							totalSeasons: totalSeasons ? totalSeasons : trailer.totalSeasons,
+							seasonNumber: seasonNumber ? seasonNumber : trailer.seasonNumber,
+							episodeNumber: episodeNumber ? episodeNumber : trailer.episodeNumber,
+							director: director ? director : trailer.director,
+							tags: tags ? tags : trailer.tags,
+							trailerUrl: newMedia ? newMedia.url : trailer.trailerUrl,
+							websiteId:websiteId  ? JSON.parse(websiteId) : trailer.websiteId,
+							isActive: !req.body.isActive ? true : req.body.isActive,
+							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+							imdb: imdb ? imdb : trailer.imdb,
+	
 						},
-						{ useFindAndModify: false, new: true }
-					).catch((err) => res.json({ status: 404, message: err }));
-				};
-				await S3.updateMedia(req, res, media.mediaKey, data);
-			});
+					}
+				)
+					.then((data) =>
+						res.json({
+							status: true,
+							message: 'Trailer is updated successfully',
+							data,
+						})
+					)
+	
+					.catch((err) => res.json({ message: err, status: 404 }));
+			}
+			await S3.uploadNewMedia(req, res, data)
+		})
+		.catch((err) => res.json({ message: err, status: 404 }));
+	} else {
+		await TrailersModel.findById({ _id: req.params.id })
+		.then(async (trailer) => {
 			const {
                 title,
 				type,
@@ -180,6 +304,7 @@ exports.updateSingleTrailer = async (req, res) => {
 				.catch((err) => res.json({ message: err, status: 404 }));
 		})
 		.catch((err) => res.json({ message: err, status: 404 }));
+	}
 };
 
 exports.removeSingleTrailer = async (req, res) => {
