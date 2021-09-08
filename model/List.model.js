@@ -7,6 +7,7 @@ const ListsSchema = new Schema(
 		likes: [{ type: mongoose.Types.ObjectId, ref: 'user' }],
 		name: { type: String, required: true },
 		description: { type: String, required: true },
+		reasonToBlock: { type: String},
 		rating:{ type: Number, default: 0 },  
 		tags: { type: Array },
 		movieIds:[{ type: mongoose.Types.ObjectId, ref: 'movie',required:true }],

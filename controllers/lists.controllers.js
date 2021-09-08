@@ -79,7 +79,9 @@ exports.getAll =async (req,res)=>{
 		},
 		{
 			$project:{
-				likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
+				reasonToBlock:true,likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
+				isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,
+				'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
 			} 
 		},
 
@@ -165,7 +167,7 @@ exports.getPopular =async (req,res)=>{
 		},
 		{
 			$project:{
-				likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
+				reasonToBlock:true,likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
 				isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,
 				'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
 			} 
@@ -247,7 +249,7 @@ exports.create = async (req, res) => {
 									from:'media',
 									let:{"mediaId":"$mediaId"},
 									pipeline:[
-										{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
+										{$match:{$expr:{$eq:["$_id","$$mediaId"]}}}, 
 										{$project:{url:1}},
 									],
 									as:'mediaId'   
@@ -287,7 +289,9 @@ exports.create = async (req, res) => {
 				},
 				{
 					$project:{
-						likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
+						reasonToBlock:true,likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
+						isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,
+						'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
 					} 
 				},
 		
@@ -387,7 +391,7 @@ exports.updateList = async (req, res) => {
 		await ListsModel.findById({ _id: req.params.id })
 			.then(async (list) => {
 				
-				const {userId,name,description,rating,tags,likes,isPublic} =
+				const {reasonToBlock,userId,name,description,rating,tags,likes,isPublic} =
 					req.body; 
 				const newmovieids= typeof req.body.movieIds === 'string' ? JSON.parse(req.body.movieIds): req.body.movieIds
               
@@ -418,6 +422,7 @@ exports.updateList = async (req, res) => {
 							movieIds:req.body.movieIds ? list.movieIds.concat(updatedMovies):list.movieIds,
 							isPublic:isPublic ? isPublic : list.isPublic,
 							likes:likes ? updatedLikes:list.likes,
+							reasonToBlock:reasonToBlock ? reasonToBlock :req.body.reasonToBlock,
 							isActive: !req.body.isActive
 								? true 
 								: req.body.isActive,
@@ -461,7 +466,8 @@ exports.removeMovieFromList = async (req, res) => {
 						isPublic:list.isPublic,
 						likes:list.likes,
 						isActive: list.isActive,
-						isDeleted: list.isDeleted
+						isDeleted: list.isDeleted,
+						reasonToBlock:list.reasonToBlock
 	
 					},
 				},
