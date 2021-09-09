@@ -17,7 +17,7 @@ const uploadNewMedia = (req, res, callback) => {
 	const params = {
 		Bucket: Bucket_Name,
 		Key: uuid(),
-		Body: req.files ? req.files.mediaId.data : data,
+		Body: req.files ? req.files.mediaId ? req.files.mediaId.data : data : data,
 		ContentType: 'image/JPG',
 	};
 	S3.upload(params, (err, data) => {
@@ -33,7 +33,7 @@ const uploadUserBackgroundImage = async (req, res, callback) => {
 	const params = {
 		Bucket: Bucket_Name,
 		Key: uuid(),
-		Body: req.files.backgroundImageId ? req.files.backgroundImageId.data : data,
+		Body: req.files ? req.files.backgroundImageId ? req.files.backgroundImageId.data : data : data,
 		ContentType: 'image/JPG',
 	};
 	 await S3.upload(params, async (err, data) => {
