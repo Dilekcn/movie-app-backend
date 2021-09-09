@@ -323,14 +323,14 @@ exports.login = async (req, res) => {
 				const token = jwt.sign(
 					{ name: email, role: data.role },
 					process.env.ACCESS_TOKEN_SECRET,
-					{ expiresIn: '1h' }
+					{ expiresIn: '24h' }
 				)
 				res.json({
 					status: true,
 					firstname: data.firstname,
 					lastname: data.lastname,
 					email: data.email,
-					country: data.country,
+					country: data.country, 
 					watchlist:data.watchlist,
 					watched:data.watched,
 					liked:data.liked,
@@ -346,7 +346,7 @@ exports.login = async (req, res) => {
 			}
 		})
 		.catch((err) => res.json({ message: 'Email does not exist' })); 
-};
+}; 
 
 exports.updateUser = async (req, res) => {
 	await UserModel.findById({ _id: req.params.id })
