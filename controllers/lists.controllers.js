@@ -1,6 +1,7 @@
 const ListsModel = require('../model/List.model');
 const UserRatingModel = require('../model/UserRatings.model');
 const CommentModel = require('../model/Comment.model');
+const MovieModel = require('../model/Movies.model');
 const mongoose = require('mongoose');
  
 
@@ -9,7 +10,7 @@ exports.getAll =async (req,res)=>{
 	const{page=1,limit=10}=req.query
 	const total = await ListsModel.find().countDocuments();
 	await ListsModel.aggregate(
-	[
+	[ 
 		{$sort:{createdAt: -1}},  
 		{$skip:(page - 1) * limit}, 
 		{$limit:limit*1},
@@ -186,7 +187,20 @@ exports.getPopular =async (req,res)=>{
  
 
 exports.create = async (req, res) => {
-
+	const movieRatings =[];
+	await Promise.all(
+		JSON.parse(req.body.movieIds).map(async(item)=>{
+			await MovieModel.find({_id:item},(err,data)=>{
+			   if (err) {
+				   res.json({ status: false, message: err });
+			   } else {
+				 movieRatings.push(data[0].imdb_rating*1)  
+			   }
+		   })
+	   })
+	)
+    const movieRatingAverage = (movieRatings.reduce((a,b)=>a+b)/JSON.parse(req.body.movieIds).length).toFixed(1)       
+    
 	const {
 		userId,
 		name,
@@ -194,10 +208,10 @@ exports.create = async (req, res) => {
 		isPublic,
 		isActive, 
 		isDeleted,
-		rating,
 		tags,
 		userRatingIds
 	} = req.body;
+	
 	const newList = await new ListsModel({
 		userId,
 		name,
@@ -205,7 +219,7 @@ exports.create = async (req, res) => {
 		isPublic,
 		isActive,
 		isDeleted,
-		rating,
+		rating:movieRatingAverage,
 		tags: tags.split(','),
 		userRatingIds, 
 		movieIds:JSON.parse(req.body.movieIds),
