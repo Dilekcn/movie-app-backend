@@ -94,7 +94,7 @@ exports.getAll =async (req,res)=>{
 
 exports.create = async (req, res) => {
 	await MoviesModel.findOne({tmdb_id:req.body.tmdb_id}, async (err, result) => {
-
+        
 		if(err) res.json({status: false, message: err })
 
 		if(result === null) {
@@ -105,12 +105,12 @@ exports.create = async (req, res) => {
 				imdb_rating:req.body.imdb_rating,
 				image_path:req.body.image_path,
 				backdrop_path:req.body.backdrop_path,
-				original_title: req.body.original_title,
+				original_title: req.body.original_title, 
 				runtime:req.body.runtime,
 				genre:req.body.genre,
 				release_date:req.body.release_date,
 				isActive: req.body.isActive,
-				isDeleted: req.body.isDeleted,
+				isDeleted: req.body.isDeleted,   
 
 			});
 		
@@ -125,7 +125,74 @@ exports.create = async (req, res) => {
 				)
 				.catch((err) => res.json({ status: false, message: err }));
 		} else {
-			return res.json({status: false, message: 'This movie already exist.', data: result})
+			await MoviesModel.aggregate(
+				[ 
+					{
+						$match: { tmdb_id:req.body.tmdb_id}
+					},
+					{
+						$lookup:{
+							from:'watchlists',
+							localField:"_id",
+							foreignField:'movieId',
+							as:'watchlistCount'
+					}, 
+						
+					}, 
+					{
+						$addFields: { watchlistCount: { $size: "$watchlistCount" } }
+					},
+					{
+						$lookup:{
+							from:'watcheds',
+							localField:"_id",
+							foreignField:'movieId', 
+							as:'watchedCount'
+						},
+						
+					},
+					{
+						$addFields: { watchedCount: { $size: "$watchedCount" } }
+					}, 
+					{
+						$lookup:{
+							from:'likeds',
+							localField:"_id", 
+							foreignField:'movieId',
+							as:'likesCount'
+						}, 
+						
+					},
+					{
+						$addFields: { likesCount: { $size: "$likesCount" } } 
+					}, 
+					{ 
+						$lookup:{
+							from:'userratings',
+							localField:"_id",
+							foreignField:'movieId', 
+							as:'userRatingIds'
+						} 
+					},
+					{
+						$lookup:{
+							from:'comments',
+							localField:"_id",
+							foreignField:'movieId', 
+							as:'commentIds'
+						}  
+					},
+					{
+						$project:{
+							type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true,runtime:true,release_date:true
+						} 
+					},
+				
+				],
+				(err,data)=>{
+				if(err)res.json(err);
+				res.json({ status: 200, data })
+			}) 
 		}
 	})
 	
@@ -142,7 +209,7 @@ exports.getSingleMovie =async (req,res)=>{
 				from:'watchlists',
 				localField:"_id",
 				foreignField:'movieId',
-				as:'watchlistCount'
+				as:'watchlistCount' 
 			}, 
 			
 		},
