@@ -187,19 +187,7 @@ exports.getPopular =async (req,res)=>{
  
 
 exports.create = async (req, res) => {
-	const movieRatings =[];
-	await Promise.all(
-		JSON.parse(req.body.movieIds).map(async(item)=>{
-			await MovieModel.find({_id:item},(err,data)=>{
-			   if (err) {
-				   res.json({ status: false, message: err });
-			   } else {
-				 movieRatings.push(data[0].imdb_rating*1)  
-			   }
-		   })
-	   })
-	)
-    const movieRatingAverage = (movieRatings.reduce((a,b)=>a+b)/JSON.parse(req.body.movieIds).length).toFixed(1)       
+      
     
 	const {
 		userId,
@@ -209,6 +197,7 @@ exports.create = async (req, res) => {
 		isActive, 
 		isDeleted,
 		tags,
+		rating,
 		userRatingIds
 	} = req.body;
 	
@@ -219,7 +208,7 @@ exports.create = async (req, res) => {
 		isPublic,
 		isActive,
 		isDeleted,
-		rating:movieRatingAverage,
+		rating,
 		tags: tags.split(','),
 		userRatingIds, 
 		movieIds:JSON.parse(req.body.movieIds),
