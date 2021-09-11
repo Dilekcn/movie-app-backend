@@ -110,25 +110,89 @@ exports.create = async (req, res) => {
 				genre:req.body.genre,
 				release_date:req.body.release_date,
 				isActive: req.body.isActive,
-				isDeleted: req.body.isDeleted,   
+				isDeleted: req.body.isDeleted,       
 
 			});
 		
-			newMovie
+			await newMovie
 				.save()
-				.then((data) =>
-					res.json({
-						status: true,
-						message: 'Added new movie successfully',
-						data,
-					})
+				.then(async(data) =>
+				await MoviesModel.aggregate(
+					[ 
+						{
+							$match: { tmdb_id:req.body.tmdb_id}  
+						},
+						{
+							$lookup:{
+								from:'watchlists',
+								localField:"_id",
+								foreignField:'movieId',
+								as:'watchlistCount'
+						}, 
+							
+						}, 
+						{
+							$addFields: { watchlistCount: { $size: "$watchlistCount" } }
+						},
+						{
+							$lookup:{
+								from:'watcheds',
+								localField:"_id",
+								foreignField:'movieId', 
+								as:'watchedCount'
+							},
+							
+						},
+						{
+							$addFields: { watchedCount: { $size: "$watchedCount" } }
+						}, 
+						{
+							$lookup:{
+								from:'likeds',
+								localField:"_id", 
+								foreignField:'movieId',
+								as:'likesCount'
+							}, 
+							
+						},
+						{
+							$addFields: { likesCount: { $size: "$likesCount" } } 
+						}, 
+						{ 
+							$lookup:{
+								from:'userratings',
+								localField:"_id",
+								foreignField:'movieId', 
+								as:'userRatingIds'
+							} 
+						},
+						{
+							$lookup:{
+								from:'comments',
+								localField:"_id",
+								foreignField:'movieId', 
+								as:'commentIds'
+							}  
+						},
+						{
+							$project:{
+								type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true,runtime:true,release_date:true
+							} 
+						},
+					
+					],
+					(err,data)=>{
+					if(err)res.json(err);
+					res.json({ status: 200, data })
+				})
 				)
-				.catch((err) => res.json({ status: false, message: err }));
+				.catch((err) => res.json({ status: false, message: err }))
+					
 		} else {
 			await MoviesModel.aggregate(
 				[ 
 					{
-						$match: { tmdb_id:req.body.tmdb_id}
+						$match: { tmdb_id:req.body.tmdb_id}  
 					},
 					{
 						$lookup:{
