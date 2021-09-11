@@ -214,7 +214,7 @@ exports.create = async (req, res) => {
 		movieIds:JSON.parse(req.body.movieIds),
 		
 	});
-	newList
+	newList 
 		.save()
 		.then((response) => res.json(response))
 		.catch((err) => res.json(err));
@@ -222,7 +222,7 @@ exports.create = async (req, res) => {
 
 	exports.getSingleList = async (req, res) => {
 		
-		await ListsModel.aggregate(
+		await ListsModel.aggregate( 
 			
 			[
 	          
@@ -235,7 +235,7 @@ exports.create = async (req, res) => {
 						let:{"movieIds":"$movieIds"},
 						pipeline:[
 							{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
-							{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
+							{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1,tmdb_id:1}},
 						],
 						as:'movieIds' 
 					} 
