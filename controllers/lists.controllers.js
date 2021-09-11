@@ -196,7 +196,6 @@ exports.create = async (req, res) => {
 		isPublic,
 		isActive, 
 		isDeleted,
-		tags,
 		rating,
 		userRatingIds
 	} = req.body;
@@ -209,7 +208,7 @@ exports.create = async (req, res) => {
 		isActive,
 		isDeleted,
 		rating,
-		tags: tags.split(','),
+		tags:req.body.tags ? req.body.tags.split(','):[],
 		userRatingIds, 
 		movieIds:JSON.parse(req.body.movieIds),
 		
