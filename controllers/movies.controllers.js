@@ -373,14 +373,66 @@ exports.updateSingleMovie = async (req, res) => {
  
 
 exports.getSingleMovieByTmdb = async (req, res) => {
-	await MoviesModel.find({ tmdb_id: req.params.tmdbid }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		} 
-	})
-
+	await MoviesModel.aggregate(
+		[ 
+			{
+				$match: { tmdb_id: req.params.tmdbid } 
+			},
+			 {
+				$lookup:{
+					from:'watchlists',
+					localField:"_id",
+					foreignField:'movieId',
+					as:'watchlistCount' 
+				}, 
+				
+			},
+			{
+				$addFields: { watchlistCount: { $size: "$watchlistCount" } }
+			},
+			{
+				$lookup:{
+					from:'watcheds',
+					localField:"_id",
+					foreignField:'movieId',
+					as:'watchedCount'
+				},
+				 
+			},
+			{
+				$addFields: { watchedCount: { $size: "$watchedCount" } }
+			},
+			{
+				$lookup:{
+					from:'likes',
+					localField:"_id",
+					foreignField:'movieId',
+					as:'likesCount'
+				}, 
+				
+			},
+			{
+				$addFields: { likesCount: { $size: "$likesCount" } } 
+			}, 
+			{ 
+				$lookup:{
+					from:'userratings',
+					localField:"_id",
+					foreignField:'movieId', 
+					as:'userRatingIds'
+				} 
+			},
+			{
+				$project:{
+					type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true,genre:true,release_date:true,watchlistCount:true,watchedCount:true,likesCount:true
+				} 
+			},
+		
+		],
+		(err,response)=>{
+		if(err)res.json(err);
+		res.json({status: 200, response })
+	}) 
 };
 
 
