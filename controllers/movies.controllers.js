@@ -294,7 +294,7 @@ exports.getSingleMovie =async (req,res)=>{
 		},
 		{
             $lookup:{
-				from:'likes',
+				from:'likeds',
 				localField:"_id",
 				foreignField:'movieId',
 				as:'likesCount'
@@ -404,7 +404,7 @@ exports.getSingleMovieByTmdb = async (req, res) => {
 			},
 			{
 				$lookup:{
-					from:'likes',
+					from:'likeds',
 					localField:"_id",
 					foreignField:'movieId',
 					as:'likesCount'
