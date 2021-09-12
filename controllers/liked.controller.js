@@ -99,7 +99,29 @@ exports.getLikedByUserId = async (req, res) => {
     })
 	.populate('movieId','type imdb_id original_title');  
 };
+exports.getWithQuery = async (req, res, next) => {
 
+	try {
+		const  query  = typeof req.body.query==="string" ?  JSON.parse(req.body.query) : req.body.query
+	
+		const response = await LikedModel.find(query)
+		.populate({
+			path:'userId',
+			model:'user',
+			select:'firstname lastname mediaId',
+			populate:{
+				path:'mediaId',
+				model:'media',
+				select:'url'
+			}
+		})
+		.populate('movieId','type imdb_id original_title'); 
+
+		res.json({status:200,message: 'Filtered Watched', response }); 
+	} catch (error) {
+		next({ status: 404, message: error });
+	}
+};
 
 exports.updateLiked = async (req, res) => {
 	await LikedModel.findByIdAndUpdate(

@@ -110,7 +110,7 @@ exports.create = async (req, res) => {
 				genre:req.body.genre,
 				release_date:req.body.release_date,
 				isActive: req.body.isActive,
-				isDeleted: req.body.isDeleted,       
+				isDeleted: req.body.isDeleted,         
 
 			});
 		

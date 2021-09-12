@@ -102,7 +102,29 @@ exports.getWatchlistByUserId = async (req, res) => {
 	.populate('movieId','type imdb_id original_title');  
 };
 
+exports.getWithQuery = async (req, res, next) => {
 
+	try {
+		const  query  = typeof req.body.query==="string" ?  JSON.parse(req.body.query) : req.body.query
+	
+		const response = await WatchlistModel.find(query)
+		.populate({
+			path:'userId',
+			model:'user',
+			select:'firstname lastname mediaId',
+			populate:{
+				path:'mediaId',
+				model:'media',
+				select:'url'
+			}
+		})
+		.populate('movieId','type imdb_id original_title'); 
+
+		res.json({status:200,message: 'Filtered Watched', response }); 
+	} catch (error) {
+		next({ status: 404, message: error });
+	}
+};
 exports.updateWatchlist = async (req, res) => {
 	await WatchlistModel.findByIdAndUpdate(
 		{ _id: req.params.id }, 

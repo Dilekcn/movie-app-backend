@@ -45,7 +45,7 @@ exports.create = async (req, res) => {
    
 	   newWatched
 		   .save() 
-		   .then((response) =>
+		   .then((response) => 
 			   res.json({
 				   status: 200,
 				   message: 'New watched is created successfully', 
@@ -100,7 +100,29 @@ exports.getWatchedByUserId = async (req, res) => {
 	.populate('movieId','type imdb_id original_title');  
 };
 
+exports.getWithQuery = async (req, res, next) => {
 
+	try {
+		const  query  = typeof req.body.query==="string" ?  JSON.parse(req.body.query) : req.body.query
+	
+		const response = await WatchedModel.find(query)
+		.populate({
+			path:'userId',
+			model:'user',
+			select:'firstname lastname mediaId',
+			populate:{
+				path:'mediaId',
+				model:'media',
+				select:'url'
+			}
+		})
+		.populate('movieId','type imdb_id original_title'); 
+
+		res.json({status:200,message: 'Filtered Watched', response }); 
+	} catch (error) {
+		next({ status: 404, message: error });
+	}
+};
 exports.updateWatched = async (req, res) => {
 	await WatchedModel.findByIdAndUpdate(
 		{ _id: req.params.id }, 

@@ -200,13 +200,13 @@ exports.create = async (req, res) => {
 		userRatingIds
 	} = req.body;
 	
-	const newList = await new ListsModel({
+	const newList = await new ListsModel({ 
 		userId,
 		name,
 		description,
 		isPublic,
 		isActive,
-		isDeleted,
+		isDeleted, 
 		rating,
 		tags:req.body.tags ? req.body.tags.split(','):[],
 		userRatingIds, 

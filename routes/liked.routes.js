@@ -7,6 +7,7 @@ router.get('/liked', likedControllers.getAll);
 router.get('/liked/:id', likedControllers.getSingleLiked);
 router.get('/liked/user/:id', likedControllers.getLikedByUserId);
 router.post('/liked', likedControllers.create);
+router.post('/liked/filter', likedControllers.getWithQuery);
 router.put('/liked/:id', likedControllers.updateLiked);
 router.delete('/liked/:id', likedControllers.removeSingleLiked);
 
