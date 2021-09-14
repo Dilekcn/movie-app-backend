@@ -89,11 +89,18 @@ exports.getAll =async (req,res)=>{
 }) 
 }
 
-
+exports.searchWithTitle = async (req, res, next) => {
+	try {
+		const response = await MoviesModel.find({ "original_title": { "$regex": req.body.original_title, "$options": "i" } })
+		res.json({status:200,message: 'Filtered movies', response }); 
+	} catch (error) {
+		next({ status: 404, message: error });
+	}
+}; 
 
 
 exports.create = async (req, res) => {
-	await MoviesModel.findOne({tmdb_id:req.body.tmdb_id}, async (err, result) => {
+	await MoviesModel.findOne({tmdb_id:req.body.tmdb_id}, async (err, result) => { 
         
 		if(err) res.json({status: false, message: err })
 
@@ -113,7 +120,7 @@ exports.create = async (req, res) => {
 				isDeleted: req.body.isDeleted,         
 
 			});
-		
+		 
 			await newMovie
 				.save()
 				.then(async(data) =>

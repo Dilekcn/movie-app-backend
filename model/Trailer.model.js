@@ -7,7 +7,7 @@ const TrailersSchema = new Schema(
 		type: { type: String },
 		year: { type: Number },
 		duration: { type: String },
-		// mediaId: { type: mongoose.Types.ObjectId, ref: 'media' },
+		// mediaId: { type: mongoose.Types.ObjectId, ref: 'media' }, 
 		mediaUrl:{ type: String },
 		cast: { type: Array },
 		description: { type: String },
