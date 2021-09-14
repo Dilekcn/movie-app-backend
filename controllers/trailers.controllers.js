@@ -140,7 +140,7 @@ exports.create = async (req, res) => {
 
 
 exports.getSingleTrailer = async (req, res) => {
-	await TrailersModel.findById({ _id: req.params.id }, (err, data) => {
+	await TrailersModel.findOne({ _id: req.params.id }, (err, data) => {
 		if (err) {
 			res.json({ message: err }); 
 		} else {
