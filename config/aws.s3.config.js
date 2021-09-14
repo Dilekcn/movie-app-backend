@@ -23,8 +23,22 @@ const uploadNewMedia = (req, res, callback) => {
 	S3.upload(params, (err, data) => {
 		if (err) return res.json(err); 
 		callback(data);
-	});
-};  
+	}); 
+}; 
+const uploadNewMediaForTrailer = (req, res, callback) => {
+	const file = __dirname + '/noImage.jpg';
+	const data = fs.readFileSync(file); 
+	const params = {
+		Bucket: Bucket_Name,
+		Key: uuid(),
+		Body: req.files ? req.files.mediaUrl ? req.files.mediaUrl.data : data : data,
+		ContentType: 'image/JPG',
+	};
+	S3.upload(params, (err, data) => {
+		if (err) return res.json(err); 
+		callback(data);
+	}); 
+}; 
  
 const uploadUserBackgroundImage = async (req, res, callback) => {
 	const file = __dirname + '/user-background-default-image.jpg'; 
@@ -233,5 +247,6 @@ module.exports = {
 	updateLogo,
 	deleteMedia,
 	uploadUserBackgroundImage,
-	updateBackgroundImage
+	updateBackgroundImage,
+	uploadNewMediaForTrailer
 };

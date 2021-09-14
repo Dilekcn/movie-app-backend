@@ -29,7 +29,7 @@ exports.create = async (req, res) => {
 				alt: 'trailers',
 			})  
   
-			newMedia.save()
+			newMedia.save() 
   
 			const {
 				imdb,
@@ -54,7 +54,7 @@ exports.create = async (req, res) => {
 	
 			const newTrailer = await new TrailersModel({
 				title,
-				episodeTitle,
+				episodeTitle, 
 				type,
 				year,
 				duration,
@@ -68,8 +68,8 @@ exports.create = async (req, res) => {
 				episodeNumber,
 				director,
 				trailerUrl,
-				isActive,
-				isDeleted,
+				isActive, 
+				isDeleted, 
 				imdb,
 		
 			});
@@ -82,7 +82,7 @@ exports.create = async (req, res) => {
 				.catch((err) => res.json(err));
 			
 		}
-		await S3.uploadNewMedia(req, res, data)
+		await S3.uploadNewMediaForTrailer(req, res, data)
 	} else {
 		const {
 			imdb,
