@@ -28,9 +28,9 @@ exports.create = async (req, res) => {
 				mediaKey: data.Key,
 				alt: 'trailers',
 			})  
-
+  
 			newMedia.save()
-
+  
 			const {
 				imdb,
 				isActive,
@@ -48,9 +48,7 @@ exports.create = async (req, res) => {
 				seasonNumber,
 				episodeNumber, 
 				director,
-				tags,
 				trailerUrl,
-				websiteId,
 				mediaUrl
 			} = req.body;
 	
@@ -60,16 +58,16 @@ exports.create = async (req, res) => {
 				type,
 				year,
 				duration,
-				mediaUrl,
+				mediaUrl:newMedia.url,
 				cast:typeof cast === 'string' ? JSON.parse(cast) : cast,
 				description,
-				genre: typeof genre === 'string' ? JSON.parse(genre) : genre,
+				genre: typeof genre === 'string' ? JSON.parse(genre) : genre, 
 				ageRestriction,
 				totalSeasons,
 				seasonNumber,
 				episodeNumber,
 				director,
-				trailerUrl:newMedia.url,
+				trailerUrl,
 				isActive,
 				isDeleted,
 				imdb,
@@ -145,7 +143,7 @@ exports.getSingleTrailer = async (req, res) => {
 			res.json({ message: err }); 
 		} else {
 			res.json(data);
-		}  
+		}   
 	}) 
 };  
 
