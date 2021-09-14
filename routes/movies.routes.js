@@ -11,5 +11,5 @@ router.post('/movies/search', moviesControllers.searchWithTitle);
 router.put('/movies/:id', moviesControllers.updateSingleMovie);
 router.delete('/movies/:id', moviesControllers.removeSingleMovie);
 
-module.exports = router;
+module.exports = router; 
  

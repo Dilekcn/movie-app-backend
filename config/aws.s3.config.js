@@ -10,10 +10,10 @@ const S3 = new AWS.S3({
 	accessKeyId: Access_Key,
 	secretAccessKey: Secret_Key,
 });
-
+ 
 const uploadNewMedia = (req, res, callback) => {
 	const file = __dirname + '/noImage.jpg';
-	const data = fs.readFileSync(file);
+	const data = fs.readFileSync(file); 
 	const params = {
 		Bucket: Bucket_Name,
 		Key: uuid(),
@@ -21,14 +21,13 @@ const uploadNewMedia = (req, res, callback) => {
 		ContentType: 'image/JPG',
 	};
 	S3.upload(params, (err, data) => {
-		if (err) return res.json(err);
+		if (err) return res.json(err); 
 		callback(data);
 	});
-};
-
+};  
+ 
 const uploadUserBackgroundImage = async (req, res, callback) => {
-
-	const file = __dirname + '/user-background-default-image.jpg';
+	const file = __dirname + '/user-background-default-image.jpg'; 
 	const data = fs.readFileSync(file);
 	const params = {
 		Bucket: Bucket_Name,
@@ -39,10 +38,9 @@ const uploadUserBackgroundImage = async (req, res, callback) => {
 	 await S3.upload(params, async (err, data) => {
 		if (err) return res.json(err);
 		callback(data)
-	});
-	
-};
-
+	});	
+};  
+  
 const uploadNewBanner = (req, res, callback) => {
 	const file = __dirname + '/noImage.jpg';
 	const data = fs.readFileSync(file);

@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
 				title: 'trailers',
 				mediaKey: data.Key,
 				alt: 'trailers',
-			})
+			})  
 
 			newMedia.save()
 
@@ -69,12 +69,11 @@ exports.create = async (req, res) => {
 				seasonNumber,
 				episodeNumber,
 				director,
-				// tags: tags.split(','),
 				trailerUrl:newMedia.url,
 				isActive,
 				isDeleted,
 				imdb,
-				// websiteId:typeof websiteId === 'string' ? JSON.parse(websiteId) : websiteId
+		
 			});
 	
 			newTrailer
@@ -104,9 +103,7 @@ exports.create = async (req, res) => {
 			seasonNumber,
 			episodeNumber, 
 			director,
-			tags,
 			trailerUrl,
-			websiteId,
 			mediaUrl
 		} = req.body;
 
@@ -125,12 +122,11 @@ exports.create = async (req, res) => {
 			seasonNumber,
 			episodeNumber,
 			director,
-			// tags: tags.split(','),
 			trailerUrl,
 			isActive,
 			isDeleted,
 			imdb,
-			// websiteId:typeof websiteId === 'string' ? JSON.parse(websiteId) : websiteId
+	
 		});
 
 		newTrailer
@@ -146,19 +142,18 @@ exports.create = async (req, res) => {
 exports.getSingleTrailer = async (req, res) => {
 	await TrailersModel.findById({ _id: req.params.id }, (err, data) => {
 		if (err) {
-			res.json({ message: err });
+			res.json({ message: err }); 
 		} else {
 			res.json(data);
-		}
-	})
-		.populate('mediaId', 'url title alt')
-		.populate('genre', 'name');
-};
+		}  
+	}) 
+};  
+
 
 exports.getTrailersByUserId = async (req, res) => {
 	await TrailersModel.find({ userId: req.params.userId }, (err, data) => {
 		if (err) {
-			res.json({ message: err });
+			res.json({ message: err }); 
 		} else {
 			res.json(data);
 		}

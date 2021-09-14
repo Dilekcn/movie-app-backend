@@ -104,7 +104,7 @@ exports.getPopular =async (req,res)=>{
 	[ 
 		{$sort:{rating: -1}},  
 		{$skip:(page - 1) * limit}, 
-		{$limit:limit*1},
+		{$limit:limit*1}, 
 		{
             $lookup:{ 
 				from:'movies',
@@ -210,7 +210,7 @@ exports.create = async (req, res) => {
 		rating,
 		tags:req.body.tags ? req.body.tags.split(','):[],
 		userRatingIds, 
-		movieIds:JSON.parse(req.body.movieIds),
+		movieIds:JSON.parse(req.body.movieIds), 
 		
 	});
 	newList 
@@ -219,7 +219,7 @@ exports.create = async (req, res) => {
 		.catch((err) => res.json(err));
     }
 
-	exports.getSingleList = async (req, res) => {
+	exports.getSingleList = async (req, res) => { 
 		
 		await ListsModel.aggregate( 
 			
@@ -415,7 +415,7 @@ exports.updateList = async (req, res) => {
 				await ListsModel.findByIdAndUpdate(			
 					{ _id: req.params.id },
 					{
-						$set: {
+						$set: { 
 							userId:userId ? userId : list.userId,  
 							name:name?name:list.name, 
 							description:description ? description : list.description,

@@ -89,16 +89,18 @@ exports.getAll =async (req,res)=>{
 }) 
 }
 
+
 exports.searchWithTitle = async (req, res, next) => {
+	const total = await MoviesModel.find({ "original_title": { "$regex": req.body.original_title, "$options": "i" } }).countDocuments();
 	try {
 		const response = await MoviesModel.find({ "original_title": { "$regex": req.body.original_title, "$options": "i" } })
-		res.json({status:200,message: 'Filtered movies', response }); 
+		res.json({status:200,total,message: 'Filtered movies', response }); 
 	} catch (error) {
 		next({ status: 404, message: error });
 	}
 }; 
 
-
+ 
 exports.create = async (req, res) => {
 	await MoviesModel.findOne({tmdb_id:req.body.tmdb_id}, async (err, result) => { 
         
