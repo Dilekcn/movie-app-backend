@@ -75,18 +75,18 @@ exports.getAll =async (req,res)=>{
 				as:'commentIds'
 			}  
 		},
-		// {
-        //     $lookup:{
-		// 		from:'lists', 
-		// 		localField:"_id",
-		// 		foreignField:'movieIds',
-		// 		as:'listedCount'
-		// 	}, 
+		{
+            $lookup:{
+				from:'lists', 
+				localField:"_id",
+				foreignField:'movieIds',
+				as:'listedCount'
+			}, 
 			
-		// }, 
-		// {
-		// 	$addFields: { listedCount: { $size: "$listedCount" } }  
-		// },
+		}, 
+		{
+			$addFields: { listedCount: { $size: "$listedCount" } }  
+		},
 		{
 			$project:{
 				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,
@@ -94,7 +94,7 @@ exports.getAll =async (req,res)=>{
 				'userRatingIds.rating':true,'userRatingIds.userId':true,
 				watchlistCount:true,watchedCount:true,likesCount:true,
 				commentIds:true,runtime:true,release_date:true,
-				// listedCount:true,
+				listedCount:true,
 			} 
 		},
 	
@@ -201,8 +201,25 @@ exports.create = async (req, res) => {
 							}  
 						},
 						{
+							$lookup:{
+								from:'lists', 
+								localField:"_id",
+								foreignField:'movieIds',
+								as:'listedCount'
+							}, 
+							
+						}, 
+						{
+							$addFields: { listedCount: { $size: "$listedCount" } }  
+						},
+						{
 							$project:{
-								type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true,runtime:true,release_date:true
+								type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,
+								image_path:true,backdrop_path:true,original_title:true,
+								isActive:true,isDeleted:true,'userRatingIds.rating':true,
+								'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,
+								likesCount:true,commentIds:true,runtime:true,release_date:true,
+								listedCount:true
 							} 
 						},
 					
@@ -273,8 +290,25 @@ exports.create = async (req, res) => {
 						}  
 					},
 					{
+						$lookup:{
+							from:'lists', 
+							localField:"_id",
+							foreignField:'movieIds',
+							as:'listedCount'
+						}, 
+						
+					}, 
+					{
+						$addFields: { listedCount: { $size: "$listedCount" } }  
+					},
+					{
 						$project:{
-							type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true,runtime:true,release_date:true
+							type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,
+							image_path:true,backdrop_path:true,original_title:true,
+							isActive:true,isDeleted:true,'userRatingIds.rating':true,
+							'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,
+							likesCount:true,commentIds:true,runtime:true,release_date:true,
+							listedCount:true
 						} 
 					},
 				
@@ -339,8 +373,25 @@ exports.getSingleMovie =async (req,res)=>{
 			} 
 		},
 		{
+			$lookup:{
+				from:'lists', 
+				localField:"_id",
+				foreignField:'movieIds',
+				as:'listedCount'
+			}, 
+			
+		}, 
+		{
+			$addFields: { listedCount: { $size: "$listedCount" } }  
+		},
+		{
 			$project:{
-				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true,genre:true,release_date:true,watchlistCount:true,watchedCount:true,likesCount:true
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,
+				image_path:true,backdrop_path:true,original_title:true,
+				isActive:true,isDeleted:true,'userRatingIds.rating':true,
+				'userRatingIds.userId':true,runtime:true,genre:true,release_date:true,
+				watchlistCount:true,watchedCount:true,likesCount:true,
+				listedCount:true
 			} 
 		},
 	
@@ -449,8 +500,24 @@ exports.getSingleMovieByTmdb = async (req, res) => {
 				} 
 			},
 			{
+				$lookup:{
+					from:'lists', 
+					localField:"_id",
+					foreignField:'movieIds',
+					as:'listedCount'
+				}, 
+				
+			}, 
+			{
+				$addFields: { listedCount: { $size: "$listedCount" } }  
+			},
+			{
 				$project:{
-					type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true,genre:true,release_date:true,watchlistCount:true,watchedCount:true,likesCount:true
+					type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,
+					backdrop_path:true,original_title:true,isActive:true,isDeleted:true,
+					'userRatingIds.rating':true,'userRatingIds.userId':true,runtime:true,
+					genre:true,release_date:true,watchlistCount:true,watchedCount:true,likesCount:true,
+					listedCount:true
 				} 
 			},
 		
