@@ -19,7 +19,7 @@ exports.getAll = async (req, res) => {
 				}
 			})
 			.populate('listId', 'name')
-			.populate('movieId','poster_path original_title release_date tmdb_id')
+			.populate('movieId','image_path original_title release_date tmdb_id')
 			
 		const total = await CommentsModel.find().countDocuments();
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
@@ -72,7 +72,7 @@ exports.getSingleComment = async (req, res) => {
         }
     })
 		.populate('listId', 'name')
-		.populate('movieId','poster_path original_title release_date tmdb_id')
+		.populate('movieId','image_path original_title release_date tmdb_id')
 };
 
 exports.getCommentsByUserId = async (req, res) => {
@@ -83,7 +83,7 @@ exports.getCommentsByUserId = async (req, res) => {
 			res.json({ status: 200, data });
 		}
 	})
-	.populate({
+	.populate({ 
         path:'userId', 
         model:'user',
         select:'firstname lastname mediaId',
@@ -95,7 +95,7 @@ exports.getCommentsByUserId = async (req, res) => {
     })
 	
 		.populate('listId', 'name')
-		.populate('movieId','poster_path original_title release_date tmdb_id')
+		.populate('movieId','image_path original_title release_date tmdb_id')
 };
 
 exports.getCommentsByList = async (req, res) => {
@@ -145,7 +145,7 @@ exports.getCommentsByMovie = async (req, res) => {
 					select:'url'
 				}
 			})
-			.populate('movieId','poster_path original_title release_date tmdb_id')
+			.populate('movieId','image_path original_title release_date tmdb_id') 
 		
 			
 		const total = await CommentsModel.find({ movieId: req.params.movieid }).countDocuments();

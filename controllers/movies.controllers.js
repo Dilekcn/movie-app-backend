@@ -33,7 +33,7 @@ exports.getAll =async (req,res)=>{
 			
 		}, 
 		{
-			$addFields: { watchlistCount: { $size: "$watchlistCount" } }
+			$addFields: { watchlistCount: { $size: "$watchlistCount" } }  
 		},
 		{
             $lookup:{
@@ -75,9 +75,26 @@ exports.getAll =async (req,res)=>{
 				as:'commentIds'
 			}  
 		},
+		// {
+        //     $lookup:{
+		// 		from:'lists', 
+		// 		localField:"_id",
+		// 		foreignField:'movieIds',
+		// 		as:'listedCount'
+		// 	}, 
+			
+		// }, 
+		// {
+		// 	$addFields: { listedCount: { $size: "$listedCount" } }  
+		// },
 		{
 			$project:{
-				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,backdrop_path:true,original_title:true,isActive:true,isDeleted:true,'userRatingIds.rating':true,'userRatingIds.userId':true,watchlistCount:true,watchedCount:true,likesCount:true,commentIds:true,runtime:true,release_date:true
+				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,
+				backdrop_path:true,original_title:true,isActive:true,isDeleted:true,
+				'userRatingIds.rating':true,'userRatingIds.userId':true,
+				watchlistCount:true,watchedCount:true,likesCount:true,
+				commentIds:true,runtime:true,release_date:true,
+				// listedCount:true,
 			} 
 		},
 	

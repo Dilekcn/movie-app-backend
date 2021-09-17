@@ -5,37 +5,34 @@ const Access_Key = process.env.Access_Key_ID;
 const Secret_Key = process.env.Secret_Access_Key;
 const Bucket_Name = process.env.Bucket_Name;
 
-exports.getAllMedia = async (req, res) => {
-	try {
+exports.getAllMedia = async (req, res) => {   
+	try {  
 		const { page = 1, limit } = req.query;
-		const response = await MediaModel.find()
+		const response = await MediaModel.find()  
 		.limit(limit * 1)
-		.skip((page - 1) * limit)
+		.skip((page - 1) * limit) 
 		.sort({ createdAt: -1 });
 		const total = await MediaModel.find().count();
-		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-		res.json({ total: total, pages, status: 200, response });
-	} catch (e) {
-		res.status(500).json(e);
-	}
-};
+		const pages = limit === undefined ? 1 : Math.ceil(total / limit);   
+		res.json({ total: total, pages, status: 200, response });  
+	   } catch (e) { 
+		res.status(500).json(e);  
+	   } 
+};   
 
 exports.createMedia = async (req, res) => {
 	const files = req.files.image;
-
 	const s3 = new AWS.S3({
 		accessKeyId: Access_Key,
 		secretAccessKey: Secret_Key,
-	});
-
+	});    
 	const params = {
 		Bucket: Bucket_Name,
 		Key: req.files.image.name,
 		Body: req.files.image.data,
-		ContentType: 'image/JPG',
-	};
-
-	s3.upload(params, async (err, data) => {
+		ContentType: 'image/JPG', 
+	}; 
+	s3.upload(params, async (err, data) => { 
 		if (err) {
 			res.json(err);
 		} else {
@@ -47,7 +44,6 @@ exports.createMedia = async (req, res) => {
 				isActive: req.body.isActive,
 				isDeleted: req.body.isDeleted,
 			});
-
 			newMedia
 				.save()
 				.then((response) =>
@@ -56,7 +52,7 @@ exports.createMedia = async (req, res) => {
 				.catch((err) => res.json({ message: err, status: false }));
 		}
 	});
-};
+}; 
 
 exports.getSingleMedia = async (req, res) => {
 	await MediaModel.findById({ _id: req.params.mediaId }, (err, data) => {
@@ -78,4 +74,5 @@ exports.removeSingleMedia = async (req, res) => {
 	await MediaModel.findByIdAndDelete({ _id: req.params.mediaId })
 		.then((data) => res.json({ message: 'Media removed', status: true, data }))
 		.catch((err) => res.json({ message: err, status: false }));
-};
+}; 
+ 

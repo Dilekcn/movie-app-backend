@@ -76,7 +76,7 @@ exports.create = async (req, res) => {
 	
 			newTrailer
 				.save()
-				.then((response) => {
+				.then((response) => { 
 					res.json(response);
 				})
 				.catch((err) => res.json(err));

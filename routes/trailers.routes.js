@@ -9,4 +9,5 @@ router.post('/trailers', trailersControllers.create);
 router.put('/trailers/:id', trailersControllers.updateSingleTrailer);
 router.delete('/trailers/:id', trailersControllers.removeSingleTrailer);
 
-module.exports = router;
+module.exports = router; 
+ 
