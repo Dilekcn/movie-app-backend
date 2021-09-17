@@ -22,7 +22,7 @@ exports.getAll =async (req,res)=>{
 					{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
 					{$project:{type:1,imdb_id:1,imdb_rating:1, 
 						original_title:1,image_path:1,backdrop_path:1,
-						runtime:1,release_date:1,genre:1
+						runtime:1,release_date:1,genre:1,tmdb_id:1
 					}},
 				],
 				as:'movieIds' 
@@ -86,7 +86,7 @@ exports.getAll =async (req,res)=>{
 			} 
 		},
 
-		
+		 
 	],
 	(err,response)=>{
 	if(err)res.json(err);
@@ -111,7 +111,7 @@ exports.getPopular =async (req,res)=>{
 				let:{"movieIds":"$movieIds"},
 				pipeline:[
 					{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
-					{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1,runtime:1,release_date:1,genre:1}},
+					{$project:{type:1,tmdb_id:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1,runtime:1,release_date:1,genre:1}},
 				],
 				as:'movieIds' 
 			} 
@@ -234,7 +234,7 @@ exports.create = async (req, res) => {
 						let:{"movieIds":"$movieIds"},
 						pipeline:[
 							{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
-							{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1,tmdb_id:1}},
+							{$project:{type:1,imdb_id:1,tmdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1,tmdb_id:1}},
 						],
 						as:'movieIds' 
 					} 
@@ -324,7 +324,7 @@ exports.getListByUserId = async (req, res) => {
 					let:{"movieIds":"$movieIds"},
 					pipeline:[
 						{$match:{$expr:{$in:["$_id","$$movieIds"]}}},
-						{$project:{type:1,imdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
+						{$project:{type:1,imdb_id:1,tmdb_id:1,imdb_rating:1,original_title:1,image_path:1,backdrop_path:1}},
 					],
 					as:'movieIds'  
 				} 
