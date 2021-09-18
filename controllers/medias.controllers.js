@@ -30,7 +30,7 @@ exports.createMedia = async (req, res) => {
 		Bucket: Bucket_Name,
 		Key: req.files.image.name,
 		Body: req.files.image.data,
-		ContentType: 'image/JPG', 
+		ContentType: files.mimetype, 
 	}; 
 	s3.upload(params, async (err, data) => { 
 		if (err) {
@@ -43,6 +43,7 @@ exports.createMedia = async (req, res) => {
 				isHomePage: req.body.isHomePage,
 				isActive: req.body.isActive,
 				isDeleted: req.body.isDeleted,
+				type:params.ContentType
 			});
 			newMedia
 				.save()

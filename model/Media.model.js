@@ -11,6 +11,7 @@ const MediaSchema = new Schema(
 		isActive: { type: Boolean, default: true }, 
 		isDeleted: { type: Boolean, default: false },
 		mediaKey: { type: String },
+		type:String
 	},
 
 	{ timestamps: true }
