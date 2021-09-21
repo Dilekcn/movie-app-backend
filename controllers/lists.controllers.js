@@ -262,14 +262,14 @@ exports.create = async (req, res) => {
 					} 
 				},
 				
-				// {
-				// 	$lookup:{
-				// 		from:'comments',
-				// 		localField:"_id",
-				// 		foreignField:'listId', 
-				// 		as:'commentIds'
-				// 	}  
-				// },
+				{
+					$lookup:{
+						from:'comments',
+						localField:"_id",
+						foreignField:'listId', 
+						as:'commentIds'
+					}  
+				},
 				{
 					$lookup:{
 						from:'users', 
