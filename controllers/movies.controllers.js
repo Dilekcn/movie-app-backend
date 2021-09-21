@@ -115,7 +115,7 @@ exports.searchWithTitle = async (req, res, next) => {
 	} catch (error) {
 		next({ status: 404, message: error });
 	}
-}; 
+};  
 
  
 exports.create = async (req, res) => {

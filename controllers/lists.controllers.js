@@ -335,19 +335,18 @@ exports.getListByUserId = async (req, res) => {
 					let:{"userId":"$userId"},
 					pipeline:[
 						{$match:{$expr:{$eq:["$_id","$$userId"]}}},
-						{$project:{firstname:1,lastname:1,mediaId:1}},
-						
-						// {
-						// 	$lookup:{
-						// 		from:'medias',
-						// 		let:{"mediaId":"$mediaId"},
-						// 		pipeline:[
-						// 			{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
-						// 			{$project:{url:1}},
-						// 		],
-						// 		as:'mediaId'  
-						// 	}
-						// }
+						{$project:{firstname:1,lastname:1,mediaId:1}}, 
+							{
+							$lookup:{
+								from:'media',
+								let:{"mediaId":"$mediaId"},
+								pipeline:[
+									{$match:{$expr:{$eq:["$_id","$$mediaId"]}}}, 
+									{$project:{url:1}},
+								],
+								as:'mediaId'   
+							}
+						}
 					],
 					as:'userId'
 				} 
@@ -470,7 +469,6 @@ exports.removeMovieFromList = async (req, res) => {
 						isActive: list.isActive,
 						isDeleted: list.isDeleted,
 						reasonToBlock:list.reasonToBlock
-	
 					},
 				},
 				{ useFindAndModify: false, new: true }
@@ -491,5 +489,5 @@ exports.removeMovieFromList = async (req, res) => {
 exports.removeSingleList = async (req, res) => {
 	await ListsModel.findByIdAndDelete({ _id: req.params.id })
 		.then((data) => res.json(data))
-		.catch((err) => res.json({ message: err }));
+		.catch((err) => res.json({ message: err })); 
 };

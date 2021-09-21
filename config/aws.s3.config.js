@@ -21,7 +21,7 @@ const uploadNewMedia = (req, res, callback) => {
 		ContentType: 'image/JPG',
 	};
 	S3.upload(params, (err, data) => {
-		if (err) return res.json(err); 
+		if (err) return res.json(err);  
 		callback(data);
 	}); 
 }; 
