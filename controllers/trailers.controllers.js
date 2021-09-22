@@ -299,6 +299,15 @@ exports.updateSingleTrailer = async (req, res) => {
 		.catch((err) => res.json({ message: err, status: 404 }));
 	}
 };
+exports.searchWithTitle = async (req, res, next) => {
+	const total = await TrailersModel.find({ "title": { "$regex": req.body.title, "$options": "i" } }).countDocuments();
+	try {
+		const response = await TrailersModel.find({ "title": { "$regex": req.body.title, "$options": "i" } })
+		res.json({status:200,total,message: 'Filtered trailers', response }); 
+	} catch (error) {
+		next({ status: 404, message: error });
+	}  
+}; 
 
 exports.removeSingleTrailer = async (req, res) => {
 	await TrailersModel.findByIdAndDelete({ _id: req.params.id })
