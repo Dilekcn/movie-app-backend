@@ -254,7 +254,7 @@ exports.create = async (req, res) => {
 										{$match:{$expr:{$eq:["$_id","$$mediaId"]}}}, 
 										{$project:{url:1}},
 									],
-									as:'mediaId'   
+									as:'mediaId'    
 								}
 							}
 						],
@@ -275,7 +275,7 @@ exports.create = async (req, res) => {
 						from:'users', 
 						let:{"likes":"$likes"},
 						pipeline:[
-							{$match:{$expr:{$in:["$_id","$$likes"]}}}, 
+							{$match:{$expr:{$in:["$_id","$$likes"]}}},  
 							{$project:{firstname:1,lastname:1}}
 						],
 						as:'likes'
@@ -446,6 +446,16 @@ exports.updateList = async (req, res) => {
 			})
 			.catch((err) => ({ status: 400, message: err })); 
 };
+
+exports.searchWithName = async (req, res, next) => {
+	const total = await ListsModel.find({ "name": { "$regex": req.body.name, "$options": "i" } }).countDocuments();
+	try {
+		const response = await ListsModel.find({ "name": { "$regex": req.body.name, "$options": "i" } })
+		res.json({status:200,total,message: 'Filtered lists', response }); 
+	} catch (error) {
+		next({ status: 404, message: error });
+	}
+}; 
 
 exports.removeMovieFromList = async (req, res) => { 
 	await ListsModel.findById({ _id: req.params.id })
