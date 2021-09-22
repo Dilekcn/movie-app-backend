@@ -149,7 +149,7 @@ exports.getSingleUserById = async (req, res) => {
 					pipeline:[ 
 						{$match:{$expr:{$eq:["$userId","$$userId"]}}},
 						{$project:{movieId:1}},
-						{ $unwind: "$movieId" },
+						{ $unwind: "$movieId" }, 
 						{
 							$lookup:{
 								from:"movies",
@@ -412,6 +412,15 @@ exports.updateUser = async (req, res) => {
 		})
 		.catch((err) => res.json({ status: false, message: err }));
 };
+exports.searchWithFirstname = async (req, res, next) => {
+	const total = await UserModel.find({ "firstname": { "$regex": req.body.firstname, "$options": "i" } }).countDocuments();
+	try {
+		const response = await UserModel.find({ "firstname": { "$regex": req.body.firstname, "$options": "i" } })
+		res.json({status:200,total,message: 'Filtered users', response }); 
+	} catch (error) {
+		next({ status: 404, message: error });
+	}  
+}; 
 
 exports.deleteUser = async (req, res) => {
 	await UserModel.findById({ _id: req.params.id })
