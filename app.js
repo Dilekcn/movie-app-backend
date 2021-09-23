@@ -23,6 +23,8 @@ const userRatingsRouter =require('./routes/userratings.routes')
 const watchlistRouter =require('./routes/watchlist.routes')
 const watchedRouter =require('./routes/watcheds.routes')
 const likedRouter =require('./routes/liked.routes')
+const listLikesRouter =require('./routes/listLikes.routes')
+const commentLikesRouter =require('./routes/commentLikes.routes')
 
 //middlewares
 // const verifyToken = require('./auth/verifyToken');
@@ -69,6 +71,10 @@ app.use('/',userRatingsRouter);
 app.use('/',watchlistRouter);
 app.use('/',watchedRouter);
 app.use('/',likedRouter);
+app.use('/',listLikesRouter);
+app.use('/',commentLikesRouter);
+
+
 
 
 
