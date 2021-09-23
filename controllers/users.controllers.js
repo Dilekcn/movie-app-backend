@@ -420,7 +420,7 @@ exports.searchWithFirstname = async (req, res, next) => {
 	} catch (error) {
 		next({ status: 404, message: error });
 	}  
-}; 
+};  
 
 exports.deleteUser = async (req, res) => {
 	await UserModel.findById({ _id: req.params.id })

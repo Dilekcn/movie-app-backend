@@ -454,7 +454,7 @@ exports.searchWithName = async (req, res, next) => {
 		res.json({status:200,total,message: 'Filtered lists', response }); 
 	} catch (error) {
 		next({ status: 404, message: error });
-	}
+	}  
 }; 
 
 exports.removeMovieFromList = async (req, res) => { 

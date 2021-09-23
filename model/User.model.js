@@ -15,7 +15,7 @@ const UserSchema = new Schema(
 		backgroundImageId: { type: mongoose.Types.ObjectId, ref: 'media' },
 		alt:String
 	},
-	{ timestamps: true }
+	{ timestamps: true } 
 );  
 
 module.exports = mongoose.model('user', UserSchema);
