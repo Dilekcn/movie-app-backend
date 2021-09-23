@@ -1,33 +1,108 @@
 const CommentsModel = require('../model/Comment.model');
 
-exports.getAll = async (req, res) => {
-	try { 
-		const { page = 1, limit } = req.query;
-		const response = await CommentsModel.find()
-			.limit(limit * 1)
-			.skip((page - 1) * limit)
-			.sort({ createdAt: -1 })
+exports.getAll =async (req,res)=>{
+
+	const{page=1,limit=10}=req.query
+	const total = await CommentsModel.find().countDocuments();
+	await CommentsModel.aggregate(
+	[ 
+		{$sort:{createdAt: -1}},  
+		{$skip:(page - 1) * limit}, 
+		{$limit:limit*1},
+		{
+            $lookup:{ 
+				from:'movies',
+				let:{"movieId":"$movieId"},
+				pipeline:[
+					{$match:{$expr:{$eq:["$_id","$$movieId"]}}},
+					{$project:{type:1,imdb_id:1,imdb_rating:1, 
+						original_title:1,image_path:1,backdrop_path:1,
+						runtime:1,release_date:1,genre:1,tmdb_id:1
+					}},
+				],
+				as:'movieId' 
+			} 
+		},
+		{
+            $lookup:{
+				from:'users',
+				let:{"userId":"$userId"},
+				pipeline:[
+					{$match:{$expr:{$eq:["$_id","$$userId"]}}},
+					{$project:{firstname:1,lastname:1,mediaId:1}},  
+						{
+						$lookup:{
+							from:'media',
+							let:{"mediaId":"$mediaId"},
+							pipeline:[
+								{$match:{$expr:{$eq:["$_id","$$mediaId"]}}},
+								{$project:{url:1}},
+							],
+							as:'mediaId'   
+						}
+					}
+				],
+				as:'userId'
+			} 
+		},
+		{
+            $lookup:{
+				from:'commentlikes',
+				localField:"_id",
+				foreignField:'commentId', 
+				as:'commentLikesCount'
+			}, 
 			
-			.populate({
-				path:'userId',
-				model:'user',
-				select:'firstname lastname mediaId',
-				populate:{
-					path:'mediaId',
-					model:'media',
-					select:'url'
-				}
-			})
-			.populate('listId', 'name')
-			.populate('movieId','image_path original_title release_date tmdb_id')
+		}, 
+		{
+			$addFields: { commentLikesCount: { $size: "$commentLikesCount" } }  
+		},
+		{
+			$project:{
+				reasonToBlock:true,movieId:true,isActive:true,
+				isDeleted:true,userId:true,content:true,commentLikesCount:true
+			} 
+		},
+
+		 
+	],
+	(err,response)=>{
+	if(err)res.json(err);
+	const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+	res.json({ total,pages, status: 200, response })
+}) 
+}
+
+
+
+// exports.getAll = async (req, res) => {
+// 	try { 
+// 		const { page = 1, limit } = req.query;
+// 		const response = await CommentsModel.find()
+// 			.limit(limit * 1)
+// 			.skip((page - 1) * limit)
+// 			.sort({ createdAt: -1 })
 			
-		const total = await CommentsModel.find().countDocuments();
-		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-		res.json({ total: total, pages, status: 200, response });
-	} catch (error) {
-		res.status(500).json(error);
-	}
-};
+// 			.populate({
+// 				path:'userId',
+// 				model:'user',
+// 				select:'firstname lastname mediaId', 
+// 				populate:{
+// 					path:'mediaId',
+// 					model:'media',
+// 					select:'url'
+// 				}
+// 			})
+// 			.populate('listId', 'name')
+// 			.populate('movieId','image_path original_title release_date tmdb_id')
+			
+// 		const total = await CommentsModel.find().countDocuments();
+// 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
+// 		res.json({ total: total, pages, status: 200, response });
+// 	} catch (error) {
+// 		res.status(500).json(error);
+// 	}
+// };
 
 exports.create = async (req, res) => {
 	const newComment = await new CommentsModel({

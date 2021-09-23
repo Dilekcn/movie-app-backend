@@ -69,7 +69,7 @@ exports.getAll =async (req,res)=>{
 				],
 				as:'likes'
 			} 
-		},
+		}, 
 		{
             $lookup:{
 				from:'userratings',
@@ -79,10 +79,22 @@ exports.getAll =async (req,res)=>{
 			} 
 		},
 		{
+            $lookup:{
+				from:'listlikes',
+				localField:"_id",
+				foreignField:'listId', 
+				as:'listLikesCount'
+			}, 
+			
+		}, 
+		{
+			$addFields: { listLikesCount: { $size: "$listLikesCount" } }  
+		},
+		{
 			$project:{
 				reasonToBlock:true,likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
 				isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,
-				'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
+				'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true,listLikesCount:true
 			} 
 		},
 
@@ -454,7 +466,7 @@ exports.searchWithName = async (req, res, next) => {
 		res.json({status:200,total,message: 'Filtered lists', response }); 
 	} catch (error) {
 		next({ status: 404, message: error });
-	}  
+	}   
 }; 
 
 exports.removeMovieFromList = async (req, res) => { 
