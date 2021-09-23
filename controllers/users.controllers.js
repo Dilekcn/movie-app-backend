@@ -406,7 +406,7 @@ exports.updateUser = async (req, res) => {
 						status: true,
 						message: 'User is updated successfully',
 						data,
-					})
+					}) 
 				)
 				.catch((err) => res.json({ status: false, message: err }));
 		})
