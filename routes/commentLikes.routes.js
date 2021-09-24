@@ -12,4 +12,4 @@ router.post('/commentlikes/filter', commentLikesControllers.getWithQuery);
 router.put('/commentlikes/:id', commentLikesControllers.updateCommentLike);
 router.delete('/commentlikes/:id', commentLikesControllers.removeSingleCommentLike);  
 
-module.exports = router;     
+module.exports = router;      

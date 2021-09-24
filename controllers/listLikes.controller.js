@@ -94,7 +94,7 @@ exports.getListLikesByUserId = async (req, res) => {
         populate:{
             path:'mediaId',
             model:'media',
-            select:'url'
+            select:'url' 
         }
     })
 	.populate('listId','name description rating');   

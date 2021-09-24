@@ -40,7 +40,7 @@ exports.getAll =async (req,res)=>{
 				from:'watcheds',
 				localField:"_id",
 				foreignField:'movieId', 
-				as:'watchedCount'
+				as:'watchedCount' 
 			},
 			
 		},

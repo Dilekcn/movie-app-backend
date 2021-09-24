@@ -412,7 +412,7 @@ exports.updateUser = async (req, res) => {
 		})
 		.catch((err) => res.json({ status: false, message: err }));
 };
-exports.searchWithFirstname = async (req, res, next) => {
+exports.searchWithFirstname = async (req, res, next) => { 
 	const total = await UserModel.find({ "firstname": { "$regex": req.body.firstname, "$options": "i" } }).countDocuments();
 	try {
 		const response = await UserModel.find({ "firstname": { "$regex": req.body.firstname, "$options": "i" } })
