@@ -445,4 +445,4 @@ exports.removeSingleComment = async (req, res) => {
 	await CommentsModel.findByIdAndDelete({ _id: req.params.id })
 		.then((data) => res.json({ status: 200, data }))
 		.catch((err) => res.json({ status: false, message: err }));
-};
+}; 
