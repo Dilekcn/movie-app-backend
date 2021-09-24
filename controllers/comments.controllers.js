@@ -24,6 +24,18 @@ exports.getAll =async (req,res)=>{
 			} 
 		},
 		{
+            $lookup:{ 
+				from:'lists',
+				let:{"listId":"$listId"},
+				pipeline:[
+					{$match:{$expr:{$eq:["$_id","$$listId"]}}},
+					{$project:{name:1
+					}},
+				],
+				as:'listId' 
+			} 
+		},
+		{
             $lookup:{
 				from:'users',
 				let:{"userId":"$userId"},
@@ -59,7 +71,7 @@ exports.getAll =async (req,res)=>{
 		},
 		{
 			$project:{
-				reasonToBlock:true,movieId:true,isActive:true,
+				reasonToBlock:true,movieId:true,listId:true,isActive:true,
 				isDeleted:true,userId:true,content:true,commentLikesCount:true
 			} 
 		},
@@ -73,36 +85,6 @@ exports.getAll =async (req,res)=>{
 }) 
 }
 
-
-
-// exports.getAll = async (req, res) => {
-// 	try { 
-// 		const { page = 1, limit } = req.query;
-// 		const response = await CommentsModel.find()
-// 			.limit(limit * 1)
-// 			.skip((page - 1) * limit)
-// 			.sort({ createdAt: -1 })
-			
-// 			.populate({
-// 				path:'userId',
-// 				model:'user',
-// 				select:'firstname lastname mediaId', 
-// 				populate:{
-// 					path:'mediaId',
-// 					model:'media',
-// 					select:'url'
-// 				}
-// 			})
-// 			.populate('listId', 'name')
-// 			.populate('movieId','image_path original_title release_date tmdb_id')
-			
-// 		const total = await CommentsModel.find().countDocuments();
-// 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
-// 		res.json({ total: total, pages, status: 200, response });
-// 	} catch (error) {
-// 		res.status(500).json(error);
-// 	}
-// };
 
 exports.create = async (req, res) => {
 	const newComment = await new CommentsModel({
