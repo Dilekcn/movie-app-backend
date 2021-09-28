@@ -430,7 +430,7 @@ exports.getCommentsByMovie = async (req, res) => {
 		],
 		(err,response)=>{
 		if(err)res.json(err);
-		res.json({response })
+		res.json({response }) 
 	}) 
 };
 
