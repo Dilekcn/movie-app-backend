@@ -10,7 +10,7 @@ exports.getAll =async (req,res)=>{
 		{$sort:{createdAt: -1}},  
 		{$skip:(page - 1) * limit}, 
 		{$limit:limit*1},
-		{
+		{ 
             $lookup:{ 
 				from:'movies',
 				let:{"movieId":"$movieId"},
@@ -73,7 +73,8 @@ exports.getAll =async (req,res)=>{
 		{
 			$project:{
 				reasonToBlock:true,movieId:true,listId:true,isActive:true,
-				isDeleted:true,userId:true,content:true,commentLikesCount:true
+				isDeleted:true,userId:true,content:true,commentLikesCount:true,createdAt:true,
+				updatedAt:true
 			} 
 		},
 	],
@@ -181,7 +182,8 @@ exports.getSingleComment = async (req, res) => {
 			{
 				$project:{
 					reasonToBlock:true,movieId:true,listId:true,isActive:true,
-					isDeleted:true,userId:true,content:true,commentLikesCount:true
+					isDeleted:true,userId:true,content:true,commentLikesCount:true,createdAt:true,
+					updatedAt:true
 				} 
 			},
 		],
@@ -264,7 +266,8 @@ exports.getCommentsByUserId = async (req, res) => {
 			{
 				$project:{
 					reasonToBlock:true,movieId:true,listId:true,isActive:true,
-					isDeleted:true,userId:true,content:true,commentLikesCount:true
+					isDeleted:true,userId:true,content:true,commentLikesCount:true,createdAt:true,
+					updatedAt:true
 				} 
 			},
 		],
@@ -344,7 +347,8 @@ exports.getCommentsByList = async (req, res) => {
 			{
 				$project:{
 					reasonToBlock:true,movieId:true,listId:true,isActive:true,
-					isDeleted:true,userId:true,content:true,commentLikesCount:true
+					isDeleted:true,userId:true,content:true,commentLikesCount:true,createdAt:true,
+					updatedAt:true
 				} 
 			},
 		],
@@ -424,7 +428,8 @@ exports.getCommentsByMovie = async (req, res) => {
 			{
 				$project:{
 					reasonToBlock:true,movieId:true,listId:true,isActive:true,
-					isDeleted:true,userId:true,content:true,commentLikesCount:true
+					isDeleted:true,userId:true,content:true,commentLikesCount:true,createdAt:true,
+					updatedAt:true
 				} 
 			},
 		],
