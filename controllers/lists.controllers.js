@@ -314,6 +314,18 @@ exports.create = async (req, res) => {
 					} 
 				},
 				{
+					$lookup:{
+						from:'listlikes',
+						localField:"_id",
+						foreignField:'listId', 
+						as:'listLikesCount'
+					}, 
+					
+				}, 
+				{
+					$addFields: { listLikesCount: { $size: "$listLikesCount" } }  
+				},
+				{
 					$project:{
 						reasonToBlock:true,likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
 						isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,
