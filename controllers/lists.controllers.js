@@ -3,7 +3,7 @@ const UserRatingModel = require('../model/UserRatings.model');
 const CommentModel = require('../model/Comment.model');
 const MovieModel = require('../model/Movies.model');
 const mongoose = require('mongoose');
- 
+  
 
 exports.getAll =async (req,res)=>{
 
@@ -179,10 +179,22 @@ exports.getPopular =async (req,res)=>{
 			} 
 		},
 		{
+            $lookup:{
+				from:'listlikes',
+				localField:"_id",
+				foreignField:'listId', 
+				as:'listLikesCount'
+			}, 
+			
+		}, 
+		{
+			$addFields: { listLikesCount: { $size: "$listLikesCount" } }  
+		},
+		{
 			$project:{
 				reasonToBlock:true,likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
-				isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,
-				'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
+				isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,
+				'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true,listLikesCount:true
 			} 
 		},
 
@@ -304,8 +316,8 @@ exports.create = async (req, res) => {
 				{
 					$project:{
 						reasonToBlock:true,likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
-						isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,
-						'userRatingIds.userId':true,'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true
+						isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,
+						'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true,listLikesCount:true
 					} 
 				},
 		
@@ -390,7 +402,25 @@ exports.getListByUserId = async (req, res) => {
 					as:'userRatingIds'
 				} 
 			},
-			
+			{
+				$lookup:{
+					from:'listlikes',
+					localField:"_id",
+					foreignField:'listId', 
+					as:'listLikesCount'
+				}, 
+				
+			}, 
+			{
+				$addFields: { listLikesCount: { $size: "$listLikesCount" } }  
+			},
+			{
+				$project:{
+					reasonToBlock:true,likes:true,rating:true,tags:true,movieIds:true,isPublic:true,isActive:true,
+					isDeleted:true,userId:true,name:true,description:true,'userRatingIds.rating':true,'userRatingIds.userId':true,
+					'commentIds.userId':true,'commentIds.title':true,'commentIds.content':true,listLikesCount:true
+				} 
+			},
 			
 		],
 		(err,response)=>{
