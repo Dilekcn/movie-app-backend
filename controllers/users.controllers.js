@@ -114,10 +114,20 @@ exports.getAllUsers = async (req, res) => {
 				as:'backgroundImageId' 
 			} 
 		}, 
+			{
+            $lookup:{
+				from:'commentlikes',
+				localField:"_id", 
+				foreignField:'userId', 
+				as:'commentLikes'
+			} 
+		}, 
 		{
 			$project:{
-				firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,watched:true,liked:true,watchlist:true,createdAt:true,updatedAt:true,
-				backgroundImageId:true 
+				firstname:true,lastname:true,email:true,password:true,country:true,
+				role:true,isActive:true,isDeleted:true,mediaId:true,watched:true,liked:true,
+				watchlist:true,createdAt:true,updatedAt:true,
+				backgroundImageId:true,commentLikes:true
 			}
 		},
 	],

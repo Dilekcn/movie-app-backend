@@ -8,7 +8,7 @@ const ListsSchema = new Schema(
 		name: { type: String},
 		description: { type: String},
 		reasonToBlock: { type: String},
-		rating:{ type: Number, default: 0 },  
+		rating:{ type: Number},  
 		tags: { type: Array },
 		movieIds:[{ type: mongoose.Types.ObjectId, ref: 'movie'}],
 		isPublic: { type: Boolean, default: true },

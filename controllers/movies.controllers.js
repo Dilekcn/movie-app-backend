@@ -87,6 +87,7 @@ exports.getAll =async (req,res)=>{
 		{
 			$addFields: { listedCount: { $size: "$listedCount" } }  
 		},
+	
 		{
 			$project:{
 				type:true,imdb_id:true,tmdb_id:true,imdb_rating:true,image_path:true,
@@ -94,7 +95,7 @@ exports.getAll =async (req,res)=>{
 				'userRatingIds.rating':true,'userRatingIds.userId':true,
 				watchlistCount:true,watchedCount:true,likesCount:true,
 				commentIds:true,runtime:true,release_date:true,
-				listedCount:true,
+				listedCount:true,commentLikes:true
 			} 
 		},
 	

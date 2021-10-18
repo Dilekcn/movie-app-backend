@@ -78,6 +78,7 @@ exports.getAll =async (req,res)=>{
 				as:'userRatingIds'
 			} 
 		},
+	
 		{
             $lookup:{
 				from:'listlikes',
@@ -183,7 +184,7 @@ exports.getPopular =async (req,res)=>{
 				from:'listlikes',
 				localField:"_id",
 				foreignField:'listId', 
-				as:'listLikesCount'
+				as:'listLikesCount' 
 			}, 
 			
 		}, 
@@ -211,7 +212,19 @@ exports.getPopular =async (req,res)=>{
  
 
 exports.create = async (req, res) => {
-      
+	const movieRatings =[];
+	await Promise.all(
+	 JSON.parse(req.body.movieIds).map(async(item)=>{
+	  await MovieModel.find({_id:item},(err,data)=>{
+		 if (err) {
+		  res.json({ status: false, message: err });
+		 } else {
+		movieRatings.push(data[0].imdb_rating*1)  
+		 }
+		})
+	   })
+	)
+	   const movieRatingAverage = (movieRatings.reduce((a,b)=>a+b)/JSON.parse(req.body.movieIds).length).toFixed(1)
     
 	const {
 		userId,
@@ -219,19 +232,19 @@ exports.create = async (req, res) => {
 		description,
 		isPublic,
 		isActive, 
-		isDeleted,
+		isDeleted, 
 		rating,
 		userRatingIds
 	} = req.body;
 	
-	const newList = await new ListsModel({ 
+	const newList = await new ListsModel({  
 		userId,
 		name,
 		description,
 		isPublic,
 		isActive,
 		isDeleted, 
-		rating,
+		rating:movieRatingAverage,
 		tags:req.body.tags ? req.body.tags.split(','):[],
 		userRatingIds, 
 		movieIds:JSON.parse(req.body.movieIds), 
@@ -442,7 +455,7 @@ exports.getListByUserId = async (req, res) => {
 };
 
 exports.updateList = async (req, res) => {
-	  console.log(req.body)
+
 		await ListsModel.findById({ _id: req.params.id })
 			.then(async (list) => {
 				
