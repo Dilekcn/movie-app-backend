@@ -114,12 +114,15 @@ exports.getAllUsers = async (req, res) => {
 				as:'backgroundImageId' 
 			} 
 		}, 
-			{
-            $lookup:{
+		{
+			$lookup:{  
 				from:'commentlikes',
-				localField:"_id", 
-				foreignField:'userId', 
-				as:'commentLikes'
+				let:{"userId":"$_id"}, 
+				pipeline:[
+					{$match:{$expr:{$eq:["$userId","$$userId"]}}},
+					{$project:{commentId:1,userId:1,_id:0}},
+				],
+				as:'commentLikes' 
 			} 
 		}, 
 		{
@@ -244,8 +247,21 @@ exports.getSingleUserById = async (req, res) => {
 				} 
 			}, 
 			{
+				$lookup:{  
+					from:'commentlikes',
+					let:{"userId":"$_id"}, 
+					pipeline:[
+						{$match:{$expr:{$eq:["$userId","$$userId"]}}},
+						{$project:{commentId:1,userId:1,_id:0}},
+					],
+					as:'commentLikes' 
+				} 
+			}, 
+			{
 				$project:{
-					firstname:true,lastname:true,email:true,password:true,country:true,role:true,isActive:true,isDeleted:true,mediaId:true,backgroundImageId:true,createdAt:true,updatedAt:true,watched:true,liked:true,watchlist:true
+					firstname:true,lastname:true,email:true,password:true,country:true,
+					role:true,isActive:true,isDeleted:true,mediaId:true,backgroundImageId:true,
+					createdAt:true,updatedAt:true,watched:true,liked:true,watchlist:true,commentLikes:true
 				}
 			},
 		],
