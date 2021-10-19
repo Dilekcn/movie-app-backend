@@ -10,5 +10,5 @@ router.post('/trailers/search', trailersControllers.searchWithTitle);
 router.put('/trailers/:id', trailersControllers.updateSingleTrailer);
 router.delete('/trailers/:id', trailersControllers.removeSingleTrailer);
 
-module.exports = router; 
+module.exports = router;  
  

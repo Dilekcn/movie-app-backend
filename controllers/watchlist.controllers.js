@@ -125,22 +125,4 @@ exports.getWithQuery = async (req, res, next) => {
 		next({ status: 404, message: error });
 	}
 };
-exports.updateWatchlist = async (req, res) => {
-	await WatchlistModel.findByIdAndUpdate(
-		{ _id: req.params.id }, 
-		{ $set: {
-			userId:req.body.userId,
-			movieId: typeof req.body.movieId==='string' ? JSON.parse(req.body.movieId):req.body.movieId,
-			isActive: !req.body.isActive ? true : req.body.isActive,
-			isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
 
-		} })
-		.then((data) => res.json({ message: 'Successfully updated', data }))
-		.catch((err) => res.json({ message: err }));
-};
-
-exports.removeSingleWatchlist = async (req, res) => {
-	await WatchlistModel.findByIdAndDelete({ _id: req.params.id })
-		.then((data) => res.json({ status: 200, data }))
-		.catch((err) => res.json({ status: false, message: err }));
-};

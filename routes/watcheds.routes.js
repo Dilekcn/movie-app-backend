@@ -8,7 +8,6 @@ router.get('/watched/:id', watchedControllers.getSingleWatched);
 router.get('/watched/user/:id', watchedControllers.getWatchedByUserId);
 router.post('/watched', watchedControllers.create);
 router.post('/watched/filter', watchedControllers.getWithQuery);
-router.put('/watched/:id', watchedControllers.updateWatched);
-router.delete('/watched/:id', watchedControllers.removeSingleWatched);  
+
 
 module.exports = router;   

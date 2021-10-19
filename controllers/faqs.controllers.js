@@ -16,7 +16,7 @@ exports.getAllFaqs = async (req, res) => {
 };
 
 exports.getSingleFaqById = async (req, res) => {
-	await FaqModel.findById({ _id: req.params.faqid }, (err, data) => {
+	await FaqModel.findById({ _id: req.params.id }, (err, data) => {
 		if (err) {
 			res.json({ message: err });
 		} else {
@@ -24,26 +24,7 @@ exports.getSingleFaqById = async (req, res) => {
 		}
 	});
 };
-
-exports.getSingleFaqByQuestion = async (req, res) => {
-	await FaqModel.find({ question: req.params.question }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		}
-	});
-};
-
-exports.getSingleFaqByAnswer = async (req, res) => {
-	await FaqModel.find({ answer: req.params.answer }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		}
-	});
-};
+ 
 
 exports.createFaq = async (req, res) => {
 	const newFaq = await new FaqModel({
@@ -66,13 +47,13 @@ exports.createFaq = async (req, res) => {
 };
 
 exports.updateFaq = async (req, res) => {
-	await FaqModel.findByIdAndUpdate({ _id: req.params.faqid }, { $set: req.body })
+	await FaqModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })
 		.then((data) => res.json({ message: 'Successfully updated', data }))
 		.catch((err) => res.json({ message: err }));
 };
 
 exports.removeFaq = async (req, res) => {
-	await FaqModel.findByIdAndDelete({ _id: req.params.faqid })
+	await FaqModel.findByIdAndDelete({ _id: req.params.id })
 		.then((data) => res.json({ message: 'Successfully removed', data }))
 		.catch((err) => res.json({ message: err }));
 };

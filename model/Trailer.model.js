@@ -18,7 +18,7 @@ const TrailersSchema = new Schema(
 		totalSeasons: { type: Number },
 		seasonNumber: { type: Number }, 
 		episodeNumber: { type: Number },
-		episodeTitle: { type: String },
+		episodeTitle: { type: String }, 
 		director: { type: String },
 		imdb: { type: String },
 		websiteId: { type: Array },

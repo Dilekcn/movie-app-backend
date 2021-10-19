@@ -201,18 +201,18 @@ exports.updateCompanyProfile = async (req, res) => {
 					{ _id: req.params.id },
 					{
 						$set: {
-							name,
+							name: req.body.name ? req.body.name : companyprofile.name,
 							logo: req.files ? companyprofile.logo : req.body.logo,
-							phone,
-							address,
+							phone:req.body.phone ? req.body.phone : companyprofile.phone,
+							address:req.body.address ? req.body.address : companyprofile.address,
 							socialMediaLinks:
 								typeof socialMediaLinks === 'string'
 									? JSON.parse(socialMediaLinks)
 									: socialMediaLinks,
-							email,
-							copyright,
-							isActive: !req.body.isActive ? true : req.body.isActive,
-							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+							email:req.body.email ? req.body.email : companyprofile.email,
+							copyright:req.body.copyright ? req.body.copyright : companyprofile.copyright,
+							isActive: !req.body.isActive ? companyprofile.isActive : req.body.isActive,
+							isDeleted: !req.body.isDeleted ? companyprofile.isDeleted : req.body.isDeleted,
 						},
 					},
 					{ useFindAndModify: false, new: true }
@@ -237,18 +237,18 @@ exports.updateCompanyProfile = async (req, res) => {
 					{ _id: req.params.id },
 					{
 						$set: {
-							name,
+							name: req.body.name ? req.body.name : companyprofile.name,
 							logo: !logo ? companyprofile.logo : logo,
-							phone,
-							address,
+							phone:req.body.phone ? req.body.phone : companyprofile.phone,
+							address:req.body.address ? req.body.address : companyprofile.address,
 							socialMediaLinks:
 								typeof socialMediaLinks === 'string'
 									? JSON.parse(socialMediaLinks)
 									: socialMediaLinks,
 							email,
-							copyright,
-							isActive: !req.body.isActive ? true : req.body.isActive,
-							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+							copyright:req.body.copyright ? req.body.copyright : companyprofile.copyright,
+							isActive: !req.body.isActive ? companyprofile.isActive : req.body.isActive,
+							isDeleted: !req.body.isDeleted ? companyprofile.isDeleted : req.body.isDeleted,
 						},
 					},
 					{ useFindAndModify: false, new: true }

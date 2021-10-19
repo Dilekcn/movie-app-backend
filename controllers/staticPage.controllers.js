@@ -155,11 +155,11 @@ exports.updatePages = async (req, res) => {
 					{ _id: req.params.id },
 					{
 						$set: {
-							name,
-							content,
+							name:req.body.name ? req.body.name : staticpage.name,
+							content:req.body.content ? req.body.content : staticpage.content,
 							mediaId: !req.body.mediaId ? staticpage.mediaId : req.body.mediaId,
-							isActive: !req.body.isActive ? true : req.body.isActive,
-							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+							isActive: !req.body.isActive ? staticpage.isActive : req.body.isActive,
+							isDeleted: !req.body.isDeleted ? staticpage.isDeleted : req.body.isDeleted,
 						},
 					},
 					{ useFindAndModify: false, new: true }
@@ -183,11 +183,11 @@ exports.updatePages = async (req, res) => {
 					{ _id: req.params.id },
 					{
 						$set: {
-							name,
-							content,
+							name:req.body.name ? req.body.name : staticpage.name,
+							content:req.body.content ? req.body.content : staticpage.content,
 							mediaId: staticpage.mediaId,
-							isActive: !req.body.isActive ? true : req.body.isActive,
-							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+							isActive: !req.body.isActive ? staticpage.isActive : req.body.isActive,
+							isDeleted: !req.body.isDeleted ? staticpage.isDeleted : req.body.isDeleted,
 						},
 					},
 					{ useFindAndModify: false, new: true }

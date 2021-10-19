@@ -57,15 +57,6 @@ exports.getSingleMessage = async (req, res) => {
 	});
 };
 
-exports.getMessageBySubject = async (req, res) => {
-	await MessagesModel.find({ subject: req.params.subject }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		}
-	});
-};
 
 exports.updateMessage = async (req, res) => {
 	await MessagesModel.findByIdAndUpdate({ _id: req.params.id }, { $set: req.body })

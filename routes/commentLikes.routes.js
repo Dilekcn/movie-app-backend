@@ -9,7 +9,5 @@ router.get('/commentlikes/user/:id', commentLikesControllers.getCommentLikesByUs
 router.get('/commentlikes/comment/:id', commentLikesControllers.getCommentLikesByCommentId);
 router.post('/commentlikes', commentLikesControllers.create);
 router.post('/commentlikes/filter', commentLikesControllers.getWithQuery);
-router.put('/commentlikes/:id', commentLikesControllers.updateCommentLike);
-router.delete('/commentlikes/:id', commentLikesControllers.removeSingleCommentLike);  
 
 module.exports = router;      

@@ -412,7 +412,7 @@ exports.updateSingleMovie = async (req, res) => {
 			await MoviesModel.findByIdAndUpdate(
 				{ _id: req.params.id },
 				{
-					$set: { 
+					$set: {  
 						type:req.body.type ?req.body.type:movie.type ,
 						imdb_id:req.body.imdb_id ?req.body.imdb_id : movie.imdb_id ,
 						tmdb_id:req.body.tmdb_id ? req.body.tmdb_id : movie.tmdb_id,
@@ -424,11 +424,11 @@ exports.updateSingleMovie = async (req, res) => {
 						genre:req.body.genre ? req.body.genre : movie.genre,
 						release_date:req.body.release_date ? req.body.release_date : movie.release_date,
 						isActive: !req.body.isActive
-							? true
-							: req.body.isActive,
+								? movie.isActive 
+								: req.body.isActive,
 						isDeleted: !req.body.isDeleted
-							? false
-							: req.body.isDeleted,
+								? movie.isDeleted
+								: req.body.isDeleted,
 					}, 
 				},
 				{ useFindAndModify: false, new: true }

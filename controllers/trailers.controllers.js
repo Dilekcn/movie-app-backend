@@ -148,16 +148,6 @@ exports.getSingleTrailer = async (req, res) => {
 };  
 
 
-exports.getTrailersByUserId = async (req, res) => {
-	await TrailersModel.find({ userId: req.params.userId }, (err, data) => {
-		if (err) {
-			res.json({ message: err }); 
-		} else {
-			res.json(data);
-		}
-	})
-		.populate('mediaId', 'url title alt')
-};
 
 exports.updateSingleTrailer = async (req, res) => {
 	if(req.files) {
@@ -214,8 +204,8 @@ exports.updateSingleTrailer = async (req, res) => {
 							tags: tags ? tags : trailer.tags,
 							trailerUrl: newMedia ? newMedia.url : trailer.trailerUrl,
 							websiteId:websiteId  ? JSON.parse(websiteId) : trailer.websiteId,
-							isActive: !req.body.isActive ? true : req.body.isActive,
-							isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+							isActive: !req.body.isActive ? trailer.isActive : req.body.isActive,
+							isDeleted: !req.body.isDeleted ? trailer.isDeleted : req.body.isDeleted,
 							imdb: imdb ? imdb : trailer.imdb,
 	
 						},
@@ -279,8 +269,8 @@ exports.updateSingleTrailer = async (req, res) => {
 						tags: tags ? tags : trailer.tags,
 						trailerUrl: trailerUrl ? trailerUrl : trailer.trailerUrl,
 						websiteId:websiteId  ? JSON.parse(websiteId) : trailer.websiteId,
-						isActive: !req.body.isActive ? true : req.body.isActive,
-						isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
+						isActive: !req.body.isActive ? trailer.isActive : req.body.isActive,
+						isDeleted: !req.body.isDeleted ? trailer.isDeleted : req.body.isDeleted,
 						imdb: imdb ? imdb : trailer.imdb,
 
 					},

@@ -9,19 +9,9 @@ exports.getAll = async (req, res) => {
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
 			.sort({ createdAt: -1 })
-            // .populate({
-			// 	path:'commnetId',
-			// 	model:'comment',
-			// 	select:'title content userId',
-			// 	populate:{
-			// 		path:'userId', 
-			// 		model:'user',
-			// 		select:'_id firstname lastname'
-			// 	}
-			// })
-            .populate('userId','title content')
-			.populate('commentId','firstname lastname')
-		const total = await ComplaintModel.find().count();
+            .populate('commentId','title content userId')
+			.populate('userId','firstname lastname')
+		const total = await ComplaintModel.find().count(); 
 		const pages = limit === undefined ? 1 : Math.ceil(total / limit);
 		res.json({ total: total, pages, status: 200, response });
 	} catch (error) {
@@ -52,14 +42,14 @@ exports.create = async (req, res) => {
 		.catch((err) => res.json(err));
 };
 
-exports.getSingleList = async (req, res) => {
-	await ComplaintModel.findById({ _id: req.params.id }, (err, data) => {
-		if (err) {
-			res.json({ message: err });
-		} else {
-			res.json(data);
-		}
-	});
+exports.getSingleComplaint = async (req, res) => {
+
+	ComplaintModel.findById({ _id: req.params.id })
+		.populate('commentId','title content userId')
+		.populate('userId','firstname lastname')
+		.then((data) => res.json(data))
+		.catch((err) => res.json({ message: err, status: false }));
+
 };
 
 

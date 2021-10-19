@@ -9,7 +9,6 @@ router.get('/listlikes/user/:id', listLikesControllers.getListLikesByUserId);
 router.get('/listlikes/list/:id', listLikesControllers.getListLikesByListId);
 router.post('/listlikes', listLikesControllers.create);
 router.post('/listlikes/filter', listLikesControllers.getWithQuery);
-router.put('/listlikes/:id', listLikesControllers.updateListLike);
-router.delete('/listlikes/:id', listLikesControllers.removeSingleListLike);  
+
 
 module.exports = router;     

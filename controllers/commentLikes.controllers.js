@@ -142,24 +142,7 @@ exports.getWithQuery = async (req, res, next) => {
 	} catch (error) {
 		next({ status: 404, message: error });
 	}
-};
-exports.updateCommentLike = async (req, res) => {
-	await CommentLikesModel.findByIdAndUpdate(
-		{ _id: req.params.id }, 
-		{ $set: {
-			userId:req.body.userId,
-			commentId: typeof req.body.commentId==='string' ? JSON.parse(req.body.commentId):req.body.commentId,
-			isActive: !req.body.isActive ? true : req.body.isActive,
-			isDeleted: !req.body.isDeleted ? false : req.body.isDeleted,
-
-		} })
-		.then((data) => res.json({ message: 'Successfully updated', data }))
-		.catch((err) => res.json({ message: err })); 
-};
-
-exports.removeSingleCommentLike = async (req, res) => {
-	await CommentLikesModel.findByIdAndDelete({ _id: req.params.id })
-		.then((data) => res.json({ status: 200, data }))
-		.catch((err) => res.json({ status: false, message: err }));
 }; 
- 
+
+
+  

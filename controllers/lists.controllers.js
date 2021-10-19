@@ -13,7 +13,7 @@ exports.getAll =async (req,res)=>{
 	[ 
 		{$sort:{createdAt: -1}},  
 		{$skip:(page - 1) * limit}, 
-		{$limit:limit*1},
+		{$limit:limit*1}, 
 		{
             $lookup:{ 
 				from:'movies',
@@ -478,7 +478,7 @@ exports.updateList = async (req, res) => {
 				? list.likes.filter((item,index)=> index!==indexLikes)
 				:[...list.likes,req.body.likes]
 				
-				await ListsModel.findByIdAndUpdate(			
+				await ListsModel.findByIdAndUpdate(	 		
 					{ _id: req.params.id },
 					{
 						$set: { 
@@ -492,10 +492,10 @@ exports.updateList = async (req, res) => {
 							likes:likes ? updatedLikes:list.likes,
 							reasonToBlock:reasonToBlock ? reasonToBlock :req.body.reasonToBlock,
 							isActive: !req.body.isActive
-								? true 
+								? list.isActive 
 								: req.body.isActive,
 							isDeleted: !req.body.isDeleted
-								? false
+								? list.isDeleted
 								: req.body.isDeleted,
 						},
 					},
